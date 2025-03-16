@@ -1,158 +1,136 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-package GUI;
+package GUI; // Khai báo package của chương trình
 
-import java.awt.Button;
+// Import thư viện FlatLaf để áp dụng giao diện Flat Atom One Light
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneLightIJTheme; 
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Label;
-import java.awt.Panel;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 /**
- *
- * @author ADMIN
+ * Lớp LogIn tạo một giao diện đăng nhập đơn giản bằng Java Swing
  */
 public class LogIn extends javax.swing.JFrame
 {
-    JPanel headerPanel = new JPanel();
-    JPanel bodyPanel = new JPanel();
-    JPanel bottomPanel = new JPanel();
-    JLabel lb1 = new JLabel("Pizza Hut");
-    JLabel lb2 = new JLabel("username");
-    JLabel lb3 = new JLabel("password");
-    JButton bt1 = new JButton("Đăng Nhập");
-    JTextField tf1 = new JTextField("Nhập username");
-    JTextField tf2 = new JTextField("Nhập password");
+    // Khai báo panel chứa tiêu đề, có ảnh nền
+    JPanel headerPanel = new JPanel(){
+        BufferedImage img; // Biến lưu trữ ảnh
+
+        @Override
+        protected void paintComponent(Graphics g) { // Ghi đè phương thức để vẽ ảnh lên panel
+            super.paintComponent(g);
+            try {
+                img = ImageIO.read(new File("D:\\PizzaStore\\src\\main\\resources\\PizzaHut.png")); // Đọc ảnh từ đường dẫn
+                g.drawImage(img, 0, 0, getWidth(), getHeight(), this); // Vẽ ảnh lên panel, co giãn theo kích thước
+            } catch (IOException e) {
+                e.printStackTrace(); // In lỗi nếu không tải được ảnh
+            }
+        }
+    };
+
+    // Khai báo các panel chứa nội dung khác nhau của giao diện
+    JPanel bodyPanel = new JPanel();   // Panel chứa các trường nhập liệu
+    JPanel bottomPanel = new JPanel(); // Panel chứa nút bấm
+
+    // Khai báo các thành phần giao diện
+    JLabel lb2 = new JLabel("username"); // Nhãn cho trường nhập username
+    JLabel lb3 = new JLabel("password"); // Nhãn cho trường nhập password
+    JButton bt1 = new JButton("Đăng Nhập"); // Nút đăng nhập
+    JTextField tf1 = new JTextField("Nhập username"); // Trường nhập username
+    JPasswordField pf1 = new JPasswordField("Nhập password"); // Trường nhập password
+
     /**
-     * Creates new form LogIn
+     * Constructor của lớp LogIn, thiết lập giao diện đăng nhập
      */
     public LogIn()
     {
-        initComponents();
-        setTitle("Trang Đăng Nhập");
-        setSize(600,800);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        
-        BoxLayout boxLayout = new BoxLayout(headerPanel,BoxLayout.X_AXIS);
-        headerPanel.add(lb1);
-        headerPanel.setLayout(boxLayout);
-        headerPanel.setBorder(new EmptyBorder(new Insets(10,100,10,100)));
-        
-        GridBagLayout gridBagLayout = new GridBagLayout();
+        setTitle("Trang Đăng Nhập"); // Đặt tiêu đề cửa sổ
+        setSize(300,340); // Thiết lập kích thước cửa sổ
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Đóng chương trình khi nhấn nút đóng
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS)); // Sắp xếp layout theo chiều dọc
+
+        // Thiết lập headerPanel (chứa ảnh nền)
+        BoxLayout boxLayout = new BoxLayout(headerPanel, BoxLayout.X_AXIS); // Layout ngang
+        headerPanel.setPreferredSize(new Dimension(200,200)); // Kích thước ưu tiên
+        headerPanel.setLayout(boxLayout); 
+        headerPanel.setBorder(new EmptyBorder(new Insets(0,100,0,100))); // Căn lề
+
+        // Thiết lập bodyPanel (chứa username và password)
+        GridBagLayout gridBagLayout = new GridBagLayout(); // Dùng GridBagLayout để sắp xếp linh hoạt
         bodyPanel.setLayout(gridBagLayout);
-        bodyPanel.setBorder(new EmptyBorder(new Insets(10,100,10,100)));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 1;
+        GridBagConstraints gbc = new GridBagConstraints(); // Thiết lập ràng buộc cho layout
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Lấp đầy theo chiều ngang
+
+        // Thêm nhãn "username" vào bodyPanel
+        gbc.gridx = 0; // Cột đầu tiên
+        gbc.gridy = 0; // Hàng đầu tiên
+        gbc.weightx = 0;
+        gbc.ipadx = 16;
         bodyPanel.add(lb2, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        bodyPanel.add(tf1, gbc);
+
+        // Thêm trường nhập username
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.gridwidth = 1;
+        gbc.weightx = 0;
+        gbc.ipadx = 100;
+        gbc.gridwidth = GridBagConstraints.REMAINDER; // Mở rộng hết hàng
+        bodyPanel.add(tf1, gbc);
+
+        // Thêm nhãn "password"
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+        gbc.ipadx = 16;
         bodyPanel.add(lb3, gbc);
+
+        // Thêm trường nhập password
         gbc.gridx = 1;
         gbc.gridy = 1;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        bodyPanel.add(tf2, gbc);
-        
-        BoxLayout boxLayout1 = new BoxLayout(bottomPanel,BoxLayout.X_AXIS);
+        gbc.weightx = 0;
+        gbc.ipadx = 100;
+        bodyPanel.add(pf1, gbc);
+
+        // Thiết lập bottomPanel (chứa nút đăng nhập)
+        BoxLayout boxLayout1 = new BoxLayout(bottomPanel, BoxLayout.X_AXIS);
         bottomPanel.setLayout(boxLayout1);
-        bottomPanel.add(bt1);
-        bottomPanel.setBorder(new EmptyBorder(new Insets(10, 100, 10, 100)));
-        
+        bottomPanel.add(bt1); // Thêm nút đăng nhập vào panel
+        bottomPanel.setBorder(new EmptyBorder(new Insets(10, 20, 10, 20))); // Căn lề cho panel
+
+        // Thêm các panel vào cửa sổ chính
         add(headerPanel);
         add(bodyPanel);
         add(bottomPanel);
+
+        setVisible(true); // Hiển thị cửa sổ
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * @param args the command line arguments
+     * Phương thức main để chạy chương trình
      */
     public static void main(String args[])
     {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try
         {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
-            {
-                if ("Nimbus".equals(info.getName()))
-                {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex)
+            // Cài đặt giao diện Flat Atom One Light
+            UIManager.setLookAndFeel(new FlatAtomOneLightIJTheme());
+        } catch (Exception e)
         {
-            java.util.logging.Logger.getLogger(LogIn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex)
-        {
-            java.util.logging.Logger.getLogger(LogIn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex)
-        {
-            java.util.logging.Logger.getLogger(LogIn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex)
-        {
-            java.util.logging.Logger.getLogger(LogIn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            System.out.println("Có Lỗi"); // In lỗi nếu không thể cài đặt giao diện
         }
-        //</editor-fold>
-
-        LogIn a = new LogIn();
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                new LogIn().setVisible(true);
-            }
-        });
+        LogIn a = new LogIn(); // Khởi tạo cửa sổ đăng nhập
     }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    // End of variables declaration//GEN-END:variables
 }
