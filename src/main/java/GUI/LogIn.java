@@ -1,136 +1,236 @@
-package GUI; // Khai báo package của chương trình
+package GUI;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import MyCustom.ImagePanel;
 
-// Import thư viện FlatLaf để áp dụng giao diện Flat Atom One Light
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneLightIJTheme; 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
-import javax.swing.border.EmptyBorder;
 
-/**
- * Lớp LogIn tạo một giao diện đăng nhập đơn giản bằng Java Swing
- */
-public class LogIn extends javax.swing.JFrame
-{
-    // Khai báo panel chứa tiêu đề, có ảnh nền
-    JPanel headerPanel = new JPanel(){
-        BufferedImage img; // Biến lưu trữ ảnh
+public class LogIn extends JFrame {
 
-        @Override
-        protected void paintComponent(Graphics g) { // Ghi đè phương thức để vẽ ảnh lên panel
-            super.paintComponent(g);
-            try {
-                img = ImageIO.read(new File("D:\\PizzaStore\\src\\main\\resources\\PizzaHut.png")); // Đọc ảnh từ đường dẫn
-                g.drawImage(img, 0, 0, getWidth(), getHeight(), this); // Vẽ ảnh lên panel, co giãn theo kích thước
-            } catch (IOException e) {
-                e.printStackTrace(); // In lỗi nếu không tải được ảnh
+    public LogIn() {
+        this.setTitle("Đăng nhập");
+        this.setSize(440, 624);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.setUndecorated(true);
+        this.setBackground(new Color(0, 0, 0, 0));
+        addControls();
+//        xuLyTaiKhoanDaGhiNho();
+        addEvents();
+    }
+
+//    private void xuLyTaiKhoanDaGhiNho() {
+//        DangNhapBUS dangNhapBUS = new DangNhapBUS();
+//        String line = dangNhapBUS.getTaiKhoanGhiNho();
+//        try {
+//            String[] arr = line.split(" | ");
+//            ckbRemember.setSelected(true);
+//            txtUser.setText(arr[0]);
+//            txtPassword.setText(arr[2]);
+//            txtUser.requestFocus();
+//        } catch (Exception e) {
+//            txtUser.setText("");
+//            txtPassword.setText("");
+//            txtUser.requestFocus();
+//        }
+//    }
+
+    private JLabel btnExit, btnLogin, btnForgot;
+    private JTextField txtUser;
+    private JPasswordField txtPassword;
+    private JPanel pnMain;
+    private JCheckBox ckbRemember;
+
+    private void addControls() {
+        Container con = getContentPane();
+
+        pnMain = new ImagePanel("D:\\PizzaStore\\src\\main\\resources\\LoginUI\\background-login.png");
+        pnMain.setLayout(null);
+
+        btnExit = new JLabel(new ImageIcon("D:\\PizzaStore\\src\\main\\resources\\LoginUI\\btn-close.png"));
+        btnExit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnExit.setBounds(399, 118, 40, 40);
+
+        btnLogin = new JLabel(new ImageIcon("D:\\PizzaStore\\src\\main\\resources\\LoginUI\\btn-login.png"));
+        btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnLogin.setBounds(24, 513, 392, 55);
+
+        btnForgot = new JLabel(new ImageIcon("D:\\PizzaStore\\src\\main\\resources\\LoginUI\\btn-forgot.png"));
+        btnForgot.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnForgot.setBounds(138, 575, 164, 30);
+
+        Font fontTXT = new Font("", Font.BOLD, 18);
+        txtUser = new JTextField();
+        txtUser.setBackground(new Color(0, 0, 0, 0f));
+        txtUser.setBorder(BorderFactory.createEmptyBorder());
+        txtUser.setForeground(Color.WHITE);
+        txtUser.setFont(fontTXT);
+        txtUser.setHorizontalAlignment(JTextField.LEFT);
+        txtUser.setBounds(36, 302, 370, 50);
+
+        txtPassword = new JPasswordField();
+        txtPassword.setEchoChar('•');
+        txtPassword.setBackground(new Color(0, 0, 0, 0f));
+        txtPassword.setBorder(BorderFactory.createEmptyBorder());
+        txtPassword.setForeground(Color.WHITE);
+        txtPassword.setFont(fontTXT);
+        txtPassword.setHorizontalAlignment(JTextField.LEFT);
+        txtPassword.setBounds(36, 401, 370, 50);
+
+//        Main.changLNF("Windows");
+        ckbRemember = new JCheckBox("Ghi nhớ đăng nhập");
+        ckbRemember.setFont(fontTXT);
+        ckbRemember.setOpaque(false);
+        ckbRemember.setForeground(Color.white);
+        ckbRemember.setBounds(28, 464, 290, 19);
+        ckbRemember.setFocusPainted(false);
+//        Main.changLNF("Nimbus");
+
+        pnMain.add(btnExit);
+        pnMain.add(txtUser);
+        pnMain.add(txtPassword);
+        pnMain.add(ckbRemember);
+        pnMain.add(btnLogin);
+        pnMain.add(btnForgot);
+
+        con.add(pnMain);
+    }
+
+    private void addEvents() {
+        moveFrame();
+        btnExit.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                xuLyThoat();
             }
-        }
-    };
 
-    // Khai báo các panel chứa nội dung khác nhau của giao diện
-    JPanel bodyPanel = new JPanel();   // Panel chứa các trường nhập liệu
-    JPanel bottomPanel = new JPanel(); // Panel chứa nút bấm
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
 
-    // Khai báo các thành phần giao diện
-    JLabel lb2 = new JLabel("username"); // Nhãn cho trường nhập username
-    JLabel lb3 = new JLabel("password"); // Nhãn cho trường nhập password
-    JButton bt1 = new JButton("Đăng Nhập"); // Nút đăng nhập
-    JTextField tf1 = new JTextField("Nhập username"); // Trường nhập username
-    JPasswordField pf1 = new JPasswordField("Nhập password"); // Trường nhập password
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
 
-    /**
-     * Constructor của lớp LogIn, thiết lập giao diện đăng nhập
-     */
-    public LogIn()
-    {
-        setTitle("Trang Đăng Nhập"); // Đặt tiêu đề cửa sổ
-        setSize(300,340); // Thiết lập kích thước cửa sổ
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // Đóng chương trình khi nhấn nút đóng
-        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS)); // Sắp xếp layout theo chiều dọc
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnExit.setIcon(new ImageIcon("D:\\PizzaStore\\src\\main\\resources\\LoginUI\\btn-close--hover.png"));
+            }
 
-        // Thiết lập headerPanel (chứa ảnh nền)
-        BoxLayout boxLayout = new BoxLayout(headerPanel, BoxLayout.X_AXIS); // Layout ngang
-        headerPanel.setPreferredSize(new Dimension(200,200)); // Kích thước ưu tiên
-        headerPanel.setLayout(boxLayout); 
-        headerPanel.setBorder(new EmptyBorder(new Insets(0,100,0,100))); // Căn lề
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnExit.setIcon(new ImageIcon("D:\\PizzaStore\\src\\main\\resources\\LoginUI\\btn-close.png"));
+            }
+        });
+        txtUser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                txtPassword.requestFocus();
+            }
+        });
+        txtPassword.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                xuLyDangNhap();
+            }
+        });
+        btnForgot.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+//                xuLyQuenMatKhau();
+            }
 
-        // Thiết lập bodyPanel (chứa username và password)
-        GridBagLayout gridBagLayout = new GridBagLayout(); // Dùng GridBagLayout để sắp xếp linh hoạt
-        bodyPanel.setLayout(gridBagLayout);
-        GridBagConstraints gbc = new GridBagConstraints(); // Thiết lập ràng buộc cho layout
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Lấp đầy theo chiều ngang
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
 
-        // Thêm nhãn "username" vào bodyPanel
-        gbc.gridx = 0; // Cột đầu tiên
-        gbc.gridy = 0; // Hàng đầu tiên
-        gbc.weightx = 0;
-        gbc.ipadx = 16;
-        bodyPanel.add(lb2, gbc);
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
 
-        // Thêm trường nhập username
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weightx = 0;
-        gbc.ipadx = 100;
-        gbc.gridwidth = GridBagConstraints.REMAINDER; // Mở rộng hết hàng
-        bodyPanel.add(tf1, gbc);
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnForgot.setIcon(new ImageIcon("D:\\PizzaStore\\src\\main\\resources\\LoginUI\\btn-forgot--hover.png"));
+            }
 
-        // Thêm nhãn "password"
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.weightx = 0;
-        gbc.ipadx = 16;
-        bodyPanel.add(lb3, gbc);
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnForgot.setIcon(new ImageIcon("D:\\PizzaStore\\src\\main\\resources\\LoginUI\\btn-forgot.png"));
+            }
+        });
+        btnLogin.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+//                xuLyDangNhap();
+            }
 
-        // Thêm trường nhập password
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.weightx = 0;
-        gbc.ipadx = 100;
-        bodyPanel.add(pf1, gbc);
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
 
-        // Thiết lập bottomPanel (chứa nút đăng nhập)
-        BoxLayout boxLayout1 = new BoxLayout(bottomPanel, BoxLayout.X_AXIS);
-        bottomPanel.setLayout(boxLayout1);
-        bottomPanel.add(bt1); // Thêm nút đăng nhập vào panel
-        bottomPanel.setBorder(new EmptyBorder(new Insets(10, 20, 10, 20))); // Căn lề cho panel
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
 
-        // Thêm các panel vào cửa sổ chính
-        add(headerPanel);
-        add(bodyPanel);
-        add(bottomPanel);
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnLogin.setIcon(new ImageIcon("D:\\PizzaStore\\src\\main\\resources\\LoginUI\\btn-login--hover.png"));
+            }
 
-        setVisible(true); // Hiển thị cửa sổ
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnLogin.setIcon(new ImageIcon("D:\\PizzaStore\\src\\main\\resources\\LoginUI\\btn-login.png"));
+            }
+        });
     }
 
-    /**
-     * Phương thức main để chạy chương trình
-     */
-    public static void main(String args[])
-    {
-        try
-        {
-            // Cài đặt giao diện Flat Atom One Light
-            UIManager.setLookAndFeel(new FlatAtomOneLightIJTheme());
-        } catch (Exception e)
-        {
-            System.out.println("Có Lỗi"); // In lỗi nếu không thể cài đặt giao diện
-        }
-        LogIn a = new LogIn(); // Khởi tạo cửa sổ đăng nhập
+    int xMouse, yMouse;
+
+    private void moveFrame() {
+        pnMain.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                int x = e.getXOnScreen();
+                int y = e.getYOnScreen();
+                Move(x, y);
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                xMouse = e.getX();
+                yMouse = e.getY();
+            }
+        });
     }
+
+    private void Move(int x, int y) {
+        this.setLocation(x - xMouse, y - yMouse);
+    }
+
+    private void xuLyThoat() {
+        System.exit(0);
+    }
+
+//    private void xuLyQuenMatKhau() {
+//        new MyDialog("Xin liên hệ Admin để giải quyết!", MyDialog.INFO_DIALOG);
+//    }
+//
+//    private void xuLyDangNhap() {
+//        DangNhapBUS dangNhapBUS = new DangNhapBUS();
+//        TaiKhoan tk = dangNhapBUS.getTaiKhoanDangNhap(txtUser.getText(),
+//                txtPassword.getText(), ckbRemember.isSelected());
+//        if (tk != null) {
+//            this.dispose();
+//            MainQuanLyGUI gui = new MainQuanLyGUI();
+//            this.dispose();
+//            gui.showWindow();
+//        }
+//    }
+
+    public void showWindow() {
+        Image icon = Toolkit.getDefaultToolkit().getImage("image/ManagerUI/icon-app.png");
+        this.setIconImage(icon);
+        this.setVisible(true);
+    }
+
 }
