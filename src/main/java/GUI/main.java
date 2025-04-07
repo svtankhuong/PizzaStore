@@ -5,7 +5,8 @@ public class main {
 //        new MyConnect();
 //
 //        changLNF("Nimbus");
-        LogIn login = new LogIn();
-        login.showWindow();
+        Login login = new Login();
+        QLBanHang a = new QLBanHang();
+        a.setVisible(true);
     }
 }
