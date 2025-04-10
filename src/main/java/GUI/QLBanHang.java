@@ -96,7 +96,7 @@ public class QLBanHang extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(1290, 812));
 
         SaleManagement.setBackground(new java.awt.Color(255, 255, 255));
-        SaleManagement.setPreferredSize(new java.awt.Dimension(1278, 620));
+        SaleManagement.setPreferredSize(new java.awt.Dimension(1278, 870));
 
         PanelSale.setBackground(new java.awt.Color(255, 255, 255));
         PanelSale.setPreferredSize(new java.awt.Dimension(1278, 600));
@@ -516,16 +516,17 @@ public class QLBanHang extends javax.swing.JPanel {
             .addComponent(jScrollPane3)
             .addGroup(SubPanelSaleLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(BtnSortReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(TfEllipsisReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(85, Short.MAX_VALUE))
-            .addGroup(SubPanelSaleLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(BtnResetReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(BtnInforReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addGroup(SubPanelSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(SubPanelSaleLayout.createSequentialGroup()
+                        .addComponent(BtnSortReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(TfEllipsisReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(85, Short.MAX_VALUE))
+                    .addGroup(SubPanelSaleLayout.createSequentialGroup()
+                        .addComponent(BtnResetReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(BtnInforReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20))))
         );
         SubPanelSaleLayout.setVerticalGroup(
             SubPanelSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -592,8 +593,8 @@ public class QLBanHang extends javax.swing.JPanel {
         LblReceiptDiscountId.setText("Mã Khuyến Mãi");
         LblReceiptDiscountId.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
-        LblDateReceipt.setText("Ngày Lập Hoá Đơn");
         LblDateReceipt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        LblDateReceipt.setText("Ngày Lập Hoá Đơn");
 
         DPDateReceipt.setEnabled(false);
         DPDateReceipt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
