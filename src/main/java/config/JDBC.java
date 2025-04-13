@@ -13,7 +13,7 @@ public class JDBC {
         try {
             String url = "jdbc:mysql://localhost:3306/pizzastore";
             String username = "root";
-            String password = "";
+            String password = "Tankhuong@25";
             c = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
             Logger.getLogger(JDBC.class.getName()).log(Level.SEVERE, "SQL connection error", e);

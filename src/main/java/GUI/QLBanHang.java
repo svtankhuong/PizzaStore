@@ -83,23 +83,21 @@ public class QLBanHang extends javax.swing.JPanel {
         LblDetailReceipt = new javax.swing.JLabel();
         LblSubTotalReceipt = new javax.swing.JLabel();
         LblReceiptDiscount = new javax.swing.JLabel();
-        LblTotalReceipt = new javax.swing.JLabel();
         LblReceiptDiscountId = new javax.swing.JLabel();
         LblDateReceipt = new javax.swing.JLabel();
         DPDateReceipt = new com.github.lgooddatepicker.components.DatePicker();
         TfSubTotalReceipt = new javax.swing.JTextField();
         TfReceiptDiscount = new javax.swing.JTextField();
         TfReceiptDiscountId = new javax.swing.JTextField();
-        TfTotalReceipt = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(1290, 812));
+        setPreferredSize(new java.awt.Dimension(1290, 864));
 
         SaleManagement.setBackground(new java.awt.Color(255, 255, 255));
         SaleManagement.setPreferredSize(new java.awt.Dimension(1278, 870));
 
         PanelSale.setBackground(new java.awt.Color(255, 255, 255));
-        PanelSale.setPreferredSize(new java.awt.Dimension(1278, 600));
+        PanelSale.setPreferredSize(new java.awt.Dimension(1278, 900));
 
         PanelTitleSale.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -460,16 +458,27 @@ public class QLBanHang extends javax.swing.JPanel {
         TableReceipt.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][]
             {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String []
             {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Mã Hoá Đơn", "Mã Nhân Viên", "Mã Khách hàng"
             }
-        ));
+        )
+        {
+            boolean[] canEdit = new boolean []
+            {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex)
+            {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane3.setViewportView(TableReceipt);
 
         BtnSortReceipt.setText("Lọc Hoá Đơn");
@@ -571,9 +580,20 @@ public class QLBanHang extends javax.swing.JPanel {
             },
             new String []
             {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Mã Chi Tiết Hoá Đơn", "Mã Sản Phẩm", "Tên Sản Phẩm", "Sô Lượng"
             }
-        ));
+        )
+        {
+            boolean[] canEdit = new boolean []
+            {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex)
+            {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane4.setViewportView(TableDetailReceipt);
 
         LblDetailReceipt.setText("Các Chi Tiết Hoá Đơn");
@@ -586,9 +606,6 @@ public class QLBanHang extends javax.swing.JPanel {
         LblReceiptDiscount.setText("Giảm Giá");
         LblReceiptDiscount.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         LblReceiptDiscount.setPreferredSize(new java.awt.Dimension(120, 50));
-
-        LblTotalReceipt.setText("Thành Tiền");
-        LblTotalReceipt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         LblReceiptDiscountId.setText("Mã Khuyến Mãi");
         LblReceiptDiscountId.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -611,10 +628,6 @@ public class QLBanHang extends javax.swing.JPanel {
         TfReceiptDiscountId.setEnabled(false);
         TfReceiptDiscountId.setPreferredSize(new java.awt.Dimension(140, 40));
 
-        TfTotalReceipt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        TfTotalReceipt.setEnabled(false);
-        TfTotalReceipt.setPreferredSize(new java.awt.Dimension(140, 40));
-
         javax.swing.GroupLayout SubPanelDetailSaleLayout = new javax.swing.GroupLayout(SubPanelDetailSale);
         SubPanelDetailSale.setLayout(SubPanelDetailSaleLayout);
         SubPanelDetailSaleLayout.setHorizontalGroup(
@@ -629,25 +642,24 @@ public class QLBanHang extends javax.swing.JPanel {
                 .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(SubPanelDetailSaleLayout.createSequentialGroup()
                         .addGap(20, 20, 20)
-                        .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(LblReceiptDiscountId, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                            .addComponent(LblSubTotalReceipt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(LblReceiptDiscountId, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20)
-                        .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(TfSubTotalReceipt, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
-                            .addComponent(TfReceiptDiscount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(SubPanelDetailSaleLayout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(LblReceiptDiscount, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                            .addComponent(LblTotalReceipt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(20, 20, 20)
-                        .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(TfReceiptDiscountId, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
-                            .addComponent(TfTotalReceipt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(TfReceiptDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(SubPanelDetailSaleLayout.createSequentialGroup()
                         .addGap(161, 161, 161)
-                        .addComponent(LblDetailReceipt)))
+                        .addComponent(LblDetailReceipt))
+                    .addGroup(SubPanelDetailSaleLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(LblSubTotalReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(LblReceiptDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(SubPanelDetailSaleLayout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(TfSubTotalReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SubPanelDetailSaleLayout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(TfReceiptDiscountId, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
         );
@@ -662,11 +674,7 @@ public class QLBanHang extends javax.swing.JPanel {
                     .addComponent(LblDateReceipt, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
                 .addGap(20, 20, 20)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(LblSubTotalReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TfSubTotalReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(78, 78, 78)
                 .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LblReceiptDiscountId, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TfReceiptDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -674,11 +682,11 @@ public class QLBanHang extends javax.swing.JPanel {
                 .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LblReceiptDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TfReceiptDiscountId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(LblTotalReceipt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(TfTotalReceipt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(73, 73, 73))
+                .addGap(20, 20, 20)
+                .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(LblSubTotalReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TfSubTotalReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
 
         LblSubTotalReceipt.getAccessibleContext().setAccessibleName("");
@@ -700,12 +708,12 @@ public class QLBanHang extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(SaleManagement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(SaleManagement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(SaleManagement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(SaleManagement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -778,7 +786,6 @@ public class QLBanHang extends javax.swing.JPanel {
     private javax.swing.JLabel LblReceiptDiscountId;
     private javax.swing.JLabel LblSubTotalReceipt;
     private javax.swing.JLabel LblTitleSale;
-    private javax.swing.JLabel LblTotalReceipt;
     private javax.swing.JLabel LblTypeProduct;
     private javax.swing.JPanel PanelDetailProduct;
     private javax.swing.JPanel PanelReceipt;
@@ -799,7 +806,6 @@ public class QLBanHang extends javax.swing.JPanel {
     private javax.swing.JTextField TfReceiptDiscount;
     private javax.swing.JTextField TfReceiptDiscountId;
     private javax.swing.JTextField TfSubTotalReceipt;
-    private javax.swing.JTextField TfTotalReceipt;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
