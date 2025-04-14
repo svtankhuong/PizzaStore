@@ -7,14 +7,16 @@ public class SanPhamDTO {
     private long DonGia;
     private int SoLuong;
     private String Loai;
+    private String AnhSP;
     
-    public SanPhamDTO(int idSP, String tenSP, String dvtinh, long DonGia, int soluong, String loai) {
+    public SanPhamDTO(int idSP, String tenSP, String dvtinh, long DonGia, int soluong, String loai, String anh) {
         this.MaSP = idSP;
         this.TenSP = tenSP;
         this.DvTinh = dvtinh;
         this.DonGia = DonGia;
         this.SoLuong = soluong;
         this.Loai = loai;
+        this.AnhSP = anh;
     }
 
     // Getter cho MaSP
@@ -65,6 +67,14 @@ public class SanPhamDTO {
 
     public void setLoai(String loai) {
         this.Loai = loai;
+    }
+    
+    public void setAnhSP(String anhsp){
+        this.AnhSP = anhsp;
+    }
+    
+    public String getAnhSP(){
+        return AnhSP;
     }
 }
 

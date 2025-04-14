@@ -24,7 +24,8 @@ public class SanPhamDAO
                 Long dongia = rs.getLong("DonGia");
                 int soluong = rs.getInt("SoLuong");
                 String loaiSP = rs.getString("Loai");
-                SanPhamDTO cthd = new SanPhamDTO(idSP, tenSP, dvTinh, dongia, soluong, loaiSP);
+                String anhSP = rs.getString("Anh");
+                SanPhamDTO cthd = new SanPhamDTO(idSP, tenSP, dvTinh, dongia, soluong, loaiSP, anhSP);
                 dsSP.add(cthd);
             }
         }catch(SQLException e)
