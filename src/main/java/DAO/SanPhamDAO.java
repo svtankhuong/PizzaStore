@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class SanPhamDAO
 {
-        public ArrayList<SanPhamDTO> layDSSP(){
+    public ArrayList<SanPhamDTO> layDSSP(){
         String sql = "SELECT * FROM SanPham";
         ArrayList<SanPhamDTO> dsSP = new ArrayList<>();
         
@@ -30,7 +30,7 @@ public class SanPhamDAO
             }
         }catch(SQLException e)
         {
-            System.err.println("Lỗi khi lấy danh sách hóa đơn: " + e.getMessage());
+            System.err.println("Lỗi khi lấy danh sách sản phẩm: " + e.getMessage());
         }
         return dsSP;
     }
