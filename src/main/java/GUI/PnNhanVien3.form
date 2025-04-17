@@ -142,7 +142,7 @@
                           <Component id="lblTitle1" min="-2" pref="282" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                           <Component id="btnReset1" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="398" max="32767" attributes="0"/>
+                          <EmptySpace pref="432" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -176,7 +176,7 @@
                 <Component class="javax.swing.JButton" name="btnReset1">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/Refresh-icon.png"/>
+                      <Image iconType="3" name="/image/Refresh-icon.png"/>
                     </Property>
                     <Property name="name" type="java.lang.String" value="" noResource="true"/>
                   </Properties>
@@ -205,7 +205,7 @@
             <Component class="javax.swing.JButton" name="jButton1">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/add-icon.png"/>
+                  <Image iconType="3" name="/image/add-icon.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Th&#xea;m"/>
               </Properties>
@@ -216,7 +216,7 @@
             <Component class="javax.swing.JButton" name="jButton2">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Pencil-icon.png"/>
+                  <Image iconType="3" name="/image/Pencil-icon.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="L&#x1b0;u"/>
               </Properties>
@@ -227,7 +227,7 @@
             <Component class="javax.swing.JButton" name="jButton3">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/delete-icon.png"/>
+                  <Image iconType="3" name="/image/delete-icon.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="X&#xf3;a"/>
               </Properties>
@@ -526,7 +526,7 @@
             <Component class="javax.swing.JButton" name="jButton4">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/excel-icon.png"/>
+                  <Image iconType="3" name="/image/excel-icon.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Nh&#x1ead;p"/>
               </Properties>
@@ -537,7 +537,7 @@
             <Component class="javax.swing.JButton" name="jButton5">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/excel-icon.png"/>
+                  <Image iconType="3" name="/image/excel-icon.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Xu&#x1ea5;t"/>
               </Properties>

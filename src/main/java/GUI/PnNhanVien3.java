@@ -68,7 +68,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         lblTitle1.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         lblTitle1.setText("Quản lý nhân viên");
 
-        btnReset1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Refresh-icon.png"))); // NOI18N
+        btnReset1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Refresh-icon.png"))); // NOI18N
         btnReset1.setName(""); // NOI18N
         btnReset1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -85,7 +85,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
                 .addComponent(lblTitle1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
                 .addComponent(btnReset1)
-                .addContainerGap(398, Short.MAX_VALUE))
+                .addContainerGap(432, Short.MAX_VALUE))
         );
         PnTitle1Layout.setVerticalGroup(
             PnTitle1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,7 +110,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
             }
         });
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-icon.png"))); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/add-icon.png"))); // NOI18N
         jButton1.setText("Thêm");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -118,7 +118,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Pencil-icon.png"))); // NOI18N
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Pencil-icon.png"))); // NOI18N
         jButton2.setText("Lưu");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -126,7 +126,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
             }
         });
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/delete-icon.png"))); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/delete-icon.png"))); // NOI18N
         jButton3.setText("Xóa");
 
         jPanel2.setBackground(new java.awt.Color(247, 247, 247));
@@ -303,7 +303,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/excel-icon.png"))); // NOI18N
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/excel-icon.png"))); // NOI18N
         jButton4.setText("Nhập");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -311,7 +311,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
             }
         });
 
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/excel-icon.png"))); // NOI18N
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/excel-icon.png"))); // NOI18N
         jButton5.setText("Xuất");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -449,9 +449,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel PnTitle;
     private javax.swing.JPanel PnTitle1;
-    private javax.swing.JButton btnReset;
     private javax.swing.JButton btnReset1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -476,7 +474,6 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     private javax.swing.JLabel lblMaNV5;
     private javax.swing.JLabel lblMaNV6;
     private javax.swing.JLabel lblMaNV7;
-    private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblTitle1;
     private javax.swing.JTextField txtMaNV1;
     private javax.swing.JTextField txtMaNV2;

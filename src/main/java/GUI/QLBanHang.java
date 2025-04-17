@@ -32,8 +32,7 @@ public class QLBanHang extends javax.swing.JPanel {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         SaleManagement = new javax.swing.JTabbedPane();
@@ -57,7 +56,6 @@ public class QLBanHang extends javax.swing.JPanel {
         LblReceiptDiscount = new javax.swing.JLabel();
         LblReceiptDiscountId = new javax.swing.JLabel();
         LblDateReceipt = new javax.swing.JLabel();
-        DPDateReceipt = new com.github.lgooddatepicker.components.DatePicker();
         TfSubTotalReceipt = new javax.swing.JTextField();
         TfReceiptDiscount = new javax.swing.JTextField();
         TfReceiptDiscountId = new javax.swing.JTextField();
@@ -110,26 +108,21 @@ public class QLBanHang extends javax.swing.JPanel {
         jScrollPane3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         TableReceipt.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][]
-            {
+            new Object [][] {
                 {null, null, null},
                 {null, null, null},
                 {null, null, null},
                 {null, null, null}
             },
-            new String []
-            {
+            new String [] {
                 "Mã Hoá Đơn", "Mã Nhân Viên", "Mã Khách hàng"
             }
-        )
-        {
-            boolean[] canEdit = new boolean []
-            {
+        ) {
+            boolean[] canEdit = new boolean [] {
                 false, false, false
             };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex)
-            {
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
@@ -141,7 +134,6 @@ public class QLBanHang extends javax.swing.JPanel {
         LblListReceipts.setText("Danh Sách Hoá Đơn");
         LblListReceipts.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
 
-        BtnResetReceipt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Refresh-icon.png"))); // NOI18N
         BtnResetReceipt.setText("Reset tất cả");
         BtnResetReceipt.setActionCommand("");
         BtnResetReceipt.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
@@ -150,20 +142,16 @@ public class QLBanHang extends javax.swing.JPanel {
         BtnInforReceipt.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         BtnInforReceipt.setText("Thông Tin Hoá Đơn");
         BtnInforReceipt.setActionCommand("");
-        BtnInforReceipt.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        BtnInforReceipt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnInforReceiptActionPerformed(evt);
             }
         });
 
         TfEllipsisReceipt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         TfEllipsisReceipt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        TfEllipsisReceipt.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        TfEllipsisReceipt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TfEllipsisReceiptActionPerformed(evt);
             }
         });
@@ -182,14 +170,12 @@ public class QLBanHang extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(BtnInforReceipt)
                 .addGap(81, 81, 81))
-            .addGroup(SubPanelSaleLayout.createSequentialGroup()
-                .addGroup(SubPanelSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(SubPanelSaleLayout.createSequentialGroup()
-                        .addComponent(BtnSortReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(TfEllipsisReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0))
+            .addGroup(SubPanelSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(SubPanelSaleLayout.createSequentialGroup()
+                    .addComponent(BtnSortReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(TfEllipsisReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         SubPanelSaleLayout.setVerticalGroup(
             SubPanelSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,26 +211,21 @@ public class QLBanHang extends javax.swing.JPanel {
         jScrollPane4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         TableDetailReceipt.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][]
-            {
+            new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null}
             },
-            new String []
-            {
+            new String [] {
                 "Mã Chi Tiết Hoá Đơn", "Mã Sản Phẩm", "Tên Sản Phẩm", "Sô Lượng"
             }
-        )
-        {
-            boolean[] canEdit = new boolean []
-            {
+        ) {
+            boolean[] canEdit = new boolean [] {
                 false, false, false, false
             };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex)
-            {
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
@@ -269,10 +250,6 @@ public class QLBanHang extends javax.swing.JPanel {
         LblDateReceipt.setText("Ngày Lập Hoá Đơn");
         LblDateReceipt.setPreferredSize(new java.awt.Dimension(150, 30));
 
-        DPDateReceipt.setEnabled(false);
-        DPDateReceipt.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        DPDateReceipt.setPreferredSize(new java.awt.Dimension(300, 30));
-
         TfSubTotalReceipt.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         TfSubTotalReceipt.setEnabled(false);
         TfSubTotalReceipt.setPreferredSize(new java.awt.Dimension(300, 30));
@@ -290,17 +267,14 @@ public class QLBanHang extends javax.swing.JPanel {
         SubPanelDetailSaleLayout.setHorizontalGroup(
             SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SubPanelDetailSaleLayout.createSequentialGroup()
-                .addGap(0, 2, Short.MAX_VALUE)
+                .addGap(0, 3, Short.MAX_VALUE)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 752, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(SubPanelDetailSaleLayout.createSequentialGroup()
                 .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(SubPanelDetailSaleLayout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(SubPanelDetailSaleLayout.createSequentialGroup()
-                                .addComponent(LblDateReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(20, 20, 20)
-                                .addComponent(DPDateReceipt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(LblDateReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(SubPanelDetailSaleLayout.createSequentialGroup()
                                 .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(LblSubTotalReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -339,10 +313,8 @@ public class QLBanHang extends javax.swing.JPanel {
                     .addComponent(LblSubTotalReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TfSubTotalReceipt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(6, 6, 6)
-                .addGroup(SubPanelDetailSaleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(LblDateReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(DPDateReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addComponent(LblDateReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(123, Short.MAX_VALUE))
         );
 
         LblSubTotalReceipt.getAccessibleContext().setAccessibleName("");
@@ -367,12 +339,9 @@ public class QLBanHang extends javax.swing.JPanel {
         LblTitleSale.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         LblTitleSale.setPreferredSize(new java.awt.Dimension(192, 40));
 
-        BtnSaleReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Refresh-icon.png"))); // NOI18N
         BtnSaleReset.setName(""); // NOI18N
-        BtnSaleReset.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        BtnSaleReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnSaleResetActionPerformed(evt);
             }
         });
@@ -411,10 +380,8 @@ public class QLBanHang extends javax.swing.JPanel {
         TfProductID.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         TfProductID.setBackground(new java.awt.Color(255, 255, 255));
         TfProductID.setPreferredSize(new java.awt.Dimension(254, 30));
-        TfProductID.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        TfProductID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TfProductIDActionPerformed(evt);
             }
         });
@@ -423,10 +390,8 @@ public class QLBanHang extends javax.swing.JPanel {
         TfProductName.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         TfProductName.setBackground(new java.awt.Color(255, 255, 255));
         TfProductName.setPreferredSize(new java.awt.Dimension(254, 30));
-        TfProductName.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        TfProductName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TfProductNameActionPerformed(evt);
             }
         });
@@ -448,10 +413,8 @@ public class QLBanHang extends javax.swing.JPanel {
         TfPriceQuotation.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         TfPriceQuotation.setBackground(new java.awt.Color(255, 255, 255));
         TfPriceQuotation.setPreferredSize(new java.awt.Dimension(254, 30));
-        TfPriceQuotation.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        TfPriceQuotation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TfPriceQuotationActionPerformed(evt);
             }
         });
@@ -479,10 +442,8 @@ public class QLBanHang extends javax.swing.JPanel {
         CbbTypeProduct.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         CbbTypeProduct.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         CbbTypeProduct.setPreferredSize(new java.awt.Dimension(254, 30));
-        CbbTypeProduct.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        CbbTypeProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CbbTypeProductActionPerformed(evt);
             }
         });
@@ -595,15 +556,13 @@ public class QLBanHang extends javax.swing.JPanel {
         jScrollPane1.setPreferredSize(new java.awt.Dimension(800, 286));
 
         TableDetailProduct.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][]
-            {
+            new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null}
             },
-            new String []
-            {
+            new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
@@ -620,10 +579,8 @@ public class QLBanHang extends javax.swing.JPanel {
         BtnDeleteSale.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         BtnDeleteSale.setForeground(new java.awt.Color(255, 255, 255));
         BtnDeleteSale.setPreferredSize(new java.awt.Dimension(120, 50));
-        BtnDeleteSale.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        BtnDeleteSale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnDeleteSaleActionPerformed(evt);
             }
         });
@@ -657,10 +614,8 @@ public class QLBanHang extends javax.swing.JPanel {
         BtnAddBasket.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         BtnAddBasket.setForeground(new java.awt.Color(255, 255, 255));
         BtnAddBasket.setIcon(cartIcon);
-        BtnAddBasket.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        BtnAddBasket.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnAddBasketActionPerformed(evt);
             }
         });
@@ -679,26 +634,21 @@ public class QLBanHang extends javax.swing.JPanel {
         jScrollPane2.setPreferredSize(new java.awt.Dimension(800, 302));
 
         TableBaskets.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][]
-            {
+            new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
                 {null, null, null, null, null},
                 {null, null, null, null, null}
             },
-            new String []
-            {
+            new String [] {
                 "Mã Sản Phẩm", "Tên Sản Phẩm", "Đơn giá", "Số lượng", "Thành tiền"
             }
-        )
-        {
-            boolean[] canEdit = new boolean []
-            {
+        ) {
+            boolean[] canEdit = new boolean [] {
                 false, false, false, false, false
             };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex)
-            {
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
@@ -842,7 +792,6 @@ public class QLBanHang extends javax.swing.JPanel {
     private javax.swing.JButton BtnSaleReset;
     private javax.swing.JButton BtnSortReceipt;
     private javax.swing.JComboBox<String> CbbTypeProduct;
-    private com.github.lgooddatepicker.components.DatePicker DPDateReceipt;
     private javax.swing.JLabel LblDateReceipt;
     private javax.swing.JLabel LblDetailProducts;
     private javax.swing.JLabel LblDetailReceipt;

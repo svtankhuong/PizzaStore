@@ -88,7 +88,7 @@
                   <Component id="PanelBrand" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   <Component id="LblSale" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="LblCustomers" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   <Component id="LblStaffs" min="-2" max="-2" attributes="0"/>
@@ -146,6 +146,9 @@
               <Dimension value="[250, 65]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="LblStaffsMouseClicked"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="LblNH">
           <Properties>

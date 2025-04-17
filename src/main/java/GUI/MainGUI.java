@@ -1,18 +1,34 @@
 package GUI;
 
 import MyCustom.ImagePanel;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 /**
  *
  * @author ADMIN
  */
 public class MainGUI extends javax.swing.JFrame {
-    /** Creates new form MainGUI */
+    private CardLayout cardLayout;
+    private JPanel contentPanel;
+    private ArrayList<JLabel> menuLabels;
+    private final Color clMenuItem = new Color(255, 204, 153); // Màu mặc định
+    private final Color clMenuItemSelected = new Color(255, 153, 102); // Màu khi chọn
     public MainGUI() {
+        
         initComponents();
-
+        initializeCardLayout();
+        setupMenuEvents();
         java.awt.EventQueue.invokeLater(() -> {
             setLabelIcon(LblSale, "/ManagerUI/lblBanHang.png");
             setLabelIcon(LblStaffs, "/ManagerUI/lblNhanVien.png");
@@ -21,6 +37,8 @@ public class MainGUI extends javax.swing.JFrame {
             setLabelIcon(LblProducts, "/ManagerUI/lblSanPham.png");
             setLabelIcon(LblTK, "/ManagerUI/lblThongKe.png");
         });
+        jPanel4.setLayout(new java.awt.BorderLayout());
+        jPanel4.add(contentPanel, java.awt.BorderLayout.CENTER);
     }
     
     private void setLabelIcon(javax.swing.JLabel label, String resourcePath) {
@@ -31,7 +49,105 @@ public class MainGUI extends javax.swing.JFrame {
         Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         label.setIcon(new ImageIcon(scaledImg));
     }
+    private void initializeCardLayout() {
+        // Khởi tạo CardLayout và contentPanel thay cho jPanel4
+        cardLayout = new CardLayout();
+        contentPanel = new JPanel(cardLayout);
+        contentPanel.setPreferredSize(new Dimension(1250, 711));
 
+        // Thêm các panel vào contentPanel
+        JPanel salePanel = new JPanel(); // Panel Bán hàng (có thể thay bằng PnQuanLyBanHangGUI)
+        salePanel.setBackground(Color.WHITE);
+        salePanel.add(new JLabel("Panel Bán hàng", SwingConstants.CENTER));
+
+        PnNhanVien3 staffPanel = new PnNhanVien3(); // Panel Nhân viên
+
+        JPanel importPanel = new JPanel(); // Panel Nhập hàng
+        importPanel.setBackground(Color.WHITE);
+        importPanel.add(new JLabel("Panel Nhập hàng", SwingConstants.CENTER));
+
+        JPanel customerPanel = new JPanel(); // Panel Khách hàng
+        customerPanel.setBackground(Color.WHITE);
+        customerPanel.add(new JLabel("Panel Khách hàng", SwingConstants.CENTER));
+
+        JPanel productPanel = new JPanel(); // Panel Sản phẩm
+        productPanel.setBackground(Color.WHITE);
+        productPanel.add(new JLabel("Panel Sản phẩm", SwingConstants.CENTER));
+
+        JPanel statsPanel = new JPanel(); // Panel Thống kê
+        statsPanel.setBackground(Color.WHITE);
+        statsPanel.add(new JLabel("Panel Thống kê", SwingConstants.CENTER));
+
+        // Thêm các panel vào CardLayout với tên định danh
+        contentPanel.add(salePanel, "sale");
+        contentPanel.add(staffPanel, "staff");
+        contentPanel.add(importPanel, "import");
+        contentPanel.add(customerPanel, "customer");
+        contentPanel.add(productPanel, "product");
+        contentPanel.add(statsPanel, "stats");
+
+        // Hiển thị panel Bán hàng mặc định
+        cardLayout.show(contentPanel, "sale");
+        LblSale.setBackground(clMenuItemSelected);
+    }
+
+    private void setupMenuEvents() {
+        // Lưu các label menu vào danh sách để quản lý
+        menuLabels = new ArrayList<>();
+        menuLabels.add(LblSale);
+        menuLabels.add(LblStaffs);
+        menuLabels.add(LblNH);
+        menuLabels.add(LblCustomers);
+        menuLabels.add(LblProducts);
+        menuLabels.add(LblTK);
+
+        // Thêm sự kiện cho các label
+        for (JLabel label : menuLabels) {
+            label.setOpaque(true); // Cho phép hiển thị màu nền
+            label.setBackground(clMenuItem);
+            label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Đặt lại màu nền của tất cả các label
+                    for (JLabel lbl : menuLabels) {
+                        lbl.setBackground(clMenuItem);
+                    }
+                    // Đặt màu nền cho label được chọn
+                    label.setBackground(clMenuItemSelected);
+
+                    // Hiển thị panel tương ứng
+                    if (label == LblSale) {
+                        cardLayout.show(contentPanel, "sale");
+                    } else if (label == LblStaffs) {
+                        cardLayout.show(contentPanel, "staff");
+                    } else if (label == LblNH) {
+                        cardLayout.show(contentPanel, "import");
+                    } else if (label == LblCustomers) {
+                        cardLayout.show(contentPanel, "customer");
+                    } else if (label == LblProducts) {
+                        cardLayout.show(contentPanel, "product");
+                    } else if (label == LblTK) {
+                        cardLayout.show(contentPanel, "stats");
+                    }
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    if (!label.getBackground().equals(clMenuItemSelected)) {
+                        label.setBackground(new Color(255, 180, 130)); // Màu hover
+                    }
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    if (!label.getBackground().equals(clMenuItemSelected)) {
+                        label.setBackground(clMenuItem);
+                    }
+                }
+            });
+        }
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -39,8 +155,7 @@ public class MainGUI extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
 
         PanelMain = new javax.swing.JPanel();
         PanelBrand = new ImagePanel("src/main/resources/ManagerUI/pizza-brand.png", 200, 170);
@@ -78,6 +193,11 @@ public class MainGUI extends javax.swing.JFrame {
         LblSale.setPreferredSize(new java.awt.Dimension(250, 65));
 
         LblStaffs.setPreferredSize(new java.awt.Dimension(250, 65));
+        LblStaffs.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                LblStaffsMouseClicked(evt);
+            }
+        });
 
         LblNH.setPreferredSize(new java.awt.Dimension(250, 65));
 
@@ -111,7 +231,7 @@ public class MainGUI extends javax.swing.JFrame {
                 .addComponent(PanelBrand, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(LblSale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(LblCustomers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(LblStaffs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -174,6 +294,10 @@ public class MainGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void LblStaffsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LblStaffsMouseClicked
+        // TODO add your handling code here:z
+    }//GEN-LAST:event_LblStaffsMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LblCustomers;
     private javax.swing.JLabel LblNH;
@@ -189,3 +313,4 @@ public class MainGUI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
 }
+
