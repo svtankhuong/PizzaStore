@@ -1,7 +1,11 @@
 package BUS;
 
 import DTO.NhanVienDTO;
+import DTO.QuyenDTO;
+import DTO.TaiKhoanDTO;
 import DAO.NhanVienDAO;
+import DAO.QuyenDAO;
+import DAO.TaiKhoanDAO;
 import MyCustom.MyDialog;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -72,14 +76,66 @@ public class NhanVienBUS {
         }
         return flag;
     }
-    
+
     public ArrayList<NhanVienDTO> getDanhSachNhanVien() {
         return nvDAO.getDanhSachNhanVien();
     }
+
     public ArrayList<NhanVienDTO> timKiemNhanVien(String tuKhoa) {
         return nvDAO.timKiemNhanVien(tuKhoa);
     }
+
     public int getMAX() {
         return nvDAO.getMax();
     }
+
+    public ArrayList<Object[]> hienThiTaiKhoanNhanVien() {
+        ArrayList<Object[]> dsThongTin = new ArrayList<>();
+    
+        try {
+            NhanVienDAO nvDAO = new NhanVienDAO();
+            TaiKhoanDAO tkDAO = new TaiKhoanDAO();
+            QuyenDAO qDAO = new QuyenDAO();
+    
+            ArrayList<NhanVienDTO> dsNhanVien = nvDAO.getDanhSachNhanVien();
+            ArrayList<TaiKhoanDTO> dsTaiKhoan = tkDAO.getDanhSachTaiKhoan();
+            ArrayList<QuyenDTO> dsQuyen = qDAO.getDanhSachQuyen();
+    
+            for (NhanVienDTO nv : dsNhanVien) {
+                // Tìm tài khoản của nhân viên
+                TaiKhoanDTO tk = dsTaiKhoan.stream()
+                    .filter(t -> String.valueOf(t.getMaNV()).equals(nv.getMaNV()))
+                    .findFirst().orElse(null);
+    
+                // Tìm quyền của tài khoản nếu có
+                QuyenDTO q = (tk != null) ? dsQuyen.stream()
+                    .filter(qu -> qu.getMaQuyen() == tk.getMaQuyen())
+                    .findFirst().orElse(null) : null;
+    
+                // Nếu không có tài khoản, tạo giá trị mặc định
+                String tenDangNhap = (tk != null) ? tk.getTenDangNhap() : "Chưa có tài khoản";
+                String tenQuyen = (q != null) ? q.getTenQuyen() : "";
+                String matKhau = (tk != null) ? tk.getMatKhau() : "";
+    
+                Object[] rowData = {
+                    nv.getMaNV(),
+                    nv.getHoLot(),
+                    nv.getTen(),
+                    nv.getNgaysinh(),
+                    nv.getGioiTinh(),
+                    tenDangNhap,  // Hiển thị tài khoản hoặc thông báo "Chưa có tài khoản"
+                    matKhau,      // Hiển thị mật khẩu hoặc thông báo "Chưa có mật khẩu"
+                    tenQuyen      // Hiển thị quyền hoặc thông báo "Không có quyền"
+                };
+    
+                dsThongTin.add(rowData);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        return dsThongTin;
+    }
+    
+    
 }

@@ -27,8 +27,6 @@ import javax.swing.table.DefaultTableModel;
 public class PnNhanVien3 extends javax.swing.JPanel {
 
     private NhanVienBUS nvBUS;
-    private DefaultTableModel model;
-    private int rowIndex;
 
     /**
      * Creates new form PnNhanVien1
@@ -75,6 +73,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         tblNhanVien = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        btnCapTaiKhoan = new javax.swing.JButton();
         jTabbedPane4 = new javax.swing.JTabbedPane();
 
         setBackground(new java.awt.Color(247, 247, 247));
@@ -119,6 +118,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         );
 
         lblMaNV5.setFont(new java.awt.Font("Times New Roman", 0, 20)); // NOI18N
+        lblMaNV5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Search-icon.png"))); // NOI18N
         lblMaNV5.setText("Tìm kiếm");
 
         txtSearch.addCaretListener(new javax.swing.event.CaretListener() {
@@ -292,6 +292,14 @@ public class PnNhanVien3 extends javax.swing.JPanel {
             }
         });
 
+        btnCapTaiKhoan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icons8_man_with_key_32px.png"))); // NOI18N
+        btnCapTaiKhoan.setText("Cấp tài khoản");
+        btnCapTaiKhoan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCapTaiKhoanActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -304,7 +312,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
                         .addComponent(lblMaNV5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 660, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 624, Short.MAX_VALUE)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane1)
@@ -319,7 +327,8 @@ public class PnNhanVien3 extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btnSua, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnCapTaiKhoan))
                         .addGap(18, 18, 18)))
                 .addContainerGap())
         );
@@ -334,7 +343,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
                             .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblMaNV5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -347,7 +356,9 @@ public class PnNhanVien3 extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton4)
                             .addComponent(jButton5))
-                        .addContainerGap())))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCapTaiKhoan)
+                        .addContainerGap(158, Short.MAX_VALUE))))
         );
 
         jTabbedPane1.addTab("Nhân Viên", jPanel1);
@@ -426,9 +437,26 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         timKiemNhanVien();
     }//GEN-LAST:event_txtSearchCaretUpdate
 
+    private void btnCapTaiKhoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapTaiKhoanActionPerformed
+        int row = tblNhanVien.getSelectedRow();
+        if (row != -1) {
+            String maNVString = tblNhanVien.getValueAt(row, 0).toString();
+            try {
+                int maNV = Integer.parseInt(maNVString);
+                DlgCapTaiKhoan dlg = new DlgCapTaiKhoan(maNV); // Tạo dialog, đã tự động tải dữ liệu trong constructor
+                dlg.setVisible(true); // Hiển thị dialog
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Mã nhân viên không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một nhân viên trước!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnCapTaiKhoanActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PnTitle1;
+    private javax.swing.JButton btnCapTaiKhoan;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSua;
     private javax.swing.JButton btnThem;
@@ -456,23 +484,19 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     private javax.swing.JTextField txtTen;
     // End of variables declaration//GEN-END:variables
     private void loadDataToTable() {
-        ArrayList<NhanVienDTO> dsNV = nvBUS.getDanhSachNhanVien(); // Lấy danh sách nhân viên từ BUS
+        NhanVienBUS nvBUS = new NhanVienBUS();
 
-        String[] columnNames = {"Mã NV", "Họ đệm", "Tên", "Ngày sinh", "Giới tính"};
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0); // 0 là số dòng ban đầu
+        String[] columnNames = {"Mã NV", "Họ đệm", "Tên", "Ngày sinh", "Giới tính", "Tên đăng nhập", "Mật Khẩu", " Quyền"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-        for (NhanVienDTO nv : dsNV) {
-            Object[] rowData = {
-                nv.getMaNV(),
-                nv.getHoLot(),
-                nv.getTen(),
-                nv.getNgaysinh(), // JTable will call toString() on Date
-                nv.getGioiTinh()
-            };
-            model.addRow(rowData);
+        ArrayList<Object[]> dsThongTin = nvBUS.hienThiTaiKhoanNhanVien();
+
+        for (Object[] row : dsThongTin) {
+            model.addRow(row);
         }
+
         tblNhanVien.setModel(model);
-        TableCustomizer.customize(tblNhanVien); // Áp dụng giao diện cho bảng 3 cột
+        TableCustomizer.customize(tblNhanVien);
     }
 
     private void clearForm() {
@@ -556,37 +580,33 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     }
 
     private void timKiemNhanVien() {
-    String tuKhoa = txtSearch.getText().trim(); // Lấy giá trị từ ô tìm kiếm
+        String tuKhoa = txtSearch.getText().trim(); // Lấy giá trị từ ô tìm kiếm
 
-    if (tuKhoa.isEmpty()) { // Kiểm tra nếu ô tìm kiếm trống
-        loadDataToTable(); // Nếu trống, tải lại toàn bộ dữ liệu
-        return; // Không cần tìm kiếm
+        if (tuKhoa.isEmpty()) { // Kiểm tra nếu ô tìm kiếm trống
+            loadDataToTable(); // Nếu trống, tải lại toàn bộ dữ liệu
+            return; // Không cần tìm kiếm
+        }
+
+        // Gọi BUS để lấy danh sách nhân viên theo từ khóa
+        ArrayList<NhanVienDTO> dsNV = nvBUS.timKiemNhanVien(tuKhoa);
+
+        // Cập nhật bảng với danh sách kết quả tìm kiếm
+        String[] columnNames = {"Mã NV", "Họ đệm", "Tên", "Ngày sinh", "Giới tính"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+        for (NhanVienDTO nv : dsNV) {
+            Object[] rowData = {
+                nv.getMaNV(),
+                nv.getHoLot(),
+                nv.getTen(),
+                nv.getNgaysinh(),
+                nv.getGioiTinh()
+            };
+            model.addRow(rowData);
+        }
+        tblNhanVien.setModel(model);
+        TableCustomizer.customize(tblNhanVien); // Tùy chỉnh giao diện bảng
     }
-
-    // Gọi BUS để lấy danh sách nhân viên theo từ khóa
-    ArrayList<NhanVienDTO> dsNV = nvBUS.timKiemNhanVien(tuKhoa);
-
-    // Kiểm tra nếu không có kết quả tìm kiếm
-
-
-    // Cập nhật bảng với danh sách kết quả tìm kiếm
-    String[] columnNames = {"Mã NV", "Họ đệm", "Tên", "Ngày sinh", "Giới tính"};
-    DefaultTableModel model = new DefaultTableModel(columnNames, 0);
-
-    for (NhanVienDTO nv : dsNV) {
-        Object[] rowData = {
-            nv.getMaNV(),
-            nv.getHoLot(),
-            nv.getTen(),
-            nv.getNgaysinh(),
-            nv.getGioiTinh()
-        };
-        model.addRow(rowData);
-    }
-    tblNhanVien.setModel(model);
-    TableCustomizer.customize(tblNhanVien); // Tùy chỉnh giao diện bảng
-}
-
 
     private void hienThiThongTinNhanVienTuTable() throws java.text.ParseException {
         int row = tblNhanVien.getSelectedRow();
