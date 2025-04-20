@@ -12,6 +12,7 @@ GUI\main.class
 GUI\PnNhanVien3$5.class
 GUI\QLBanHang$11.class
 GUI\PnNhanVien3$2.class
+MyCustom\TableCustomizer$1.class
 MyCustom\IconTextField.class
 GUI\DlgCapTaiKhoan$1.class
 GUI\Login$1.class
@@ -52,6 +53,7 @@ GUI\PnNhanVien3$9.class
 GUI\PnNhanVien3$3.class
 GUI\PnNhanVien3$11.class
 GUI\QLBanHang$3.class
+MyCustom\TableCustomizer.class
 GUI\PnNhanVien3.class
 GUI\PnNhanVien3$10.class
 DAO\HoaDonDAO.class
