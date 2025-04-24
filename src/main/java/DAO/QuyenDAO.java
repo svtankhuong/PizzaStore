@@ -6,6 +6,7 @@ import config.JDBC;
 import java.util.ArrayList;
 
 public class QuyenDAO {
+
     public ArrayList<QuyenDTO> getDanhSachQuyen() {
         ArrayList<QuyenDTO> danhSachQuyen = new ArrayList<>();
         try {
@@ -29,7 +30,8 @@ public class QuyenDAO {
             connection.close();
         } catch (Exception e) {
             e.printStackTrace();
-    }
+        }
         return danhSachQuyen;
     }
+
 }

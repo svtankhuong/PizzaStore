@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 public final class DlgCapTaiKhoan extends javax.swing.JDialog {
-
+    
     private int maNV;
 
     public DlgCapTaiKhoan(int maNV) {
@@ -53,7 +53,8 @@ public final class DlgCapTaiKhoan extends javax.swing.JDialog {
         txtMatKhau = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         btnTaoTaiKhoan = new javax.swing.JButton();
-        btnTaoTaiKhoan1 = new javax.swing.JButton();
+        btnSuaTaiKhoan = new javax.swing.JButton();
+        btnXoataikhoan = new javax.swing.JButton();
 
         jLabel2.setText("jLabel2");
 
@@ -94,6 +95,7 @@ public final class DlgCapTaiKhoan extends javax.swing.JDialog {
         jLabel5.setText("Quyền");
 
         cmbQuyen.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        cmbQuyen.setToolTipText("");
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel6.setText("Mật khẩu");
@@ -154,11 +156,19 @@ public final class DlgCapTaiKhoan extends javax.swing.JDialog {
             }
         });
 
-        btnTaoTaiKhoan1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        btnTaoTaiKhoan1.setText("Đổi tài khoản/mật khẩu");
-        btnTaoTaiKhoan1.addActionListener(new java.awt.event.ActionListener() {
+        btnSuaTaiKhoan.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnSuaTaiKhoan.setText("Đổi tài khoản/mật khẩu");
+        btnSuaTaiKhoan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTaoTaiKhoan1ActionPerformed(evt);
+                btnSuaTaiKhoanActionPerformed(evt);
+            }
+        });
+
+        btnXoataikhoan.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnXoataikhoan.setText("Xóa tài khoản");
+        btnXoataikhoan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoataikhoanActionPerformed(evt);
             }
         });
 
@@ -169,14 +179,16 @@ public final class DlgCapTaiKhoan extends javax.swing.JDialog {
             .addComponent(pnTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(pnInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(421, 421, 421)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 17, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnTaoTaiKhoan)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnTaoTaiKhoan1)
-                .addContainerGap())
+                .addGap(48, 48, 48)
+                .addComponent(btnSuaTaiKhoan)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 17, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(111, 111, 111)
+                .addComponent(btnXoataikhoan)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,13 +196,15 @@ public final class DlgCapTaiKhoan extends javax.swing.JDialog {
                 .addComponent(pnTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnTaoTaiKhoan)
+                        .addComponent(btnSuaTaiKhoan)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnTaoTaiKhoan)
-                    .addComponent(btnTaoTaiKhoan1))
-                .addGap(28, 28, 28))
+                .addComponent(btnXoataikhoan, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10))
         );
 
         pack();
@@ -200,19 +214,21 @@ public final class DlgCapTaiKhoan extends javax.swing.JDialog {
 //    private PhanQuyenBUS phanQuyenBUS = new PhanQuyenBUS();
 
     private void btnTaoTaiKhoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoTaiKhoanActionPerformed
-// Lấy dữ liệu từ các ô nhập liệu
+        // Lấy dữ liệu từ các ô nhập liệu
         String tenDangNhap = txtTenDangNhap.getText().trim();
         String matKhau = txtMatKhau.getText().trim();
-        String maNVStr = String.valueOf(this.maNV); // Chuyển maNV thành String
 
-        // Lấy tên quyền từ JComboBox
+        int maNV = this.maNV;
+
+        // Mặc định mã quyền là 4 (Nhân viên)
+        int maQuyen = 4;
         String tenQuyen = (String) cmbQuyen.getSelectedItem();
-        String maQuyenStr = "3"; // Giá trị mặc định
-//        QuyenBUS quyenBUS = new QuyenBUS();
+
+        // Tìm mã quyền tương ứng với tên quyền được chọn
         ArrayList<QuyenDTO> dsQuyen = QuyenBUS.getListQuyen();
         for (QuyenDTO q : dsQuyen) {
-            if (q.getTenQuyen().equals(tenQuyen)) {
-                maQuyenStr = String.valueOf(q.getMaQuyen()); // Chuyển maQuyen thành String
+            if (q.getTenQuyen().equalsIgnoreCase(tenQuyen)) {
+                maQuyen = q.getMaQuyen();
                 break;
             }
         }
@@ -222,12 +238,11 @@ public final class DlgCapTaiKhoan extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!", "Lỗi", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
-        // Gọi TaiKhoanBUS để cấp tài khoản
+        // Kiểm tra xem nhân viên đã có tài khoản chưa
         TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
-        boolean success = taiKhoanBUS.capTaiKhoan(tenDangNhap, matKhau, maQuyenStr, maNVStr);
+        boolean success = taiKhoanBUS.capTaiKhoan(tenDangNhap, matKhau, maQuyen, maNV);
 
-        // Xử lý kết quả
+        // Thông báo kết quả
         if (success) {
             JOptionPane.showMessageDialog(this, "Cấp tài khoản thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             this.dispose(); // Đóng dialog
@@ -244,9 +259,49 @@ public final class DlgCapTaiKhoan extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtMatKhauActionPerformed
 
-    private void btnTaoTaiKhoan1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoTaiKhoan1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnTaoTaiKhoan1ActionPerformed
+    private void btnSuaTaiKhoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaTaiKhoanActionPerformed
+        // Lấy thông tin từ các trường nhập liệu
+        String tenDangNhap = txtTenDangNhap.getText();
+        String matKhau = txtMatKhau.getText();
+        String tenQuyen = (String) cmbQuyen.getSelectedItem(); // Lấy quyền người dùng chọn
+
+        // Kiểm tra nếu các trường khác không được để trống
+        if (tenDangNhap.isEmpty() || matKhau.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin tài khoản!");
+            return;
+        }
+
+        // Lấy mã quyền tương ứng với tên quyền đã chọn
+        int maQuyen = -1;
+        ArrayList<QuyenDTO> dsQuyen = QuyenBUS.getListQuyen();
+        for (QuyenDTO q : dsQuyen) {
+            if (q.getTenQuyen().equalsIgnoreCase(tenQuyen)) {
+                maQuyen = q.getMaQuyen();
+                break;
+            }
+        }
+        TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
+        boolean success = taiKhoanBUS.suaTaiKhoan(tenDangNhap, matKhau, maQuyen, maNV);
+
+        if (success) {
+            JOptionPane.showMessageDialog(this, "Cập nhật tài khoản thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Cập nhật tài khoản thất bại! Có thể nhân viên chưa có tài khoản hoặc xảy ra lỗi.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSuaTaiKhoanActionPerformed
+
+    private void btnXoataikhoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoataikhoanActionPerformed
+        String tenDangNhap = txtTenDangNhap.getText(); // Lấy tên đăng nhập từ ô nhập
+
+        // Gọi phương thức XoaTaiKhoan từ TaiKhoanBUS để xóa tài khoản
+        TaiKhoanBUS bus = new TaiKhoanBUS();
+        bus.XoaTaiKhoan(tenDangNhap); // Thực hiện xóa tài khoản
+
+        // Cập nhật lại giao diện (nếu cần), ví dụ: làm trống ô nhập hoặc làm mới bảng
+        txtTenDangNhap.setText(""); // Làm trống ô nhập tên đăng nhập
+        txtMatKhau.setText(""); // Làm trống ô nhập tên đăng nhập
+    }//GEN-LAST:event_btnXoataikhoanActionPerformed
 
     private void loadDataCmbQuyen() {
         cmbQuyen.removeAllItems();
@@ -258,8 +313,9 @@ public final class DlgCapTaiKhoan extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSuaTaiKhoan;
     private javax.swing.JButton btnTaoTaiKhoan;
-    private javax.swing.JButton btnTaoTaiKhoan1;
+    private javax.swing.JButton btnXoataikhoan;
     private javax.swing.JComboBox<String> cmbQuyen;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -276,30 +332,29 @@ public final class DlgCapTaiKhoan extends javax.swing.JDialog {
     private javax.swing.JTextField txtTenDangNhap;
     // End of variables declaration//GEN-END:variables
     public void loadTaiKhoanChoNhanVien(int maNV) {
-    TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
-    TaiKhoanDTO taiKhoan = taiKhoanBUS.getTaiKhoanTheoMaNV(maNV);
+        TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
+        TaiKhoanDTO taiKhoan = taiKhoanBUS.getTaiKhoanTheoMaNV(maNV);
 
-    if (taiKhoan != null) {
-        txtTenDangNhap.setText(taiKhoan.getTenDangNhap());
-        txtMatKhau.setText(taiKhoan.getMatKhau());
+        if (taiKhoan != null) {
+            txtTenDangNhap.setText(taiKhoan.getTenDangNhap());
+            txtMatKhau.setText(taiKhoan.getMatKhau());
 
-        int maQuyen = taiKhoan.getMaQuyen();
+            int maQuyen = taiKhoan.getMaQuyen();
 
-        // Lấy tên quyền từ maQuyen
-        QuyenBUS quyenBUS = new QuyenBUS();
-        String tenQuyen = quyenBUS.getTenQuyenTheoMa(maQuyen);
+            // Lấy tên quyền từ maQuyen
+            QuyenBUS quyenBUS = new QuyenBUS();
+            String tenQuyen = quyenBUS.getTenQuyenTheoMa(maQuyen);
 
-        if (tenQuyen != null) {
-            cmbQuyen.setSelectedItem(tenQuyen);
+            if (tenQuyen != null) {
+                cmbQuyen.setSelectedItem(tenQuyen);
+            } else {
+                cmbQuyen.setSelectedItem("Nhân viên"); // Không tìm thấy quyền
+            }
         } else {
-            cmbQuyen.setSelectedIndex(-1); // Không tìm thấy quyền
+            txtTenDangNhap.setText("");
+            txtMatKhau.setText("");
+            cmbQuyen.setSelectedItem("Nhân viên");
         }
-    } else {
-        txtTenDangNhap.setText("");
-        txtMatKhau.setText("");
-        cmbQuyen.setSelectedIndex(-1);
     }
-}
-
 
 }

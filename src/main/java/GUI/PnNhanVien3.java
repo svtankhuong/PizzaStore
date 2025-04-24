@@ -451,6 +451,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một nhân viên trước!", "Thông báo", JOptionPane.WARNING_MESSAGE);
         }
+        loadDataToTable();
     }//GEN-LAST:event_btnCapTaiKhoanActionPerformed
 
 

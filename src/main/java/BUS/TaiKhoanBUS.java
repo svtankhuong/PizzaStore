@@ -2,6 +2,7 @@ package BUS;
 
 import DAO.TaiKhoanDAO;
 import DTO.TaiKhoanDTO;
+import MyCustom.MyDialog;
 import java.util.ArrayList;
 
 public class TaiKhoanBUS {
@@ -41,10 +42,10 @@ public class TaiKhoanBUS {
         return null; // Không tìm thấy tài khoản
     }
 
-    public boolean capTaiKhoan(String tenDangNhap, String matKhau, String maQuyenStr, String maNVStr) {
+    public boolean capTaiKhoan(String tenDangNhap, String matKhau, int maQuyen, int maNV) {
         try {
-            int maQuyen = Integer.parseInt(maQuyenStr);
-            int maNV = Integer.parseInt(maNVStr);
+//            int maQuyen = Integer.parseInt(maQuyenStr);
+//            int maNV = Integer.parseInt(maNVStr);
 
             // Kiểm tra nếu nhân viên đã có tài khoản
             if (getTaiKhoanTheoMaNV(maNV) != null) {
@@ -71,4 +72,36 @@ public class TaiKhoanBUS {
             return false;
         }
     }
+
+    public boolean suaTaiKhoan(String tenDangNhap, String matKhau, int maQuyen, int maNV) {
+        TaiKhoanDTO tk = new TaiKhoanDTO();
+        tk.setTenDangNhap(tenDangNhap);
+        tk.setMatKhau(matKhau);
+        tk.setMaQuyen(maQuyen);
+        tk.setMaNV(maNV);
+
+        TaiKhoanDAO dao = new TaiKhoanDAO();
+        boolean thanhCong = dao.ThemTaiKhoan(tk);
+
+        if (!thanhCong) {
+            new MyDialog("Cập nhật tài khoản thất bại!", MyDialog.ERROR_DIALOG);
+        } else {
+            new MyDialog("Cập nhật tài khoản thành công!", MyDialog.SUCCESS_DIALOG);
+        }
+        return thanhCong;
+    }
+
+    public void XoaTaiKhoan(String tenDangNhap) {
+        TaiKhoanDAO dao = new TaiKhoanDAO();
+        boolean isDeleted = dao.XoaTaiKhoan(tenDangNhap);  // Gọi phương thức xóa tài khoản từ DAO
+
+        if (isDeleted) {
+            // Nếu xóa thành công, hiển thị thông báo thành công
+            new MyDialog("Tài khoản đã được xóa thành công!", MyDialog.SUCCESS_DIALOG);
+        } else {
+            // Nếu xóa không thành công, hiển thị thông báo lỗi
+            new MyDialog("Tài khoản không tồn tại hoặc không thể xóa.", MyDialog.ERROR_DIALOG);
+        }
+    }
+
 }

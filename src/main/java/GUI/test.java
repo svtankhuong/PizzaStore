@@ -15,7 +15,7 @@ public class test {
         // 1. Kiểm tra lấy danh sách nhân viên
         System.out.println("Them:");
 
-        boolean ketQua = TaiKhoanBUS.capTaiKhoan("provip", "123456", "1", "3");
+        boolean ketQua = TaiKhoanBUS.suaTaiKhoan("provip123", "123456", 1 , 2);
 
 
         if(ketQua) {
@@ -24,4 +24,16 @@ public class test {
             System.out.println("Thêm nhân viên thất bại!");
         }
     }
+    
+            // Lấy tên quyền từ JComboBox
+//        String tenQuyen = (String) cmbQuyen.getSelectedItem();
+//        String maQuyenStr = "3"; // Giá trị mặc định
+////        QuyenBUS quyenBUS = new QuyenBUS();
+//        ArrayList<QuyenDTO> dsQuyen = QuyenBUS.getListQuyen();
+//        for (QuyenDTO q : dsQuyen) {
+//            if (q.getTenQuyen().equals(tenQuyen)) {
+//                maQuyenStr = String.valueOf(q.getMaQuyen()); // Chuyển maQuyen thành String
+//                break;
+//            }
+//        }
 }
