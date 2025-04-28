@@ -29,8 +29,29 @@ public class MainGUI extends javax.swing.JFrame {
     public MainGUI(ArrayList<Object> ttdn) {
         this.ttdn = ttdn;
         initComponents();
-        initializeCardLayout(ttdn);
-        setupMenuEvents();
+        String tenquyen = ttdn.get(6).toString();
+        switch (tenquyen)
+        {
+            case "admin":
+                initializeCardLayout();
+                setupMenuEvents();
+                break;
+            case "Thu ngân":
+                initializeCardLayout_Sale();
+                setupMenuEvents_Sale();
+                break;
+            case "Bếp trưởng":
+                initializeCardLayout_Chef();
+               setupMenuEvents_Chef();
+                break;
+            case "Nhân viên":
+                initializeCardLayout_Employee();
+                setupMenuEvents_Employee();
+                break;
+            default:
+                throw new AssertionError();
+        }
+
         java.awt.EventQueue.invokeLater(() -> {
             setLabelIcon(LblSale, "/ManagerUI/lblBanHang.png");
             setLabelIcon(LblStaffs, "/ManagerUI/lblNhanVien.png");
@@ -51,7 +72,7 @@ public class MainGUI extends javax.swing.JFrame {
         Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         label.setIcon(new ImageIcon(scaledImg));
     }
-    private void initializeCardLayout(ArrayList<Object> ttdn) {
+    private void initializeCardLayout() {
         // Khởi tạo CardLayout và contentPanel thay cho jPanel4
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
@@ -147,6 +168,219 @@ public class MainGUI extends javax.swing.JFrame {
                 }
             });
         }
+    }
+    private void initializeCardLayout_Chef() {
+        // Khởi tạo CardLayout và contentPanel thay cho jPanel4
+        cardLayout = new CardLayout();
+        contentPanel = new JPanel(cardLayout);
+        contentPanel.setPreferredSize(new Dimension(1250, 770));
+
+        JPanel importPanel = new JPanel(); // Panel Nhập hàng
+        importPanel.setBackground(Color.WHITE);
+        importPanel.add(new JLabel("Panel Nhập hàng", SwingConstants.CENTER));
+
+        JPanel productPanel = new JPanel(); // Panel Sản phẩm
+        productPanel.setBackground(Color.WHITE);
+        productPanel.add(new JLabel("Panel Sản phẩm", SwingConstants.CENTER));
+
+
+        // Thêm các panel vào CardLayout với tên định danh
+        contentPanel.add(importPanel, "import");
+        contentPanel.add(productPanel, "product");
+
+        // Hiển thị panel Bán hàng mặc định
+        cardLayout.show(contentPanel, "import");
+        LblSale.setBackground(clMenuItemSelected);
+    }
+    
+    private void setupMenuEvents_Chef() {
+        // Lưu các label menu vào danh sách để quản lý
+        menuLabels = new ArrayList<>();
+        menuLabels.add(LblSale);
+        menuLabels.add(LblStaffs);
+        menuLabels.add(LblNH);
+        menuLabels.add(LblCustomers);
+        menuLabels.add(LblProducts);
+        menuLabels.add(LblTK);
+
+        // Thêm sự kiện cho các label
+        for (JLabel label : menuLabels) {
+            label.setOpaque(true); // Cho phép hiển thị màu nền
+            label.setBackground(clMenuItem);
+            label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Đặt lại màu nền của tất cả các label
+                    for (JLabel lbl : menuLabels) {
+                        lbl.setBackground(clMenuItem);
+                    }
+                    // Đặt màu nền cho label được chọn
+                    label.setBackground(clMenuItemSelected);
+
+                    // Hiển thị panel tương ứng
+                    if (label == LblNH) {
+                        cardLayout.show(contentPanel, "import");
+                    } else if (label == LblProducts) {
+                        cardLayout.show(contentPanel, "product");
+                    } 
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    if (!label.getBackground().equals(clMenuItemSelected)) {
+                        label.setBackground(new Color(255, 180, 130)); // Màu hover
+                    }
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    if (!label.getBackground().equals(clMenuItemSelected)) {
+                        label.setBackground(clMenuItem);
+                    }
+                }
+            });
+        }
+    }
+    private void setupMenuEvents_Sale() {
+        // Lưu các label menu vào danh sách để quản lý
+        menuLabels = new ArrayList<>();
+        menuLabels.add(LblSale);
+        menuLabels.add(LblStaffs);
+        menuLabels.add(LblNH);
+        menuLabels.add(LblCustomers);
+        menuLabels.add(LblProducts);
+        menuLabels.add(LblTK);
+
+        // Thêm sự kiện cho các label
+        for (JLabel label : menuLabels) {
+            label.setOpaque(true); // Cho phép hiển thị màu nền
+            label.setBackground(clMenuItem);
+            label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Đặt lại màu nền của tất cả các label
+                    for (JLabel lbl : menuLabels) {
+                        lbl.setBackground(clMenuItem);
+                    }
+                    // Đặt màu nền cho label được chọn
+                    label.setBackground(clMenuItemSelected);
+
+                    // Hiển thị panel tương ứng
+                    if (label == LblSale) {
+                        cardLayout.show(contentPanel, "sale");
+                    } else if (label == LblCustomers) {
+                        cardLayout.show(contentPanel, "customer");
+                    } else if (label == LblTK) {
+                        cardLayout.show(contentPanel, "stats");
+                    }
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    if (!label.getBackground().equals(clMenuItemSelected)) {
+                        label.setBackground(new Color(255, 180, 130)); // Màu hover
+                    }
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    if (!label.getBackground().equals(clMenuItemSelected)) {
+                        label.setBackground(clMenuItem);
+                    }
+                }
+            });
+        }
+    }    
+    private void initializeCardLayout_Sale() {
+        // Khởi tạo CardLayout và contentPanel thay cho jPanel4
+        cardLayout = new CardLayout();
+        contentPanel = new JPanel(cardLayout);
+        contentPanel.setPreferredSize(new Dimension(1250, 770));
+
+        // Thêm các panel vào contentPanel
+        PnQLBH salePanel = new PnQLBH(ttdn);
+
+        JPanel customerPanel = new JPanel(); // Panel Khách hàng
+        customerPanel.setBackground(Color.WHITE);
+        customerPanel.add(new JLabel("Panel Khách hàng", SwingConstants.CENTER));
+
+        JPanel statsPanel = new JPanel(); // Panel Thống kê
+        statsPanel.setBackground(Color.WHITE);
+        statsPanel.add(new JLabel("Panel Thống kê", SwingConstants.CENTER));
+
+        // Thêm các panel vào CardLayout với tên định danh
+        contentPanel.add(salePanel, "sale");
+        contentPanel.add(customerPanel, "customer");
+        contentPanel.add(statsPanel, "stats");
+
+        // Hiển thị panel Bán hàng mặc định
+        cardLayout.show(contentPanel, "sale");
+        LblSale.setBackground(clMenuItemSelected);
+    }
+    private void setupMenuEvents_Employee() {   
+        // Lưu các label menu vào danh sách để quản lý
+        menuLabels = new ArrayList<>();
+        menuLabels.add(LblSale);
+        menuLabels.add(LblStaffs);
+        menuLabels.add(LblNH);
+        menuLabels.add(LblCustomers);
+        menuLabels.add(LblProducts);
+        menuLabels.add(LblTK);
+
+        // Thêm sự kiện cho các label
+        for (JLabel label : menuLabels) {
+            label.setOpaque(true); // Cho phép hiển thị màu nền
+            label.setBackground(clMenuItem);
+            label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Đặt lại màu nền của tất cả các label
+                    for (JLabel lbl : menuLabels) {
+                        lbl.setBackground(clMenuItem);
+                    }
+                    // Đặt màu nền cho label được chọn
+                    label.setBackground(clMenuItemSelected);
+
+                    // Hiển thị panel tương ứng
+                    if (label == LblSale) {
+                        cardLayout.show(contentPanel, "sale");
+                    } 
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    if (!label.getBackground().equals(clMenuItemSelected)) {
+                        label.setBackground(new Color(255, 180, 130)); // Màu hover
+                    }
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    if (!label.getBackground().equals(clMenuItemSelected)) {
+                        label.setBackground(clMenuItem);
+                    }
+                }
+            });
+        }
+    }
+    private void initializeCardLayout_Employee() {
+        // Khởi tạo CardLayout và contentPanel thay cho jPanel4
+        cardLayout = new CardLayout();
+        contentPanel = new JPanel(cardLayout);
+        contentPanel.setPreferredSize(new Dimension(1250, 770));
+
+        // Thêm các panel vào contentPanel
+        PnQLBH salePanel = new PnQLBH(ttdn);
+
+        // Thêm các panel vào CardLayout với tên định danh
+        contentPanel.add(salePanel, "sale");
+
+        // Hiển thị panel Bán hàng mặc định
+        cardLayout.show(contentPanel, "sale");
+        LblSale.setBackground(clMenuItemSelected);
     }
     /** This method is called from within the constructor to
      * initialize the form.
