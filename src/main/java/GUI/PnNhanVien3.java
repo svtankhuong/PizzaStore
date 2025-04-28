@@ -5,25 +5,19 @@
 package GUI;
 
 import BUS.NhanVienBUS;
-import BUS.QuyenBUS;
 import DAO.NhanVienDAO;
 import DTO.NhanVienDTO;
-import DTO.QuyenDTO;
 import MyCustom.MyDialog;
 import MyCustom.TableCustomizer;
 import static MyCustom.TableCustomizer.customize;
 
 import com.formdev.flatlaf.json.ParseException;
-import java.awt.GridLayout;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -42,8 +36,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         nvBUS = new NhanVienBUS(); // Khởi tạo NhanVienBUS
         txtMaNV.setText(String.valueOf(nvBUS.getMAX()));
         loadDataToTable(); // Tải dữ liệu nhân viên lên JTable
-        loadDataCmbQuyen();
-        loadChiTietQuyen();
+
     }
 
     /**
@@ -81,27 +74,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         btnCapTaiKhoan = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        cbbNhomQuyen = new javax.swing.JComboBox<>();
-        lblTitle2 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        lbBanHang = new javax.swing.JLabel();
-        lbKhuyenMai = new javax.swing.JLabel();
-        lbSanPham = new javax.swing.JLabel();
-        lbNhanVien = new javax.swing.JLabel();
-        lbKhachHang = new javax.swing.JLabel();
-        lbNhapHang = new javax.swing.JLabel();
-        lbThongKe = new javax.swing.JLabel();
-        cbBanHang = new javax.swing.JCheckBox();
-        cbKhuyenMai = new javax.swing.JCheckBox();
-        cbSanPham = new javax.swing.JCheckBox();
-        cbNhanVien = new javax.swing.JCheckBox();
-        cbKhachHang = new javax.swing.JCheckBox();
-        cbNhapHang = new javax.swing.JCheckBox();
-        cbThongKe = new javax.swing.JCheckBox();
-        btnThemQuyen = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jTabbedPane4 = new javax.swing.JTabbedPane();
 
         setBackground(new java.awt.Color(247, 247, 247));
 
@@ -389,194 +362,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         );
 
         jTabbedPane1.addTab("Nhân Viên", jPanel1);
-
-        cbbNhomQuyen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbbNhomQuyenActionPerformed(evt);
-            }
-        });
-
-        lblTitle2.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        lblTitle2.setText("Quản lý phân quyền");
-
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel1.setText("Nhóm quyền");
-
-        lbBanHang.setText("Quản lý bán hàng");
-
-        lbKhuyenMai.setText("Quản lý khuyến mãi ");
-
-        lbSanPham.setText("Quản lý sản phầm");
-
-        lbNhanVien.setText("Quản lý nhân viên");
-
-        lbKhachHang.setText("Quản lý khách hàng ");
-
-        lbNhapHang.setText("Quản lý nhập hàng");
-
-        lbThongKe.setText("Thống kê");
-
-        cbBanHang.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbBanHangActionPerformed(evt);
-            }
-        });
-
-        cbKhuyenMai.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbKhuyenMaiActionPerformed(evt);
-            }
-        });
-
-        cbSanPham.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbSanPhamActionPerformed(evt);
-            }
-        });
-
-        cbNhanVien.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbNhanVienActionPerformed(evt);
-            }
-        });
-
-        cbKhachHang.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbKhachHangActionPerformed(evt);
-            }
-        });
-
-        cbNhapHang.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbNhapHangActionPerformed(evt);
-            }
-        });
-
-        cbThongKe.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbThongKeActionPerformed(evt);
-            }
-        });
-
-        btnThemQuyen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/add-icon.png"))); // NOI18N
-        btnThemQuyen.setText("Thêm quyền");
-        btnThemQuyen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnThemQuyenActionPerformed(evt);
-            }
-        });
-
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Pencil-icon.png"))); // NOI18N
-        jButton2.setText("Sửa quyền");
-
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/delete-icon.png"))); // NOI18N
-        jButton3.setText("Xóa quyền");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(38, 38, 38)
-                        .addComponent(cbbNhomQuyen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbBanHang)
-                            .addComponent(lbKhuyenMai)
-                            .addComponent(lbSanPham)
-                            .addComponent(lbNhanVien)
-                            .addComponent(lbKhachHang)
-                            .addComponent(lbNhapHang)
-                            .addComponent(lbThongKe))
-                        .addGap(58, 58, 58)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbThongKe)
-                            .addComponent(cbNhapHang)
-                            .addComponent(cbKhachHang)
-                            .addComponent(cbNhanVien)
-                            .addComponent(cbSanPham)
-                            .addComponent(cbKhuyenMai)
-                            .addComponent(cbBanHang))))
-                .addGap(535, 535, 535))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(431, 431, 431)
-                        .addComponent(lblTitle2, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(369, 369, 369)
-                        .addComponent(btnThemQuyen)
-                        .addGap(68, 68, 68)
-                        .addComponent(jButton2)
-                        .addGap(79, 79, 79)
-                        .addComponent(jButton3)))
-                .addContainerGap(369, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                                        .addGap(27, 27, 27)
-                                                        .addComponent(lblTitle2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addGap(53, 53, 53)
-                                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                            .addComponent(cbbNhomQuyen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                            .addComponent(jLabel1))
-                                                        .addGap(18, 18, 18)
-                                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                            .addComponent(lbBanHang)
-                                                            .addComponent(cbBanHang))
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                        .addComponent(lbKhuyenMai))
-                                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(cbKhuyenMai)))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(lbSanPham))
-                                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addGap(0, 0, Short.MAX_VALUE)
-                                                .addComponent(cbSanPham)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(lbNhanVien))
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(cbNhanVien)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lbKhachHang))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(cbKhachHang)))
-                        .addGap(15, 15, 15)
-                        .addComponent(lbNhapHang))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(cbNhapHang)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbThongKe)
-                    .addComponent(cbThongKe))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnThemQuyen)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addGap(220, 220, 220))
-        );
-
-        jTabbedPane1.addTab("tab2", jPanel3);
+        jTabbedPane1.addTab("Quyền", jTabbedPane4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -668,42 +454,6 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         loadDataToTable();
     }//GEN-LAST:event_btnCapTaiKhoanActionPerformed
 
-    private void cbbNhomQuyenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbNhomQuyenActionPerformed
-        loadChiTietQuyen();
-    }//GEN-LAST:event_cbbNhomQuyenActionPerformed
-
-    private void cbBanHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbBanHangActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbBanHangActionPerformed
-
-    private void cbKhuyenMaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbKhuyenMaiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbKhuyenMaiActionPerformed
-
-    private void cbSanPhamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSanPhamActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbSanPhamActionPerformed
-
-    private void cbNhanVienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbNhanVienActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbNhanVienActionPerformed
-
-    private void cbKhachHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbKhachHangActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbKhachHangActionPerformed
-
-    private void cbNhapHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbNhapHangActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbNhapHangActionPerformed
-
-    private void cbThongKeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbThongKeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbThongKeActionPerformed
-
-    private void btnThemQuyenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemQuyenActionPerformed
-        themQuyenMoi();
-    }//GEN-LAST:event_btnThemQuyenActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PnTitle1;
@@ -711,34 +461,15 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSua;
     private javax.swing.JButton btnThem;
-    private javax.swing.JButton btnThemQuyen;
     private javax.swing.JButton btnXoa;
-    private javax.swing.JCheckBox cbBanHang;
-    private javax.swing.JCheckBox cbKhachHang;
-    private javax.swing.JCheckBox cbKhuyenMai;
-    private javax.swing.JCheckBox cbNhanVien;
-    private javax.swing.JCheckBox cbNhapHang;
-    private javax.swing.JCheckBox cbSanPham;
-    private javax.swing.JCheckBox cbThongKe;
     private javax.swing.JComboBox<String> cbbGioiTinh;
-    private javax.swing.JComboBox<QuyenDTO> cbbNhomQuyen;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JLabel lbBanHang;
-    private javax.swing.JLabel lbKhachHang;
-    private javax.swing.JLabel lbKhuyenMai;
-    private javax.swing.JLabel lbNhanVien;
-    private javax.swing.JLabel lbNhapHang;
-    private javax.swing.JLabel lbSanPham;
-    private javax.swing.JLabel lbThongKe;
+    private javax.swing.JTabbedPane jTabbedPane4;
     private javax.swing.JLabel lblHoDem5;
     private javax.swing.JLabel lblHoDem6;
     private javax.swing.JLabel lblMaNV1;
@@ -746,7 +477,6 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     private javax.swing.JLabel lblMaNV3;
     private javax.swing.JLabel lblMaNV5;
     private javax.swing.JLabel lblTitle1;
-    private javax.swing.JLabel lblTitle2;
     private javax.swing.JTable tblNhanVien;
     private javax.swing.JTextField txtHoLot;
     private javax.swing.JTextField txtMaNV;
@@ -906,77 +636,6 @@ public class PnNhanVien3 extends javax.swing.JPanel {
             cbbGioiTinh.setSelectedIndex(1);
         } else {
             cbbGioiTinh.setSelectedIndex(2);
-        }
-    }
-//    QUYỀN
-
-    private void loadDataCmbQuyen() {
-        cbbNhomQuyen.removeAllItems();
-        QuyenBUS.docDanhSachQuyen();
-        ArrayList<QuyenDTO> dsq = QuyenBUS.getListQuyen();
-        for (QuyenDTO q : dsq) {
-            cbbNhomQuyen.addItem(q);  // Thêm QuyenDTO vào ComboBox
-        }
-    }
-
-    private void themQuyenMoi() {
-        JPanel panel = new JPanel(new GridLayout(2, 1, 5, 5));
-        panel.add(new JLabel("Nhập tên quyền mới:"));
-        JTextField txtTenQuyen = new JTextField();
-        panel.add(txtTenQuyen);
-
-        int result = JOptionPane.showConfirmDialog(this, panel, "Thêm quyền mới",
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (result == JOptionPane.OK_OPTION) {
-            String tenQuyenMoi = txtTenQuyen.getText().trim();
-            if (!tenQuyenMoi.isEmpty()) {
-                // Tạo đối tượng QuyenDTO mới
-                QuyenDTO quyenMoi = new QuyenDTO();
-                quyenMoi.setTenQuyen(tenQuyenMoi);
-                quyenMoi.setQLBanHang(false);
-                quyenMoi.setQLKhuyenMai(false);
-                quyenMoi.setQLSanPham(false);
-                quyenMoi.setQLNhanVien(false);
-                quyenMoi.setQLKhachHang(false);
-                quyenMoi.setQLNhapHang(false);
-                quyenMoi.setThongKe(false);
-
-                // Lưu vào danh sách chính thông qua QuyenBUS
-                //QuyenBUS.themQuyen(quyenMoi); // Giả sử bạn có phương thức này trong QuyenBUS để thêm quyền mới
-
-                // Tải lại danh sách vào JComboBox
-                loadDataCmbQuyen();
-
-                // Chọn quyền vừa thêm
-                cbbNhomQuyen.setSelectedItem(quyenMoi);
-
-                JOptionPane.showMessageDialog(this, "Đã thêm quyền: " + tenQuyenMoi);
-            } else {
-                JOptionPane.showMessageDialog(this, "Tên quyền không được để trống.");
-            }
-        }
-    }
-
-    private void loadChiTietQuyen() {
-        QuyenDTO q = (QuyenDTO) cbbNhomQuyen.getSelectedItem();
-        if (q != null) {
-            cbBanHang.setSelected(q.getQLBanHang());
-            cbKhuyenMai.setSelected(q.getQLKhuyenMai());
-            cbSanPham.setSelected(q.getQLSanPham());
-            cbNhanVien.setSelected(q.getQLNhanVien());
-            cbKhachHang.setSelected(q.getQLKhachHang());
-            cbNhapHang.setSelected(q.getQLNhapHang());
-            cbThongKe.setSelected(q.getThongKe());
-        } else {
-            // Reset các checkbox nếu không có quyền nào được chọn
-            cbBanHang.setSelected(false);
-            cbKhuyenMai.setSelected(false);
-            cbSanPham.setSelected(false);
-            cbNhanVien.setSelected(false);
-            cbKhachHang.setSelected(false);
-            cbNhapHang.setSelected(false);
-            cbThongKe.setSelected(false);
         }
     }
 
