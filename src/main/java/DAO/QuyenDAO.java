@@ -1,8 +1,13 @@
 package DAO;
 
+import DTO.NhanVienDTO;
 import DTO.QuyenDTO;
 
 import config.JDBC;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class QuyenDAO {
@@ -33,5 +38,4 @@ public class QuyenDAO {
         }
         return danhSachQuyen;
     }
-
 }

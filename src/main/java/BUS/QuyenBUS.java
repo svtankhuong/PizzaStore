@@ -12,6 +12,10 @@ public class QuyenBUS {
     public static void docDanhSachQuyen() {
         danhSachQuyen = qDAO.getDanhSachQuyen();
     }
+    
+    public QuyenBUS(){
+        docDanhSachQuyen();
+    }
 
     // Trả về danh sách quyền đã đọc
     public static ArrayList<QuyenDTO> getListQuyen() {

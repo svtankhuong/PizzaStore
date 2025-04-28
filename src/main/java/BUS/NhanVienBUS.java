@@ -43,7 +43,7 @@ public class NhanVienBUS {
         return flag;
     }
 
-    public boolean Suanhanvien(String maNV, String ho, String ten, String gioiTinh, String ngaySinh) {
+    public boolean Suanhanvien(int maNV, String ho, String ten, String gioiTinh, String ngaySinh) {
         ho = ho.trim();
         ten = ten.trim();
 
@@ -67,7 +67,7 @@ public class NhanVienBUS {
         return flag;
     }
 
-    public boolean xoaNhanVienMem(String maNV) {
+    public boolean xoaNhanVienMem(int maNV) {
         boolean flag = nvDAO.xoaNhanVienMem(maNV);
         if (!flag) {
             new MyDialog("Xóa nhân viên thất bại!", MyDialog.ERROR_DIALOG);

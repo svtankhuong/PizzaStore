@@ -11,7 +11,7 @@ public class JDBC {
     public static Connection getConnection() {
         Connection c = null;
         try {
-            String url = "jdbc:mysql://localhost:3306/test2";
+            String url = "jdbc:mysql://localhost:3306/pizzastore";
             String username = "root";
             String password = "";
             c = DriverManager.getConnection(url, username, password);

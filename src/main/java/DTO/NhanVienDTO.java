@@ -3,7 +3,7 @@ package DTO;
 import java.util.Date;
 
 public class NhanVienDTO {
-    private String MaNV;
+    private int MaNV;
     private String HoLot;
     private String Ten;
     private String GioiTinh;
@@ -12,7 +12,7 @@ public class NhanVienDTO {
     public NhanVienDTO() {
     }
 
-    public NhanVienDTO(String MaNV, String HoLot, String Ten, String GioiTinh, String Ngaysinh) {
+    public NhanVienDTO(int MaNV, String HoLot, String Ten, String GioiTinh, String Ngaysinh) {
         this.MaNV = MaNV;
         this.HoLot = HoLot;
         this.Ten = Ten;
@@ -20,11 +20,11 @@ public class NhanVienDTO {
         this.Ngaysinh = Ngaysinh;
     }
 
-    public String getMaNV() {
+    public int getMaNV() {
         return MaNV;
     }
 
-    public void setMaNV(String MaNV) {
+    public void setMaNV(int MaNV) {
         this.MaNV = MaNV;
     }
 

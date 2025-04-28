@@ -17,7 +17,7 @@ public class NhanVienDAO {
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 NhanVienDTO nv = new NhanVienDTO();
-                nv.setMaNV(rs.getString("MaNV"));
+                nv.setMaNV(rs.getInt("MaNV"));
                 nv.setHoLot(rs.getString("HoLot"));
                 nv.setTen(rs.getString("Ten"));
                 nv.setGioiTinh(rs.getString("GioiTinh"));
@@ -32,17 +32,17 @@ public class NhanVienDAO {
     }
 
     // Lấy thông tin nhân viên theo mã
-    public NhanVienDTO getNhanVien(String maNV) {
+    public NhanVienDTO getNhanVien(int maNV) {
         NhanVienDTO nv = null;
         try {
             String sql = "SELECT * FROM nhanvien WHERE MaNV=?";
             Connection connection = JDBC.getConnection();
             PreparedStatement pre = connection.prepareStatement(sql);
-            pre.setString(1, maNV);
+            pre.setInt(1, maNV);
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
                 nv = new NhanVienDTO();
-                nv.setMaNV(rs.getString("MaNV"));
+                nv.setMaNV(rs.getInt("MaNV"));
                 nv.setHoLot(rs.getString("HoLot"));
                 nv.setTen(rs.getString("Ten"));
                 nv.setGioiTinh(rs.getString("GioiTinh"));
@@ -62,7 +62,7 @@ public class NhanVienDAO {
             String sql = "INSERT INTO nhanvien (MaNV, HoLot, Ten, GioiTinh, Ngaysinh) VALUES (?, ?, ?, ?, ?)";
             Connection connection = JDBC.getConnection();
             PreparedStatement pre = connection.prepareStatement(sql);
-            pre.setString(1, nv.getMaNV());
+            pre.setInt(1, nv.getMaNV());
             pre.setString(2, nv.getHoLot());
             pre.setString(3, nv.getTen());
             pre.setString(4, nv.getGioiTinh());
@@ -86,7 +86,7 @@ public class NhanVienDAO {
             pre.setString(2, nv.getTen());
             pre.setString(3, nv.getGioiTinh());
             pre.setString(4, nv.getNgaysinh());
-            pre.setString(5, nv.getMaNV());
+            pre.setInt(5, nv.getMaNV());
             result = pre.executeUpdate() > 0;
             connection.close();
         } catch (SQLException e) {
@@ -96,13 +96,13 @@ public class NhanVienDAO {
     }
 
     // Xóa một nhân viên
-    public boolean xoaNhanVien(String maNV) {
+    public boolean xoaNhanVien(int maNV) {
         boolean result = false;
         try {
             String sql = "DELETE FROM nhanvien WHERE MaNV=?";
             Connection connection = JDBC.getConnection();
             PreparedStatement pre = connection.prepareStatement(sql);
-            pre.setString(1, maNV);
+            pre.setInt(1, maNV);
             result = pre.executeUpdate() > 0;
             connection.close();
         } catch (SQLException e) {
@@ -112,13 +112,13 @@ public class NhanVienDAO {
     }
 
     // Xóa mềm (cập nhật isDelete = 1)
-    public boolean xoaNhanVienMem(String maNV) {
+    public boolean xoaNhanVienMem(int maNV) {
         boolean result = false;
         try {
             String sql = "UPDATE nhanvien SET isDelete = 1 WHERE MaNV = ?";
             Connection connection = JDBC.getConnection();
             PreparedStatement pre = connection.prepareStatement(sql);
-            pre.setString(1, maNV);
+            pre.setInt(1, maNV);
             result = pre.executeUpdate() > 0;
             pre.close();
             connection.close();
@@ -168,7 +168,7 @@ public class NhanVienDAO {
 
             while (rs.next()) {
                 NhanVienDTO nv = new NhanVienDTO();
-                nv.setMaNV(rs.getString("MaNV"));
+                nv.setMaNV(rs.getInt("MaNV"));
                 nv.setHoLot(rs.getString("HoLot"));
                 nv.setTen(rs.getString("Ten"));
                 nv.setGioiTinh(rs.getString("GioiTinh"));

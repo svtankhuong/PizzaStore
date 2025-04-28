@@ -815,7 +815,8 @@ public class PnNhanVien3 extends javax.swing.JPanel {
             return;
         }
 
-        String maNV = txtMaNV.getText().trim(); // Lấy MaNV từ text field
+        String maNVchu = txtMaNV.getText().trim(); // Lấy MaNV từ text field
+        int maNV  = Integer.parseInt(maNVchu);
         String ho = txtHoLot.getText().trim();
         String ten = txtTen.getText().trim();
         String gioiTinh = cbbGioiTinh.getSelectedItem().toString();
@@ -836,7 +837,8 @@ public class PnNhanVien3 extends javax.swing.JPanel {
             new MyDialog("Vui lòng chọn nhân viên để xóa!", MyDialog.ERROR_DIALOG);
             return;
         }
-        String maNV = txtMaNV.getText().trim();
+        String maNVchu = txtMaNV.getText().trim();
+        int maNV  = Integer.parseInt(maNVchu);
         int confirm = JOptionPane.showConfirmDialog(
                 null,
                 "Bạn có chắc chắn muốn xóa nhân viên này?",

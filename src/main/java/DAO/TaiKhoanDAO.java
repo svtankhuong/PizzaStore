@@ -1,5 +1,9 @@
 package DAO;
 
+import BUS.QuyenBUS;
+import DTO.NhanVienDTO;
+import DTO.QuyenDTO;
+import DTO.SanPhamDTO;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -84,6 +88,40 @@ public class TaiKhoanDAO {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public ArrayList<Object> getInforAccount(String username)
+    {
+       
+       String sql = "SELECT MaNV, MatKhau, MaQuyen FROM TaiKhoan WHERE TenDangNhap=?";
+       ArrayList<Object> thong_tin_DN = new ArrayList<>();
+        try ( Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                int manv = rs.getInt("MaNV");
+                String matkhau = rs.getString("MatKhau");
+                int maquyen = rs.getInt("MaQuyen");
+                NhanVienDAO a = new NhanVienDAO();
+                NhanVienDTO b = a.getNhanVien(manv);
+                String ngaysinh = b.getNgaysinh();
+                String gioitinh = b.getGioiTinh();
+                thong_tin_DN.add(username);
+                thong_tin_DN.add(matkhau);
+                thong_tin_DN.add(manv);
+                String ho_ten_nhan_vien = b.getHoLot()+" "+b.getTen();
+                thong_tin_DN.add(ho_ten_nhan_vien);
+                thong_tin_DN.add(ngaysinh);
+                thong_tin_DN.add(gioitinh);
+                QuyenBUS c = new QuyenBUS();
+                String tenQuyen = c.getTenQuyenTheoMa(maquyen);
+                thong_tin_DN.add(tenQuyen);
+            }
+        }catch(SQLException e)
+        {
+            System.err.println("Lỗi : " + e.getMessage());
+        }
+        return thong_tin_DN;
     }
 
 }
