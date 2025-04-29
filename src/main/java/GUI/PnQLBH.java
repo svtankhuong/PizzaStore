@@ -7,7 +7,6 @@ package GUI;
 import BUS.HoaDonBUS;
 import DTO.HoaDonDTO;
 import DTO.SanPhamDTO;
-import com.github.lgooddatepicker.components.DatePicker;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Dimension;
@@ -18,6 +17,7 @@ import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.border.EmptyBorder;
@@ -35,6 +35,9 @@ import org.kordamp.ikonli.swing.FontIcon;
 
 public class PnQLBH extends JPanel {
 
+    private JPanel panelHoaDon;
+    private JPanel panelBanHang;
+    
     private JTable tableHoaDon;
     private JTable tableChiTietHoaDon;
     private JTable tableSanPham;
@@ -46,6 +49,8 @@ public class PnQLBH extends JPanel {
     private JTextField tfTongCong;
     private JFormattedTextField ftNgayLap;
     private JComponent[] fields;
+    private JTextField ttKH;
+    private JTextField ttKM;
     // ... các JTextField/JComponent khác từ mảng 'fields' nếu cần
     private JButton btnThemVaoGio;
     private JButton btnXoaKhoiGio;
@@ -82,6 +87,18 @@ public class PnQLBH extends JPanel {
         setupTableModels(tk);     // Khởi tạo cấu trúc bảng (cột)
         loadDataFromSource();   // Nạp dữ liệu động từ BUS/DAO
         loadProductImage(DEFAULT_IMAGE_PATH); // Tải ảnh mặc định ban đầu
+        // Viết sự kiện cho nút ... kế bên label khách hàng        
+        JButton a = (JButton) fields[6];
+        a.addActionListener((ActionEvent e) ->
+        {
+            showTableCustomer();
+        });
+        // Viết sự kiện cho nút ... kế bên label Khuyến mãi
+        JButton b = (JButton) fields[7];
+        b.addActionListener((ActionEvent e) ->
+        {
+            showTableDiscount();
+        });        
     }
     // Hàm đệ quy set màu trắng cho tất cả component
     private void setBackgroundForAllComponents(java.awt.Component component) {
@@ -94,14 +111,46 @@ public class PnQLBH extends JPanel {
         }
     }
 
+    private void showTableCustomer(){
+        InforCustomer a = new InforCustomer();
+        a.setSelectCustomerListener(new SelectCustomerOrDiscount() {
+            @Override
+            public void onCustomerSelected(String tenKH) {
+                ttKH.setText(tenKH);
+            }
+
+            @Override
+            public void onDiscountSelected(String tenKM) {
+                // Không dùng
+            }
+        });
+        a.setVisible(true);
+    }
+
+    private void showTableDiscount(){
+        InforDiscount b = new InforDiscount();
+        b.setSelectDiscountListener(new SelectCustomerOrDiscount() {
+            @Override
+            public void onCustomerSelected(String tenKH) {
+                // Không dùng
+            }
+
+            @Override
+            public void onDiscountSelected(String tenKM) {
+                ttKM.setText(tenKM);
+            }
+        });
+        b.setVisible(true);
+    }
+
     
     private void initComponents() {
         UIManager.put("TabbedPane.selected", Color.black);
         UIManager.put("TabbedPane.selectedForeground", Color.white);
         
         JTabbedPane tabbedPane = new JTabbedPane();
-        JPanel panelHoaDon = new JPanel();
-        JPanel panelBanHang = new JPanel();
+        panelHoaDon = new JPanel();
+        panelBanHang = new JPanel();
 
         // === Tab Hóa Đơn (Giữ nguyên) ===
         panelHoaDon.setLayout(null);
@@ -219,14 +268,28 @@ public class PnQLBH extends JPanel {
                 ((JSpinner) fields[i]).setEnabled(false);
                 ((JSpinner) fields[i]).setFont(new java.awt.Font("Times New Roman", 0, 14));
                 ((JSpinner) fields[i]).setBounds(panelRightStartX + 150, currentY, panelRightWidth - 170, 30);
-            } else if(label.getText().equals("Khách Hàng:") || label.getText().equals("Khuyến Mãi:")) {
-                // THÊM: TextField trước
-                JTextField textField = new JTextField();
-                textField.setFont(new java.awt.Font("Times New Roman", 0, 14));
-                textField.setEditable(false);
-                textField.setBounds(panelRightStartX + 150, currentY, panelRightWidth - 225, 30); // ngắn lại chút để chừa nút
-                panelBanHang.add(textField);
-
+            }else if (label.getText().equals("Khách Hàng:")){
+                ttKH = new JTextField();
+                ttKH.setFont(new java.awt.Font("Times New Roman", 0, 14));
+                ttKH.setEditable(false);
+                ttKH.setBounds(panelRightStartX + 150, currentY, panelRightWidth - 225, 30); // ngắn lại chút để chừa nút
+                panelBanHang.add(ttKH);
+                // Sau đó thêm nút
+                fields[i] = new JButton();
+                FontIcon ellipsis = FontIcon.of(FontAwesomeSolid.ELLIPSIS_H);
+                ellipsis.setIconSize(28);
+                ellipsis.setIconColor(Color.BLACK);
+                ((JButton) fields[i]).setIcon(ellipsis);
+                ((JButton) fields[i]).setVerticalAlignment(SwingConstants.CENTER);
+                ((JButton) fields[i]).setHorizontalAlignment(SwingConstants.CENTER);
+                fields[i].setFont(new java.awt.Font("Times New Roman", 0, 14));
+                fields[i].setBounds(panelRightStartX + 150 + (panelRightWidth - 225) + 20, currentY, 35, 30); // đặt nút ngay bên phải
+            } else if(label.getText().equals("Khuyến Mãi:")){
+                ttKM = new JTextField();
+                ttKM.setFont(new java.awt.Font("Times New Roman", 0, 14));
+                ttKM.setEditable(false);
+                ttKM.setBounds(panelRightStartX + 150, currentY, panelRightWidth - 225, 30); // ngắn lại chút để chừa nút
+                panelBanHang.add(ttKM);   
                 // Sau đó thêm nút
                 fields[i] = new JButton();
                 FontIcon ellipsis = FontIcon.of(FontAwesomeSolid.ELLIPSIS_H);
@@ -382,65 +445,7 @@ public class PnQLBH extends JPanel {
          // Thiết lập độ rộng cột... cho tableSanPham
         tableSanPham.getSelectionModel().addListSelectionListener((var event) -> {
             if (!event.getValueIsAdjusting()) {
-                int maSP = (Integer) tableSanPham.getValueAt(tableSanPham.getSelectedRow(), 0);
-                String tenSP = (String) tableSanPham.getValueAt(tableSanPham.getSelectedRow(), 1);
-                long dongia = (long) tableSanPham.getValueAt(tableSanPham.getSelectedRow(), 2);
-                int slSP = (Integer) tableSanPham.getValueAt(tableSanPham.getSelectedRow(), 3);
-                slTD = slSP;
-                String loaiSP = (String) tableSanPham.getValueAt(tableSanPham.getSelectedRow(), 4);
-                for (int i = 0; i < fields.length; i++){
-                    if (fields[i] instanceof JTextField)
-                    {
-                        JTextField a = (JTextField) fields[i];
-                        switch (i)
-                        {
-                            case 0:
-                                a.setText(String.valueOf(maSP));
-                                break;
-                            case 1:
-                                a.setText(tenSP);
-                                break;
-                            case 2:
-                                a.setText(String.valueOf(dongia));
-                                break;
-                            case 4:
-                                a.setText(loaiSP);
-                                break;
-                            case 5:
-                                a.setText(tk.get(3).toString());
-                                break;
-                            default:
-                                System.out.println("Khong phai la JTextField");
-                        }
-                        a.setForeground(Color.blue);
-                    } else if (fields[i] instanceof JSpinner) {
-                        JSpinner b = (JSpinner) fields[i];
-                        JComponent editor = b.getEditor();
-                        JFormattedTextField textField = ((JSpinner.DefaultEditor) editor).getTextField();
-
-                        // Xóa border của text box và điều chỉnh padding
-                        textField.setBorder(new EmptyBorder(0, 2, 0, 0));
-                        textField.setHorizontalAlignment(JTextField.RIGHT); // Căn phải text
-
-                        // Tùy chỉnh các nút tăng giảm
-                        for (Component component : b.getComponents()) {
-                            if (component instanceof JButton) {
-                                JButton button = (JButton) component;
-                                // Xóa border và margin của nút
-                                button.setBorder(new LineBorder(Color.lightGray, 1));
-                                button.setMargin(new Insets(0, 0, 0, 0));
-                                // Đặt kích thước nút để khớp với chiều cao của text box
-                                int textFieldHeight = textField.getPreferredSize().height;
-                                button.setPreferredSize(new Dimension(button.getPreferredSize().width, textFieldHeight));
-                            }
-                        }
-
-                        // Đặt LineBorder cho toàn bộ JSpinner
-                        b.setBorder(new LineBorder(Color.BLACK, 1));           
-                        b.setEnabled(true);
-                        b.setModel(new SpinnerNumberModel(1, 1, slTD, 1));
-                    } 
-                }
+                xuly_nhanhang_bangsanpham(tk);
             }
         });
 
@@ -462,48 +467,48 @@ public class PnQLBH extends JPanel {
         // --- Nạp dữ liệu cho Bảng Hóa Đơn ---
         DefaultTableModel modelHoaDon = (DefaultTableModel) tableHoaDon.getModel();
         modelHoaDon.setRowCount(0); // Xóa dữ liệu cũ trước khi nạp mới
-         try {
+        try {
              HoaDonBUS localHdBUS = new HoaDonBUS(); // Hoặc sử dụng biến hdBUS đã khai báo ở lớp
              ArrayList<HoaDonDTO> dsHD = localHdBUS.hienDSHD(); // Đảm bảo phương thức này tồn tại và trả về ArrayList<HoaDonDTO>
-             if (dsHD != null) {
-                 for (HoaDonDTO hd : dsHD) {
-                     Object[] rowData = {
-                         hd.getMaHD(),
-                         hd.getMaNV(),
-                         hd.getMaKH(),
-                         hd.getNgayLapHD(), // Đảm bảo có phương thức getNgayLap()
-                         hd.getTongTienHD() // Đảm bảo có phương thức getTongTien()
-                     };
-                     modelHoaDon.addRow(rowData);
-                 }
-             }
-         } catch (Exception e) {
+            if (dsHD != null) {
+                for (HoaDonDTO hd : dsHD) {
+                    Object[] rowData = {
+                        hd.getMaHD(),
+                        hd.getMaNV(),
+                        hd.getMaKH(),
+                        hd.getNgayLapHD(), // Đảm bảo có phương thức getNgayLap()
+                        hd.getTongTienHD() // Đảm bảo có phương thức getTongTien()
+                    };
+                    modelHoaDon.addRow(rowData);
+                }
+            }
+        } catch (Exception e) {
              JOptionPane.showMessageDialog(this, "Lỗi khi tải danh sách hóa đơn: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
              e.printStackTrace(); // In lỗi ra console để debug
-         }
+        }
 
         // --- Nạp dữ liệu cho Bảng Sản Phẩm (trong tab Bán Hàng) ---
         DefaultTableModel modelSanPham = (DefaultTableModel) tableSanPham.getModel();
         modelSanPham.setRowCount(0);
-         try {
+        try {
              HoaDonBUS localHdBUS = new HoaDonBUS();
              ArrayList<SanPhamDTO> dsSP = localHdBUS.hienDSSP(); // Đảm bảo phương thức này tồn tại và trả về ArrayList<SanPhamDTO>
-              if (dsSP != null) {
-                  for (SanPhamDTO sp : dsSP) {
-                      Object[] rowData = {
-                          sp.getMaSP(),
-                          sp.getTenSP(),
-                          sp.getDonGia(),
-                          sp.getSoLuong(), // Đây có thể là số lượng tồn
-                          sp.getLoai() // Hoặc tên loại SP nếu có phương thức get
-                      };
-                      modelSanPham.addRow(rowData);
-                  }
-              }
-         } catch (Exception e) {
+            if (dsSP != null) {
+                for (SanPhamDTO sp : dsSP) {
+                    Object[] rowData = {
+                        sp.getMaSP(),
+                        sp.getTenSP(),
+                        sp.getDonGia(),
+                        sp.getSoLuong(), // Đây có thể là số lượng tồn
+                        sp.getLoai() // Hoặc tên loại SP nếu có phương thức get
+                    };
+                    modelSanPham.addRow(rowData);
+                }
+            }
+        } catch (Exception e) {
               JOptionPane.showMessageDialog(this, "Lỗi khi tải danh sách sản phẩm: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
               e.printStackTrace();
-         }
+        }
 
         // --- Nạp Bảng Chi Tiết Hóa Đơn: Sẽ được gọi khi chọn hóa đơn ---
         // Xóa dữ liệu bảng chi tiết khi mới load panel
@@ -513,6 +518,70 @@ public class PnQLBH extends JPanel {
         // --- Bảng Giỏ Hàng: Để trống khi khởi tạo ---
         DefaultTableModel modelGioHang = (DefaultTableModel) tableGioHang.getModel();
         modelGioHang.setRowCount(0);
+    }
+    
+    private void xuly_nhanhang_bangsanpham(ArrayList<Object> tk){
+        int maSP = (Integer) tableSanPham.getValueAt(tableSanPham.getSelectedRow(), 0);
+        String tenSP = (String) tableSanPham.getValueAt(tableSanPham.getSelectedRow(), 1);
+        long dongia = (long) tableSanPham.getValueAt(tableSanPham.getSelectedRow(), 2);
+        int slSP = (Integer) tableSanPham.getValueAt(tableSanPham.getSelectedRow(), 3);
+        slTD = slSP;
+        String loaiSP = (String) tableSanPham.getValueAt(tableSanPham.getSelectedRow(), 4);
+        for (int i = 0; i < fields.length; i++){
+            if (fields[i] instanceof JTextField)
+            {
+                JTextField a = (JTextField) fields[i];
+                switch (i)
+                {
+                    case 0:
+                        a.setText(String.valueOf(maSP));
+                        break;
+                    case 1:
+                        a.setText(tenSP);
+                        break;
+                    case 2:
+                        a.setText(String.valueOf(dongia));
+                        break;
+                    case 4:
+                        a.setText(loaiSP);
+                        break;
+                    case 5:
+                        a.setText(tk.get(3).toString());
+                        break;
+                    default:
+                        System.out.println("Khong phai la JTextField");
+                }
+                a.setForeground(Color.blue);
+            } else if (fields[i] instanceof JSpinner) {
+                JSpinner b = (JSpinner) fields[i];
+                JComponent editor = b.getEditor();
+                JFormattedTextField textField = ((JSpinner.DefaultEditor) editor).getTextField();
+
+                // Xóa border của text box và điều chỉnh padding
+                textField.setBorder(new EmptyBorder(0, 2, 0, 0));
+                textField.setHorizontalAlignment(JTextField.RIGHT); // Căn phải text
+
+                // Tùy chỉnh các nút tăng giảm
+                for (Component component : b.getComponents()) {
+                    if (component instanceof JButton) {
+                        JButton button = (JButton) component;
+                        // Xóa border và margin của nút
+                        button.setBorder(new LineBorder(Color.lightGray, 1));
+                        button.setMargin(new Insets(0, 0, 0, 0));
+                        // Đặt kích thước nút để khớp với chiều cao của text box
+                        int textFieldHeight = textField.getPreferredSize().height;
+                        button.setPreferredSize(new Dimension(button.getPreferredSize().width, textFieldHeight));
+                    }
+                }
+
+                // Đặt LineBorder cho toàn bộ JSpinner
+                b.setBorder(new LineBorder(Color.BLACK, 1));           
+                b.setEnabled(true);
+                b.setModel(new SpinnerNumberModel(1, 1, slTD, 1));
+            } 
+        }
+        HoaDonBUS hd = new HoaDonBUS();
+        loadProductImage(hd.timAnhChoSanPham(String.valueOf(maSP)));
     }
 
         // Phương thức tải và hiển thị ảnh sản phẩm trên JLabel

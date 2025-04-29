@@ -32,7 +32,7 @@ public class MainGUI extends javax.swing.JFrame {
         String tenquyen = ttdn.get(6).toString();
         switch (tenquyen)
         {
-            case "admin":
+            case "Admin":
                 initializeCardLayout();
                 setupMenuEvents();
                 break;
