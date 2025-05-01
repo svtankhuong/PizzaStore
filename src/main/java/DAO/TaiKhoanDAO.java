@@ -62,10 +62,10 @@ public class TaiKhoanDAO {
             String sql = "UPDATE taikhoan SET MatKhau = ?, MaQuyen = ?, MaNV = ? WHERE TenDangNhap = ?";
             java.sql.PreparedStatement pre = conn.prepareStatement(sql);
 
-            pre.setString(1, tk.getTenDangNhap());
-            pre.setString(2, tk.getMatKhau());
-            pre.setInt(3, tk.getMaQuyen());
-            pre.setInt(4, tk.getMaNV());
+            pre.setString(1, tk.getMatKhau());     // MatKhau
+            pre.setInt(2, tk.getMaQuyen());        // MaQuyen
+            pre.setInt(3, tk.getMaNV());           // MaNV
+            pre.setString(4, tk.getTenDangNhap()); // WHERE TenDangNhap = ?
 
             int rowsAffected = pre.executeUpdate();
             return rowsAffected > 0;
@@ -90,15 +90,14 @@ public class TaiKhoanDAO {
         return result;
     }
 
-    public ArrayList<Object> getInforAccount(String username)
-    {
-       
-       String sql = "SELECT MaNV, MatKhau, MaQuyen FROM TaiKhoan WHERE TenDangNhap=?";
-       ArrayList<Object> thong_tin_DN = new ArrayList<>();
-        try ( Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)){
+    public ArrayList<Object> getInforAccount(String username) {
+
+        String sql = "SELECT MaNV, MatKhau, MaQuyen FROM TaiKhoan WHERE TenDangNhap=?";
+        ArrayList<Object> thong_tin_DN = new ArrayList<>();
+        try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 int manv = rs.getInt("MaNV");
                 String matkhau = rs.getString("MatKhau");
                 int maquyen = rs.getInt("MaQuyen");
@@ -109,7 +108,7 @@ public class TaiKhoanDAO {
                 thong_tin_DN.add(username);
                 thong_tin_DN.add(matkhau);
                 thong_tin_DN.add(manv);
-                String ho_ten_nhan_vien = b.getHoLot()+" "+b.getTen();
+                String ho_ten_nhan_vien = b.getHoLot() + " " + b.getTen();
                 thong_tin_DN.add(ho_ten_nhan_vien);
                 thong_tin_DN.add(ngaysinh);
                 thong_tin_DN.add(gioitinh);
@@ -117,8 +116,7 @@ public class TaiKhoanDAO {
                 String tenQuyen = c.getTenQuyenTheoMa(maquyen);
                 thong_tin_DN.add(tenQuyen);
             }
-        }catch(SQLException e)
-        {
+        } catch (SQLException e) {
             System.err.println("Lỗi : " + e.getMessage());
         }
         return thong_tin_DN;

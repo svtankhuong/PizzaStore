@@ -3,7 +3,7 @@
 -- TẠO BẢNG
 -- ============================
 
-create DATABASE pizzastore;
+
 use pizzastore;
 
 CREATE TABLE NhanVien (

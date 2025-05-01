@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -44,6 +45,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         loadDataToTable(); // Tải dữ liệu nhân viên lên JTable
         loadDataCmbQuyen();
         loadChiTietQuyen();
+        
     }
 
     /**
@@ -100,8 +102,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         cbNhapHang = new javax.swing.JCheckBox();
         cbThongKe = new javax.swing.JCheckBox();
         btnThemQuyen = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnXoaQuyen = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(247, 247, 247));
 
@@ -466,11 +467,13 @@ public class PnNhanVien3 extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Pencil-icon.png"))); // NOI18N
-        jButton2.setText("Sửa quyền");
-
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/delete-icon.png"))); // NOI18N
-        jButton3.setText("Xóa quyền");
+        btnXoaQuyen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/delete-icon.png"))); // NOI18N
+        btnXoaQuyen.setText("Xóa quyền");
+        btnXoaQuyen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaQuyenActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -508,13 +511,11 @@ public class PnNhanVien3 extends javax.swing.JPanel {
                         .addGap(431, 431, 431)
                         .addComponent(lblTitle2, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(369, 369, 369)
+                        .addGap(440, 440, 440)
                         .addComponent(btnThemQuyen)
-                        .addGap(68, 68, 68)
-                        .addComponent(jButton2)
-                        .addGap(79, 79, 79)
-                        .addComponent(jButton3)))
-                .addContainerGap(369, Short.MAX_VALUE))
+                        .addGap(114, 114, 114)
+                        .addComponent(btnXoaQuyen)))
+                .addContainerGap(452, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -571,12 +572,11 @@ public class PnNhanVien3 extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnThemQuyen)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(btnXoaQuyen))
                 .addGap(220, 220, 220))
         );
 
-        jTabbedPane1.addTab("tab2", jPanel3);
+        jTabbedPane1.addTab("Quyền", jPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -673,36 +673,60 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     }//GEN-LAST:event_cbbNhomQuyenActionPerformed
 
     private void cbBanHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbBanHangActionPerformed
-        // TODO add your handling code here:
+        capNhatQuyen(cbBanHang, "QLBanHang");
     }//GEN-LAST:event_cbBanHangActionPerformed
 
     private void cbKhuyenMaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbKhuyenMaiActionPerformed
-        // TODO add your handling code here:
+        capNhatQuyen(cbKhuyenMai, "QLKhuyenMai");
     }//GEN-LAST:event_cbKhuyenMaiActionPerformed
 
     private void cbSanPhamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSanPhamActionPerformed
-        // TODO add your handling code here:
+        capNhatQuyen(cbSanPham, "QLSanPham");
     }//GEN-LAST:event_cbSanPhamActionPerformed
 
     private void cbNhanVienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbNhanVienActionPerformed
-        // TODO add your handling code here:
+        capNhatQuyen(cbNhanVien, "QLNhanVien");
     }//GEN-LAST:event_cbNhanVienActionPerformed
 
     private void cbKhachHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbKhachHangActionPerformed
-        // TODO add your handling code here:
+        capNhatQuyen(cbKhachHang, "QLKhachHang");
     }//GEN-LAST:event_cbKhachHangActionPerformed
 
     private void cbNhapHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbNhapHangActionPerformed
-        // TODO add your handling code here:
+        capNhatQuyen(cbNhapHang, "QLNhapHang");
     }//GEN-LAST:event_cbNhapHangActionPerformed
 
     private void cbThongKeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbThongKeActionPerformed
-        // TODO add your handling code here:
+        capNhatQuyen(cbThongKe, "ThongKe");
     }//GEN-LAST:event_cbThongKeActionPerformed
 
     private void btnThemQuyenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemQuyenActionPerformed
         themQuyenMoi();
     }//GEN-LAST:event_btnThemQuyenActionPerformed
+
+    private void btnXoaQuyenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaQuyenActionPerformed
+        // Lấy quyền đang chọn từ combobox
+        QuyenDTO quyen = (QuyenDTO) cbbNhomQuyen.getSelectedItem();
+
+        if (quyen != null) {
+            // Lấy mã quyền từ đối tượng QuyenDTO
+            int maQuyen = quyen.getMaQuyen(); // Giả sử bạn có phương thức getMaQuyen() trong QuyenDTO
+
+            // Gọi phương thức xóa quyền từ QuyenBUS
+            QuyenBUS quyenBUS = new QuyenBUS(); // Tạo đối tượng QuyenBUS nếu chưa có sẵn
+            boolean isDeleted = quyenBUS.xoaQuyen(maQuyen);
+
+            if (isDeleted) {
+                // Nếu xóa thành công, xóa quyền khỏi combobox
+                cbbNhomQuyen.removeItem(quyen);
+
+                // Hiển thị thông báo cho người dùng
+                JOptionPane.showMessageDialog(this, "Quyền đã được xóa.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn quyền cần xóa.");
+        }
+    }//GEN-LAST:event_btnXoaQuyenActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -713,6 +737,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     private javax.swing.JButton btnThem;
     private javax.swing.JButton btnThemQuyen;
     private javax.swing.JButton btnXoa;
+    private javax.swing.JButton btnXoaQuyen;
     private javax.swing.JCheckBox cbBanHang;
     private javax.swing.JCheckBox cbKhachHang;
     private javax.swing.JCheckBox cbKhuyenMai;
@@ -722,8 +747,6 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbThongKe;
     private javax.swing.JComboBox<String> cbbGioiTinh;
     private javax.swing.JComboBox<QuyenDTO> cbbNhomQuyen;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
@@ -816,7 +839,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         }
 
         String maNVchu = txtMaNV.getText().trim(); // Lấy MaNV từ text field
-        int maNV  = Integer.parseInt(maNVchu);
+        int maNV = Integer.parseInt(maNVchu);
         String ho = txtHoLot.getText().trim();
         String ten = txtTen.getText().trim();
         String gioiTinh = cbbGioiTinh.getSelectedItem().toString();
@@ -838,7 +861,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
             return;
         }
         String maNVchu = txtMaNV.getText().trim();
-        int maNV  = Integer.parseInt(maNVchu);
+        int maNV = Integer.parseInt(maNVchu);
         int confirm = JOptionPane.showConfirmDialog(
                 null,
                 "Bạn có chắc chắn muốn xóa nhân viên này?",
@@ -922,9 +945,10 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     }
 
     private void themQuyenMoi() {
+        JTextField txtTenQuyen = new JTextField();
+
         JPanel panel = new JPanel(new GridLayout(2, 1, 5, 5));
         panel.add(new JLabel("Nhập tên quyền mới:"));
-        JTextField txtTenQuyen = new JTextField();
         panel.add(txtTenQuyen);
 
         int result = JOptionPane.showConfirmDialog(this, panel, "Thêm quyền mới",
@@ -932,32 +956,33 @@ public class PnNhanVien3 extends javax.swing.JPanel {
 
         if (result == JOptionPane.OK_OPTION) {
             String tenQuyenMoi = txtTenQuyen.getText().trim();
-            if (!tenQuyenMoi.isEmpty()) {
-                // Tạo đối tượng QuyenDTO mới
-                QuyenDTO quyenMoi = new QuyenDTO();
-                quyenMoi.setTenQuyen(tenQuyenMoi);
-                quyenMoi.setQLBanHang(false);
-                quyenMoi.setQLKhuyenMai(false);
-                quyenMoi.setQLSanPham(false);
-                quyenMoi.setQLNhanVien(false);
-                quyenMoi.setQLKhachHang(false);
-                quyenMoi.setQLNhapHang(false);
-                quyenMoi.setThongKe(false);
 
-                // Lưu vào danh sách chính thông qua QuyenBUS
-                //QuyenBUS.themQuyen(quyenMoi); // Giả sử bạn có phương thức này trong QuyenBUS để thêm quyền mới
-
-                // Tải lại danh sách vào JComboBox
-                loadDataCmbQuyen();
-
-                // Chọn quyền vừa thêm
-                cbbNhomQuyen.setSelectedItem(quyenMoi);
-
-                JOptionPane.showMessageDialog(this, "Đã thêm quyền: " + tenQuyenMoi);
-            } else {
+            if (tenQuyenMoi.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Tên quyền không được để trống.");
+                return;
+            }
+
+            QuyenBUS quyenBUS = new QuyenBUS();
+
+            for (QuyenDTO q : QuyenBUS.getListQuyen()) {
+                if (q.getTenQuyen().equalsIgnoreCase(tenQuyenMoi)) {
+                    JOptionPane.showMessageDialog(this, "Quyền này đã tồn tại.");
+                    return;
+                }
+            }
+
+            QuyenDTO quyenMoi = new QuyenDTO();
+            quyenMoi.setTenQuyen(tenQuyenMoi); // Chỉ cần set tên
+
+            if (quyenBUS.themQuyen(quyenMoi)) {
+                JOptionPane.showMessageDialog(this, "Đã thêm quyền: " + tenQuyenMoi);
+                loadDataCmbQuyen();
+                cbbNhomQuyen.setSelectedItem(tenQuyenMoi);
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm quyền thất bại.");
             }
         }
+
     }
 
     private void loadChiTietQuyen() {
@@ -979,6 +1004,31 @@ public class PnNhanVien3 extends javax.swing.JPanel {
             cbKhachHang.setSelected(false);
             cbNhapHang.setSelected(false);
             cbThongKe.setSelected(false);
+        }
+    }
+
+    private void capNhatQuyen(JCheckBox checkbox, String tenQuyen) {
+        QuyenDTO q = (QuyenDTO) cbbNhomQuyen.getSelectedItem();
+        if (q != null) {
+            boolean giaTri = checkbox.isSelected();
+            switch (tenQuyen) {
+                case "QLBanHang" ->
+                    q.setQLBanHang(giaTri);
+                case "QLKhuyenMai" ->
+                    q.setQLKhuyenMai(giaTri);
+                case "QLSanPham" ->
+                    q.setQLSanPham(giaTri);
+                case "QLNhanVien" ->
+                    q.setQLNhanVien(giaTri);
+                case "QLKhachHang" ->
+                    q.setQLKhachHang(giaTri);
+                case "QLNhapHang" ->
+                    q.setQLNhapHang(giaTri);
+                case "ThongKe" ->
+                    q.setThongKe(giaTri);
+            }
+            QuyenBUS qBUS = new QuyenBUS();
+            qBUS.capnhatquyen(q);  // Cập nhật quyền vào cơ sở dữ liệu
         }
     }
 

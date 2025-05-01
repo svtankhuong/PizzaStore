@@ -2,9 +2,11 @@ package BUS;
 
 import DAO.QuyenDAO;
 import DTO.QuyenDTO;
+import MyCustom.MyDialog;
 import java.util.ArrayList;
 
 public class QuyenBUS {
+
     private static ArrayList<QuyenDTO> danhSachQuyen;
     private static QuyenDAO qDAO = new QuyenDAO();
 
@@ -12,8 +14,8 @@ public class QuyenBUS {
     public static void docDanhSachQuyen() {
         danhSachQuyen = qDAO.getDanhSachQuyen();
     }
-    
-    public QuyenBUS(){
+
+    public QuyenBUS() {
         docDanhSachQuyen();
     }
 
@@ -31,6 +33,7 @@ public class QuyenBUS {
         }
         return null;
     }
+
     public String getTenQuyenTheoMa(int maQuyen) {
         for (QuyenDTO q : danhSachQuyen) {
             if (q.getMaQuyen() == maQuyen) {
@@ -39,4 +42,25 @@ public class QuyenBUS {
         }
         return null;
     }
+
+    public boolean themQuyen(QuyenDTO q) {
+        return qDAO.themQuyen(q);
+    }
+
+    // Cập nhật quyền
+    public boolean capnhatquyen(QuyenDTO quyen) {
+        return qDAO.capNhatQuyen(quyen);
+    }
+
+    // Xóa quyền
+    public boolean xoaQuyen(int maQuyen) {
+        boolean flag = qDAO.xoaQuyen(maQuyen);
+        if (!flag) {
+            new MyDialog("Xóa thật bại do đang có nhân viên mang quyền này", MyDialog.ERROR_DIALOG);
+        } else {
+            new MyDialog("Xóa thành công", MyDialog.ERROR_DIALOG);
+        }
+        return flag;
+    }
+
 }

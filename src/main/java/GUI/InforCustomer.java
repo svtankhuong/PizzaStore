@@ -70,8 +70,7 @@ public class InforCustomer extends javax.swing.JFrame{
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel1 = new javax.swing.JPanel();
@@ -132,10 +131,8 @@ public class InforCustomer extends javax.swing.JFrame{
 
         BtnChooseCustomer.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         BtnChooseCustomer.setText("Chọn Khách Hàng");
-        BtnChooseCustomer.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        BtnChooseCustomer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnChooseCustomerActionPerformed(evt);
             }
         });

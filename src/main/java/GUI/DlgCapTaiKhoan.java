@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 public final class DlgCapTaiKhoan extends javax.swing.JDialog {
-    
+
     private int maNV;
 
     public DlgCapTaiKhoan(int maNV) {
@@ -223,6 +223,13 @@ public final class DlgCapTaiKhoan extends javax.swing.JDialog {
         // Mặc định mã quyền là 4 (Nhân viên)
         int maQuyen = 4;
         String tenQuyen = (String) cmbQuyen.getSelectedItem();
+        ArrayList<TaiKhoanDTO> danhSachTaiKhoan = TaiKhoanBUS.getDanhSachTaiKhoan();
+        for (TaiKhoanDTO tk : danhSachTaiKhoan) {
+            if (tk.getMaNV() == maNV) {
+                JOptionPane.showMessageDialog(this, "Nhân viên này đã có tài khoản!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
 
         // Tìm mã quyền tương ứng với tên quyền được chọn
         ArrayList<QuyenDTO> dsQuyen = QuyenBUS.getListQuyen();

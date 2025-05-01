@@ -81,7 +81,7 @@ public class TaiKhoanBUS {
         tk.setMaNV(maNV);
 
         TaiKhoanDAO dao = new TaiKhoanDAO();
-        boolean thanhCong = dao.ThemTaiKhoan(tk);
+        boolean thanhCong = dao.SuaTaiKhoan(tk);
 
         if (!thanhCong) {
             new MyDialog("Cập nhật tài khoản thất bại!", MyDialog.ERROR_DIALOG);
