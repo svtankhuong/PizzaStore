@@ -16,9 +16,9 @@ public class QuyenDAO {
         ArrayList<QuyenDTO> danhSachQuyen = new ArrayList<>();
         try {
             String sql = "SELECT * FROM quyen";
-            java.sql.Connection connection = JDBC.getConnection();
-            java.sql.PreparedStatement pre = connection.prepareStatement(sql);
-            java.sql.ResultSet rs = pre.executeQuery();
+            Connection connection = JDBC.getConnection();
+            PreparedStatement pre = connection.prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 QuyenDTO q = new QuyenDTO();
                 q.setMaQuyen(rs.getInt("MaQuyen"));
@@ -38,4 +38,48 @@ public class QuyenDAO {
         }
         return danhSachQuyen;
     }
+
+    public boolean themQuyen(QuyenDTO q) {
+        String sql = "INSERT INTO quyen (TenQuyen, QLBanHang, QLKhuyenMai, QLSanPham, QLNhanVien, QLKhachHang, QLNhapHang, ThongKe) "
+                + "VALUES (?, 0,0,0,0,0,0,0)";
+        try (Connection connection = JDBC.getConnection(); PreparedStatement pre = connection.prepareStatement(sql)) {
+            pre.setString(1, q.getTenQuyen());
+            return pre.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean capNhatQuyen(QuyenDTO quyen) {
+        String sql = "UPDATE quyen SET QLBanHang=?, QLKhuyenMai=?, QLSanPham=?, QLNhanVien=?, QLKhachHang=?, QLNhapHang=?, ThongKe=? WHERE MaQuyen=?";
+        try (Connection connection = JDBC.getConnection(); PreparedStatement pre = connection.prepareStatement(sql)) {
+            pre.setBoolean(1, quyen.getQLBanHang());
+            pre.setBoolean(2, quyen.getQLKhuyenMai());
+            pre.setBoolean(3, quyen.getQLSanPham());
+            pre.setBoolean(4, quyen.getQLNhanVien());
+            pre.setBoolean(5, quyen.getQLKhachHang());
+            pre.setBoolean(6, quyen.getQLNhapHang());
+            pre.setBoolean(7, quyen.getThongKe());
+            pre.setInt(8, quyen.getMaQuyen());
+
+            return pre.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean xoaQuyen(int maQuyen) {
+        String sql = "DELETE FROM quyen WHERE MaQuyen=?";
+        try (Connection connection = JDBC.getConnection(); PreparedStatement pre = connection.prepareStatement(sql)) {
+            pre.setInt(1, maQuyen);
+            return pre.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

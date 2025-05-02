@@ -91,51 +91,52 @@ public class NhanVienBUS {
 
     public ArrayList<Object[]> hienThiTaiKhoanNhanVien() {
         ArrayList<Object[]> dsThongTin = new ArrayList<>();
-    
+
         try {
             NhanVienDAO nvDAO = new NhanVienDAO();
             TaiKhoanDAO tkDAO = new TaiKhoanDAO();
             QuyenDAO qDAO = new QuyenDAO();
-    
+
             ArrayList<NhanVienDTO> dsNhanVien = nvDAO.getDanhSachNhanVien();
             ArrayList<TaiKhoanDTO> dsTaiKhoan = tkDAO.getDanhSachTaiKhoan();
             ArrayList<QuyenDTO> dsQuyen = qDAO.getDanhSachQuyen();
-    
+
             for (NhanVienDTO nv : dsNhanVien) {
-                // Tìm tài khoản của nhân viên
+                // Tìm tài khoản của nhân viên (dùng so sánh số nguyên)
                 TaiKhoanDTO tk = dsTaiKhoan.stream()
-                    .filter(t -> String.valueOf(t.getMaNV()).equals(nv.getMaNV()))
-                    .findFirst().orElse(null);
-    
-                // Tìm quyền của tài khoản nếu có
-                QuyenDTO q = (tk != null) ? dsQuyen.stream()
-                    .filter(qu -> qu.getMaQuyen() == tk.getMaQuyen())
-                    .findFirst().orElse(null) : null;
-    
-                // Nếu không có tài khoản, tạo giá trị mặc định
+                        .filter(t -> t.getMaNV() == nv.getMaNV())
+                        .findFirst().orElse(null);
+
+                // Tìm quyền tương ứng nếu có
+                QuyenDTO q = (tk != null)
+                        ? dsQuyen.stream()
+                                .filter(qu -> qu.getMaQuyen() == tk.getMaQuyen())
+                                .findFirst().orElse(null)
+                        : null;
+
+                // Lấy thông tin hiển thị
                 String tenDangNhap = (tk != null) ? tk.getTenDangNhap() : "Chưa có tài khoản";
+                String matKhau = (tk != null && tk.getMatKhau() != null) ? tk.getMatKhau() : "";
                 String tenQuyen = (q != null) ? q.getTenQuyen() : "";
-                String matKhau = (tk != null) ? tk.getMatKhau() : "";
-    
+
                 Object[] rowData = {
                     nv.getMaNV(),
                     nv.getHoLot(),
                     nv.getTen(),
                     nv.getNgaysinh(),
                     nv.getGioiTinh(),
-                    tenDangNhap,  // Hiển thị tài khoản hoặc thông báo "Chưa có tài khoản"
-                    matKhau,      // Hiển thị mật khẩu hoặc thông báo "Chưa có mật khẩu"
-                    tenQuyen      // Hiển thị quyền hoặc thông báo "Không có quyền"
+                    tenDangNhap,
+                    matKhau,
+                    tenQuyen
                 };
-    
+
                 dsThongTin.add(rowData);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    
+
         return dsThongTin;
     }
-    
-    
+
 }
