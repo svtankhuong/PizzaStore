@@ -18,7 +18,13 @@ public class HoaDonDAO
         try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, hd.getMaNV());
             ps.setInt(2, hd.getMaKH());
-            ps.setInt(3, hd.getMaCTKM());
+            
+            // Xử lý null cho MaCTKM
+            if (hd.getMaCTKM() != null) {
+                ps.setInt(3, hd.getMaCTKM());
+            } else {
+                ps.setNull(3, java.sql.Types.INTEGER);
+            }
             ps.setDate(4, Date.valueOf(hd.getNgayLapHD()));
             ps.setLong(5, hd.getSoTienGiam());
             ps.setLong(6, hd.getTongTienHD());

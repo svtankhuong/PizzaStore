@@ -81,4 +81,26 @@ public class ChiTietKMDAO {
             return false;
         }
     }
+    
+    public ChiTietKMDTO timKiemCTKM(int MaKM) {
+        String sql = "SELECT * FROM chitietkhuyenmai WHERE MaKM=?";
+        ChiTietKMDTO ctkm = null;
+        try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, MaKM);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                int a = rs.getInt("MACTKM"); 
+                int b = rs.getInt("MaKM");
+                Long c = rs.getLong("PhanTramGiam");
+                Long d = rs.getLong("ToiThieuGiam");
+                String e = rs.getString("TenCTKM");
+                ctkm = new ChiTietKMDTO(a, b, c, d, e);
+            }
+       
+        } catch (SQLException e) {
+            System.err.println("Lỗi tìm kiếm khuyến mãi: " + e.getMessage());
+            return null;
+        }
+        return ctkm;
+    }
 }

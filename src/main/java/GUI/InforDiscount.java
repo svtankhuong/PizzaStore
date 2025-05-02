@@ -69,20 +69,28 @@ public class InforDiscount extends javax.swing.JFrame
         SPane1 = new javax.swing.JScrollPane();
         TableDiscount = new javax.swing.JTable();
         BtnChooseDiscount = new javax.swing.JButton();
+        BtnNoDiscount = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(600, 600));
+        setResizable(false);
+        setSize(new java.awt.Dimension(0, 0));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setMinimumSize(new java.awt.Dimension(600, 600));
         jPanel1.setPreferredSize(new java.awt.Dimension(600, 600));
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
         jLabel.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel.setText("Bảng Khuyến Mãi");
-        jPanel1.add(jLabel, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        jPanel1.add(jLabel, gridBagConstraints);
 
         SPane1.getViewport().setBackground(Color.WHITE);
         SPane1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        SPane1.setPreferredSize(new java.awt.Dimension(580, 440));
 
         TableDiscount.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         TableDiscount.setModel(new javax.swing.table.DefaultTableModel(
@@ -111,13 +119,14 @@ public class InforDiscount extends javax.swing.JFrame
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.ipadx = 520;
-        gridBagConstraints.ipady = 400;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         jPanel1.add(SPane1, gridBagConstraints);
 
         BtnChooseDiscount.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         BtnChooseDiscount.setText("Chọn Khuyến Mãi");
+        BtnChooseDiscount.setMaximumSize(new java.awt.Dimension(170, 30));
+        BtnChooseDiscount.setMinimumSize(new java.awt.Dimension(170, 30));
+        BtnChooseDiscount.setPreferredSize(new java.awt.Dimension(170, 30));
         BtnChooseDiscount.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -127,17 +136,34 @@ public class InforDiscount extends javax.swing.JFrame
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.ipadx = 50;
-        gridBagConstraints.ipady = 15;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.ipadx = 10;
+        gridBagConstraints.ipady = 5;
         jPanel1.add(BtnChooseDiscount, gridBagConstraints);
+
+        BtnNoDiscount.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        BtnNoDiscount.setText("Không Khuyến Mãi");
+        BtnNoDiscount.setPreferredSize(new java.awt.Dimension(180, 30));
+        BtnNoDiscount.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                BtnNoDiscountActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipady = 5;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        jPanel1.add(BtnNoDiscount, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
@@ -149,25 +175,34 @@ public class InforDiscount extends javax.swing.JFrame
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnChooseDiscountActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_BtnChooseDiscountActionPerformed
     {//GEN-HEADEREND:event_BtnChooseDiscountActionPerformed
         int row = TableDiscount.getSelectedRow();
-        if(row == -1){
-            JOptionPane.showMessageDialog(this, "Bạn chưa chọn dòng trong bảng thông tin khuyến mãi" , "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }else{
+        if(row != -1){
+            String ma_km = TableDiscount.getModel().getValueAt(row, 0).toString();
             String ten_km = TableDiscount.getModel().getValueAt(row, 1).toString();
-            JOptionPane.showMessageDialog(this, String.format("Bạn đã khuyến mãi có tên là  %s", ten_km) , "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, String.format("Bạn đã chọn khuyến mãi có tên là  %s", ten_km) , "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
             if(listener != null){
-                listener.onDiscountSelected(ten_km);
+                listener.onDiscountSelected(Integer.parseInt(ma_km),ten_km);
             }
             this.dispose();
         }
     }//GEN-LAST:event_BtnChooseDiscountActionPerformed
 
+    private void BtnNoDiscountActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_BtnNoDiscountActionPerformed
+    {//GEN-HEADEREND:event_BtnNoDiscountActionPerformed
+        if(listener != null){
+            listener.onDiscountSelected(null, null);
+        }
+        this.dispose();
+    }//GEN-LAST:event_BtnNoDiscountActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnChooseDiscount;
+    private javax.swing.JButton BtnNoDiscount;
     private javax.swing.JScrollPane SPane1;
     private javax.swing.JTable TableDiscount;
     private javax.swing.JLabel jLabel;

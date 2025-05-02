@@ -11,13 +11,20 @@ import java.util.ArrayList;
 
 public class CTHDDAO
 {
-        public boolean themCTHD(ChiTietHoaDonDTO cthd){
+    public boolean themCTHD(ChiTietHoaDonDTO cthd) {
         String sql = "INSERT INTO ChiTietHoaDon (MaHD, MaSP, MaNV, MaCTKM, SoLuong, DonGia, ThanhTien) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, cthd.getMaHD());
             ps.setInt(2, cthd.getMaSP());
             ps.setInt(3, cthd.getMaNV());
-            ps.setInt(4, cthd.getMaCTKM());
+
+            // Xử lý null cho MaCTKM
+            if (cthd.getMaCTKM() != null) {
+                ps.setInt(4, cthd.getMaCTKM());
+            } else {
+                ps.setNull(4, java.sql.Types.INTEGER);
+            }
+
             ps.setLong(5, cthd.getSoLuong());
             ps.setLong(6, cthd.getDonGia());
             ps.setLong(7, cthd.getThanhTien());
@@ -26,9 +33,10 @@ public class CTHDDAO
         } catch (SQLException e) {
             System.err.println("Lỗi khi thêm hóa đơn: " + e.getMessage());
         }
-        
+
         return false;
     }
+
     
     public ArrayList<ChiTietHoaDonDTO> layDSCTHD(){
         String sql = "SELECT * FROM ChiTietHoaDon";

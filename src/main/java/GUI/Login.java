@@ -1,7 +1,5 @@
 
 package GUI;
-
-import BUS.LoginBUS;
 import DAO.TaiKhoanDAO;
 import DTO.TaiKhoanDTO;
 import MyCustom.ImagePanel;
@@ -16,8 +14,27 @@ public class Login extends javax.swing.JFrame {
   
     public Login() {
         initComponents();
+        tfUsername.setText("hoangvanvu");
+        pfPassword.setText("1234567");
     }
 
+    public int check_user_log_in(String tenDN, String tenMK){
+        TaiKhoanDAO tkdao = new TaiKhoanDAO();
+        ArrayList<TaiKhoanDTO> dsTK = tkdao.getDanhSachTaiKhoan();
+        for (TaiKhoanDTO tk: dsTK){
+            if (tk.getTenDangNhap().equals(tenDN))
+            {
+                if (tk.getMatKhau().equals(tenMK)){
+                    return 1;
+                }else{
+                //  nếu người dùng đăng nhập sai mật khẩu                  
+                    return 0;
+                }
+            }
+        }
+        //  Nếu người dùng gõ tên đăng nhập sai hoặc không tồn tại
+        return -1; 
+    }
  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -169,8 +186,7 @@ public class Login extends javax.swing.JFrame {
         } else if(pass.isBlank()){
             JOptionPane.showMessageDialog(null, "password không được để trống", "Lỗi", JOptionPane.ERROR_MESSAGE );                      
         } else{
-            LoginBUS a = new LoginBUS();
-            int kiemtra= a.check_user_log_in(username, pass);
+            int kiemtra= check_user_log_in(username, pass);
             if (kiemtra < 0)
             {
                 JOptionPane.showMessageDialog(null, String.format("Tài khoản %s không tồn tại",username), "Lỗi", JOptionPane.ERROR_MESSAGE );                      

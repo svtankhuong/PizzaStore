@@ -34,4 +34,27 @@ public class KhachHangDAO
         }
         return dsKH;
     }
+    
+    public KhachHangDTO TimKhachHangTheoMa(int makh){
+        String sql = "SELECT * FROM KhachHang WHERE MaKH = ?";
+        KhachHangDTO kh = null;
+        try ( Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1, makh);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int idKH = rs.getInt("MaKH");
+                String holot = rs.getString("HoLot");
+                String tenKH = rs.getString("Ten");
+                String sdt = rs.getString("SDT");
+                String diachi = rs.getString("DiaChi");
+                Long tct = rs.getLong("TongChiTieu");
+                kh = new KhachHangDTO(idKH, holot, tenKH, sdt, diachi, tct);
+            }
+        }catch(SQLException e)
+        {
+            System.err.println("Lỗi khi lấy danh sách Khách Hàng: " + e.getMessage());
+        }
+        
+        return kh;
+    }
 }

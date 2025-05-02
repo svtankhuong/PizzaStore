@@ -12,9 +12,16 @@ public class HoaDonBUS
         return sp.layDSSP();
     }
     
-    public void addReceipt(SanPhamDTO sp){
-        
+    public boolean addReceipt(HoaDonDTO hd){
+        HoaDonDAO hddao = new HoaDonDAO();
+        return hddao.themHD(hd);
     }
+    
+    public boolean addDetailReceipt(ChiTietHoaDonDTO cthd){
+        CTHDDAO cthddao = new CTHDDAO();
+        return cthddao.themCTHD(cthd);
+    }
+    
     public ArrayList<HoaDonDTO> hienDSHD(){
         HoaDonDAO hd = new HoaDonDAO();
         return hd.layDSHD();

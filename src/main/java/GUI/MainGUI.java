@@ -615,7 +615,6 @@ public class MainGUI extends javax.swing.JFrame {
 
         // Create the InforAccount object
         InforAccount account = new InforAccount(param1, param2, param3, param4, param5, param6, param7);
-
         account.setLocationRelativeTo(null);
         account.setVisible(true);
         account.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

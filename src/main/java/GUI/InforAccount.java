@@ -59,7 +59,10 @@ public class InforAccount extends javax.swing.JFrame
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Thông Tin Tài Khoản");
         setBackground(new java.awt.Color(255, 255, 255));
+        setMinimumSize(new java.awt.Dimension(400, 300));
         setPreferredSize(new java.awt.Dimension(400, 300));
+        setResizable(false);
+        setSize(new java.awt.Dimension(400, 300));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         LblTitle.setBackground(new java.awt.Color(255, 255, 255));
@@ -229,8 +232,6 @@ public class InforAccount extends javax.swing.JFrame
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 150;
         getContentPane().add(TFGT, gridBagConstraints);
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
 

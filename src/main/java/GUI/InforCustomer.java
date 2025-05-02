@@ -82,9 +82,12 @@ public class InforCustomer extends javax.swing.JFrame{
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(600, 600));
+        setMinimumSize(new java.awt.Dimension(600, 600));
+        setResizable(false);
+        setSize(new java.awt.Dimension(0, 0));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setMinimumSize(new java.awt.Dimension(600, 600));
         jPanel1.setPreferredSize(new java.awt.Dimension(600, 600));
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
@@ -92,10 +95,11 @@ public class InforCustomer extends javax.swing.JFrame{
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Bảng Khách Hàng");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         jPanel1.add(jLabel1, gridBagConstraints);
 
         SPane.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        SPane.setPreferredSize(new java.awt.Dimension(580, 460));
         SPane.getViewport().setBackground(Color.WHITE);
 
         TCustomer.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
@@ -125,13 +129,14 @@ public class InforCustomer extends javax.swing.JFrame{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.ipadx = 520;
-        gridBagConstraints.ipady = 400;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         jPanel1.add(SPane, gridBagConstraints);
 
         BtnChooseCustomer.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         BtnChooseCustomer.setText("Chọn Khách Hàng");
+        BtnChooseCustomer.setMaximumSize(new java.awt.Dimension(170, 30));
+        BtnChooseCustomer.setMinimumSize(new java.awt.Dimension(170, 30));
+        BtnChooseCustomer.setPreferredSize(new java.awt.Dimension(170, 30));
         BtnChooseCustomer.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -142,28 +147,23 @@ public class InforCustomer extends javax.swing.JFrame{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.ipadx = 50;
-        gridBagConstraints.ipady = 15;
+        gridBagConstraints.ipadx = 100;
+        gridBagConstraints.ipady = 20;
         jPanel1.add(BtnChooseCustomer, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnChooseCustomerActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_BtnChooseCustomerActionPerformed
@@ -173,10 +173,11 @@ public class InforCustomer extends javax.swing.JFrame{
         if(row == -1){
             JOptionPane.showMessageDialog(this, "Bạn chưa chọn dòng trong bảng khách hàng" , "Lỗi", JOptionPane.ERROR_MESSAGE);
         }else{
+            String ma_kh = TCustomer.getModel().getValueAt(row,0).toString();
             String ten_kh = TCustomer.getModel().getValueAt(row, 1).toString();
             JOptionPane.showMessageDialog(this, String.format("Bạn đã chọn khách hàng %s", ten_kh) , "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
             if(listener != null){
-                listener.onCustomerSelected(ten_kh);
+                listener.onCustomerSelected(Integer.parseInt(ma_kh),ten_kh);
             }
             this.dispose();
         }

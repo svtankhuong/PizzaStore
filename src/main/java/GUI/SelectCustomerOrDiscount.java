@@ -10,6 +10,6 @@ package GUI;
  */
 public interface SelectCustomerOrDiscount
 {
-    void onCustomerSelected(String tenKH);
-    void onDiscountSelected(String tenKM);
+    void onCustomerSelected(int maKH,String tenKH);
+    void onDiscountSelected(Integer maKM,String tenKM);
 }
