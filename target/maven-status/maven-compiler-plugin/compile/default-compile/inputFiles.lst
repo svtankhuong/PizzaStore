@@ -1,4 +1,5 @@
 D:\MonHoc\javadoan\PizzaStore\src\main\java\BUS\HoaDonBUS.java
+D:\MonHoc\javadoan\PizzaStore\src\main\java\BUS\KhachHangBUS.java
 D:\MonHoc\javadoan\PizzaStore\src\main\java\BUS\LoginBUS.java
 D:\MonHoc\javadoan\PizzaStore\src\main\java\BUS\NhanVienBUS.java
 D:\MonHoc\javadoan\PizzaStore\src\main\java\BUS\QuyenBUS.java
@@ -30,10 +31,12 @@ D:\MonHoc\javadoan\PizzaStore\src\main\java\GUI\InforDiscount.java
 D:\MonHoc\javadoan\PizzaStore\src\main\java\GUI\Login.java
 D:\MonHoc\javadoan\PizzaStore\src\main\java\GUI\main.java
 D:\MonHoc\javadoan\PizzaStore\src\main\java\GUI\MainGUI.java
+D:\MonHoc\javadoan\PizzaStore\src\main\java\GUI\PnKhachHang.java
 D:\MonHoc\javadoan\PizzaStore\src\main\java\GUI\PnNhanVien3.java
 D:\MonHoc\javadoan\PizzaStore\src\main\java\GUI\PnQLBH.java
 D:\MonHoc\javadoan\PizzaStore\src\main\java\GUI\SelectCustomerOrDiscount.java
 D:\MonHoc\javadoan\PizzaStore\src\main\java\GUI\test.java
+D:\MonHoc\javadoan\PizzaStore\src\main\java\MyCustom\ButtonStyle.java
 D:\MonHoc\javadoan\PizzaStore\src\main\java\MyCustom\IconTextField.java
 D:\MonHoc\javadoan\PizzaStore\src\main\java\MyCustom\ImagePanel.java
 D:\MonHoc\javadoan\PizzaStore\src\main\java\MyCustom\MyDialog.java

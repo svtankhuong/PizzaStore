@@ -14,56 +14,62 @@ import java.util.logging.Logger;
 
 public class NhanVienBUS {
 
-    private NhanVienDAO nvDAO;
+    private final NhanVienDAO nvDAO;
 
     public NhanVienBUS() {
         nvDAO = new NhanVienDAO();
     }
 
-    public boolean themNhanVien(String ho, String ten, String gioiTinh, String ngaySinh) {
-        ho = ho.trim();
-        ten = ten.trim();
+    private String validateNhanVien(String ho, String ten, String gioiTinh, String ngaySinh) {
+        if (ten.trim().isEmpty()) {
+            return "Tên không được để trống!";
+        }
+        if (ho.trim().isEmpty()) {
+            return "Họ lót không được để trống!";
+        }
+        if (gioiTinh == null || gioiTinh.trim().isEmpty()) {
+            return "Giới tính không được để trống!";
+        }
+        if (ngaySinh == null || ngaySinh.trim().isEmpty()) {
+            return "Ngày sinh không được để trống!";
+        }
+        return null;
+    }
 
-        if (ten.equals("")) {
-            new MyDialog("Tên không được để trống!", MyDialog.ERROR_DIALOG);
+    public boolean themNhanVien(String ho, String ten, String gioiTinh, String ngaySinh) {
+        String loi = validateNhanVien(ho, ten, gioiTinh, ngaySinh);
+        if (loi != null) {
+            new MyDialog(loi, MyDialog.ERROR_DIALOG);
             return false;
         }
+
         NhanVienDTO nv = new NhanVienDTO();
-        nv.setHoLot(ho);
-        nv.setTen(ten);
+        nv.setHoLot(ho.trim());
+        nv.setTen(ten.trim());
         nv.setGioiTinh(gioiTinh);
         nv.setNgaysinh(ngaySinh);
 
         boolean flag = nvDAO.themNhanVien(nv);
-        if (!flag) {
-            new MyDialog("Thêm thất bại!", MyDialog.ERROR_DIALOG);
-        } else {
-            new MyDialog("Thêm thành công!", MyDialog.SUCCESS_DIALOG);
-        }
+        new MyDialog(flag ? "Thêm thành công!" : "Thêm thất bại!", flag ? MyDialog.SUCCESS_DIALOG : MyDialog.ERROR_DIALOG);
         return flag;
     }
 
     public boolean Suanhanvien(int maNV, String ho, String ten, String gioiTinh, String ngaySinh) {
-        ho = ho.trim();
-        ten = ten.trim();
-
-        if (ten.equals("")) {
-            new MyDialog("Tên không được để trống!", MyDialog.ERROR_DIALOG);
+        String loi = validateNhanVien(ho, ten, gioiTinh, ngaySinh);
+        if (loi != null) {
+            new MyDialog(loi, MyDialog.ERROR_DIALOG);
             return false;
         }
+
         NhanVienDTO nv = new NhanVienDTO();
-        nv.setMaNV(maNV); // Gán MaNV
-        nv.setHoLot(ho);
-        nv.setTen(ten);
+        nv.setMaNV(maNV);
+        nv.setHoLot(ho.trim());
+        nv.setTen(ten.trim());
         nv.setGioiTinh(gioiTinh);
         nv.setNgaysinh(ngaySinh);
 
         boolean flag = nvDAO.capNhatNhanVien(nv);
-        if (!flag) {
-            new MyDialog("Sửa thất bại!", MyDialog.ERROR_DIALOG);
-        } else {
-            new MyDialog("Sửa thành công!", MyDialog.SUCCESS_DIALOG);
-        }
+        new MyDialog(flag ? "Sửa thành công!" : "Sửa thất bại!", flag ? MyDialog.SUCCESS_DIALOG : MyDialog.ERROR_DIALOG);
         return flag;
     }
 

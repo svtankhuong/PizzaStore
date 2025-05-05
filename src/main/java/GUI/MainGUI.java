@@ -87,9 +87,8 @@ public class MainGUI extends javax.swing.JFrame {
         importPanel.setBackground(Color.WHITE);
         importPanel.add(new JLabel("Panel Nhập hàng", SwingConstants.CENTER));
 
-        JPanel customerPanel = new JPanel(); // Panel Khách hàng
-        customerPanel.setBackground(Color.WHITE);
-        customerPanel.add(new JLabel("Panel Khách hàng", SwingConstants.CENTER));
+        PnKhachHang customerPanel = new PnKhachHang(); // Panel Khách hàng
+
 
         JPanel productPanel = new JPanel(); // Panel Sản phẩm
         productPanel.setBackground(Color.WHITE);

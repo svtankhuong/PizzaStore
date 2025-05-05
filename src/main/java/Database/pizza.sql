@@ -42,7 +42,8 @@ CREATE TABLE KhachHang (
     Ten VARCHAR(255),
     SDT VARCHAR(10),
     DiaChi VARCHAR(255) NOT NULL,
-    TongChiTieu DECIMAL
+    TongChiTieu DECIMAL(10, 2) DEFAULT 0,  
+    isDelete TINYINT(1) DEFAULT 0  
 );
 
 CREATE TABLE SanPham (
