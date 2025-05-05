@@ -7,17 +7,22 @@
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>22</maven.compiler.release>
+        <maven.compiler.release>23</maven.compiler.release>
         <exec.mainClass>GUI.PizzaStore</exec.mainClass>
     </properties>
     <dependencies>
+        <!-- AbsoluteLayout for NetBeans GUI Builder -->
+        <dependency>
+            <groupId>org.netbeans.external</groupId>
+            <artifactId>AbsoluteLayout</artifactId>
+            <version>RELEASE220</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/com.formdev/flatlaf -->
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>3.5.4</version>
         </dependency>
-        
         <!-- https://mvnrepository.com/artifact/com.formdev/flatlaf-intellij-themes -->
         <dependency>
             <groupId>com.formdev</groupId>
@@ -25,36 +30,30 @@
             <version>3.5.4</version>
             <type>jar</type>
         </dependency>
-
         <!-- Ikonli Core -->
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-core</artifactId>
             <version>12.3.1</version>
         </dependency>
-
         <!-- Ikonli Swing (cho Java Swing) -->
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-swing</artifactId>
             <version>12.3.1</version>
         </dependency>
-
         <!-- FontAwesome Icons -->
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-fontawesome5-pack</artifactId>
             <version>12.3.1</version>
         </dependency>
-
         <!-- Material Design Icons -->
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>
             <artifactId>ikonli-materialdesign-pack</artifactId>
             <version>12.3.1</version>
         </dependency>
-        
-
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
@@ -161,4 +160,34 @@
             <version>11.2.1</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <!-- Plugin để biên dịch -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>23</release>
+                </configuration>
+            </plugin>
+            <!-- Plugin để chạy main class -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>GUI.PizzaStore</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <repositories>
+        <!-- Repository cho NetBeans -->
+        <repository>
+            <id>netbeans</id>
+            <name>NetBeans</name>
+            <url>https://netbeans.apache.org/maven2/</url>
+        </repository>
+    </repositories>
 </project>
