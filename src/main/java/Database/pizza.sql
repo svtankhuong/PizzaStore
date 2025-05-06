@@ -125,7 +125,6 @@ CREATE TABLE PhieuNhap (
 );
 
 CREATE TABLE chitietphieunhap (
-    MACTPN INT AUTO_INCREMENT PRIMARY KEY,
     MaPN INT,
     MaNL INT,
     SoLuong INT,
@@ -227,3 +226,47 @@ INSERT INTO chitietphieunhap (MaPN, MaNL, SoLuong, DonGia, ThanhTien) VALUES
 (1, 2, 25, 40000, 1000000),
 (2, 3, 50, 15000, 750000),
 (3, 4, 30, 30000, 900000);
+
+-- Thêm khóa chính 
+ALTER TABLE chitietphieunhap ADD PRIMARY KEY (MaPN, MaNL);
+
+-- Thêm dữ liệu mẫu cho PhieuNhap
+INSERT INTO PhieuNhap (MaNCC, MaNV, TongTien, NgayLap) VALUES
+(4, 5, 1800000, '2025-04-01'),
+(1, 2, 2500000, '2025-04-05'),
+(2, 3, 2200000, '2025-04-10'), 
+(3, 1, 1850000, '2025-04-12'), 
+(1, 4, 2700000, '2025-04-15'), 
+(4, 5, 1600000, '2025-04-20'), 
+(2, 2, 1950000, '2025-04-25');
+
+-- Thêm dữ liệu mẫu cho chitietphieunhap
+INSERT INTO chitietphieunhap (MaPN, MaNL, SoLuong, DonGia, ThanhTien) VALUES
+(4, 5, 60, 20000, 1200000),
+(4, 3, 40, 15000, 600000),
+(5, 1, 30, 50000, 1500000),
+(5, 2, 25, 40000, 1000000),
+(6, 1, 20, 50000, 1000000), -- NguyenLieu MaNL = 1
+(6, 3, 40, 15000, 600000),  -- NguyenLieu MaNL = 3
+(6, 5, 30, 20000, 600000),  -- NguyenLieu MaNL = 5
+(7, 2, 25, 40000, 1000000), -- NguyenLieu MaNL = 2
+(7, 4, 25, 30000, 750000),  -- NguyenLieu MaNL = 4
+(7, 5, 5, 20000, 100000),   -- NguyenLieu MaNL = 5
+(8, 1, 30, 50000, 1500000), -- NguyenLieu MaNL = 1
+(8, 3, 40, 15000, 600000),  -- NguyenLieu MaNL = 3
+(8, 4, 20, 30000, 600000),  -- NguyenLieu MaNL = 4
+(8, 5, 5, 20000, 100000),   -- NguyenLieu MaNL = 5
+(9, 2, 20, 40000, 800000),  -- NguyenLieu MaNL = 2
+(9, 3, 30, 15000, 450000),  -- NguyenLieu MaNL = 3
+(9, 5, 35, 20000, 700000),  -- NguyenLieu MaNL = 5
+(10, 4, 20, 30000, 600000), -- NguyenLieu MaNL = 4
+(10, 5, 5, 20000, 100000),  -- NguyenLieu MaNL = 5
+(10, 3, 10, 15000, 150000), -- NguyenLieu MaNL = 3
+(10, 1, 5, 50000, 250000),  -- NguyenLieu MaNL = 1
+(10, 2, 5, 40000, 200000);  -- NguyenLieu MaNL = 2
+
+-- Cập nhật TongTien trong PhieuNhap
+UPDATE PhieuNhap SET TongTien = 750000 WHERE MaPN = 2;
+UPDATE PhieuNhap SET TongTien = 900000 WHERE MaPN = 3;
+UPDATE PhieuNhap SET TongTien = 1950000 WHERE MaPN = 9;
+UPDATE PhieuNhap SET TongTien = 1300000 WHERE MaPN = 10;
