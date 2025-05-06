@@ -227,26 +227,45 @@ public class ThongKeGUI extends JFrame {
         add(controlPanel, BorderLayout.NORTH);
         add(tabbedPane, BorderLayout.CENTER);
     }
+private void customizeTable(JTable table) {
+    table.setRowHeight(30);
+    table.getTableHeader().setBackground(new Color(30, 144, 255));
+    table.getTableHeader().setForeground(Color.WHITE);
+    table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
 
-    private void customizeTable(JTable table) {
-        table.setRowHeight(30);
-        table.getTableHeader().setBackground(new Color(30, 144, 255));
-        table.getTableHeader().setForeground(Color.WHITE);
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
-        table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                                                           boolean hasFocus, int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                if (!isSelected) {
-                    c.setBackground(row % 2 == 0 ? new Color(240, 248, 255) : new Color(255, 255, 255));
-                }
-                return c;
+    // Renderer tùy chỉnh cho các ô
+    table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                       boolean hasFocus, int row, int column) {
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (!isSelected) {
+                c.setBackground(row % 2 == 0 ? new Color(240, 248, 255) : new Color(255, 255, 255));
             }
-        });
-        table.setGridColor(new Color(173, 216, 230));
-    }
+            return c;
+        }
+    });
 
+    // Renderer tùy chỉnh cho các cột số (TongThu, TongChi)
+    table.setDefaultRenderer(Number.class, new DefaultTableCellRenderer() {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                       boolean hasFocus, int row, int column) {
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (value instanceof Number) {
+                // Định dạng số với dấu phân cách hàng nghìn
+                java.text.DecimalFormat df = new java.text.DecimalFormat("#,###");
+                setText(df.format(value));
+            }
+            if (!isSelected) {
+                c.setBackground(row % 2 == 0 ? new Color(240, 248, 255) : new Color(255, 255, 255));
+            }
+            return c;
+        }
+    });
+
+    table.setGridColor(new Color(173, 216, 230));
+}
     private void customizeScrollPane(JScrollPane scrollPane) {
         scrollPane.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
             @Override
@@ -384,29 +403,28 @@ public class ThongKeGUI extends JFrame {
             doanhThuTable.getColumnModel().getColumn(2).setPreferredWidth(200);
         }
     }
+private void updateChiPhiTable(List<ThongKeDoanhChiDTO> data) {
+    DefaultTableModel model = new DefaultTableModel();
+    model.addColumn("Từ ngày");
+    model.addColumn("Đến ngày");
+    model.addColumn("Tổng chi");
 
-    private void updateChiPhiTable(List<ThongKeDoanhChiDTO> data) {
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Từ ngày");
-        model.addColumn("Đến ngày");
-        model.addColumn("Tổng chi");
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        for (ThongKeDoanhChiDTO tk : data) {
-            model.addRow(new Object[]{
-                tk.getTuNgay() != null ? sdf.format(tk.getTuNgay()) : "",
-                tk.getDenNgay() != null ? sdf.format(tk.getDenNgay()) : "",
-                tk.getTongChi()
-            });
-        }
-        chiPhiTable.setModel(model);
-        if (chiPhiTable.getColumnCount() >= 3) {
-            chiPhiTable.getColumnModel().getColumn(0).setPreferredWidth(150);
-            chiPhiTable.getColumnModel().getColumn(1).setPreferredWidth(150);
-            chiPhiTable.getColumnModel().getColumn(2).setPreferredWidth(200);
-        }
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    java.text.DecimalFormat df = new java.text.DecimalFormat("#,###"); // Định dạng số
+    for (ThongKeDoanhChiDTO tk : data) {
+        model.addRow(new Object[]{
+            tk.getTuNgay() != null ? sdf.format(tk.getTuNgay()) : "",
+            tk.getDenNgay() != null ? sdf.format(tk.getDenNgay()) : "",
+            df.format(tk.getTongChi()) // Định dạng TongChi thành chuỗi
+        });
     }
-
+    chiPhiTable.setModel(model);
+    if (chiPhiTable.getColumnCount() >= 3) {
+        chiPhiTable.getColumnModel().getColumn(0).setPreferredWidth(150);
+        chiPhiTable.getColumnModel().getColumn(1).setPreferredWidth(150);
+        chiPhiTable.getColumnModel().getColumn(2).setPreferredWidth(200);
+    }
+}
     private void updateDoanhThuTableThangNam(List<ThongKeDoanhThuDTO> data, int thang, int nam) {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Tháng");

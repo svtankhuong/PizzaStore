@@ -1,18 +1,19 @@
 package DTO;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class PhieuNhapDTO {
     private int maPN;
     private int maNCC;
     private int maNV;
-    private double tongTien;
+    private BigDecimal tongTien;
     private Date ngayLap;
 
     public PhieuNhapDTO() {
     }
 
-    public PhieuNhapDTO(int maPN, int maNCC, int maNV, double tongTien, Date ngayLap) {
+    public PhieuNhapDTO(int maPN, int maNCC, int maNV, BigDecimal tongTien, Date ngayLap) {
         this.maPN = maPN;
         this.maNCC = maNCC;
         this.maNV = maNV;
@@ -25,7 +26,7 @@ public class PhieuNhapDTO {
     }
 
     public void setMaPN(int maPN) {
-        this.maPN = maPN;
+        this.maPN=maPN;
     }
 
     public int getMaNCC() {
@@ -44,11 +45,11 @@ public class PhieuNhapDTO {
         this.maNV = maNV;
     }
 
-    public double getTongTien() {
+    public BigDecimal getTongTien() {
         return tongTien;
     }
 
-    public void setTongTien(double tongTien) {
+    public void setTongTien(BigDecimal tongTien) {
         this.tongTien = tongTien;
     }
 
@@ -58,18 +59,5 @@ public class PhieuNhapDTO {
 
     public void setNgayLap(Date ngayLap) {
         this.ngayLap = ngayLap;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof PhieuNhapDTO)) return false;
-        PhieuNhapDTO other = (PhieuNhapDTO) obj;
-        return maPN == other.maPN;
-    }
-
-    @Override
-    public int hashCode() {
-        return maPN;
     }
 }

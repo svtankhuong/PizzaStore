@@ -1,16 +1,16 @@
 package DTO;
 
-public class ChiTietPhieuNhapDTO {
+public class CTPhieuNhapDTO {
     private int maPN;
     private int maNL;
     private int soLuong;
     private double donGia;
     private double thanhTien;
 
-    public ChiTietPhieuNhapDTO() {
+    public CTPhieuNhapDTO() {
     }
 
-    public ChiTietPhieuNhapDTO(int maPN, int maNL, int soLuong, double donGia, double thanhTien) {
+    public CTPhieuNhapDTO(int maPN, int maNL, int soLuong, double donGia, double thanhTien) {
         this.maPN = maPN;
         this.maNL = maNL;
         this.soLuong = soLuong;
@@ -56,18 +56,5 @@ public class ChiTietPhieuNhapDTO {
 
     public void setThanhTien(double thanhTien) {
         this.thanhTien = thanhTien;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof ChiTietPhieuNhapDTO)) return false;
-        ChiTietPhieuNhapDTO other = (ChiTietPhieuNhapDTO) obj;
-        return maPN == other.maPN && maNL == other.maNL;
-    }
-
-    @Override
-    public int hashCode() {
-        return 31 * maPN + maNL;
     }
 }
