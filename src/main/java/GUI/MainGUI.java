@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.JFrame;
 
+import GUI.SanPhamGUI;
+
 /**
  *
  * @author ADMIN
@@ -58,6 +60,7 @@ public class MainGUI extends javax.swing.JFrame {
             setLabelIcon(LblNH, "/ManagerUI/lblNhapHang.png");
             setLabelIcon(LblCustomers, "/ManagerUI/lblKhachHang.png");
             setLabelIcon(LblProducts, "/ManagerUI/lblSanPham.png");
+            setLabelIcon(LblPromotions, "/ManagerUI/lblKhuyenMai.png");
             setLabelIcon(LblTK, "/ManagerUI/lblThongKe.png");
         });
         jPanel4.setLayout(new java.awt.BorderLayout());
@@ -90,9 +93,12 @@ public class MainGUI extends javax.swing.JFrame {
         PnKhachHang customerPanel = new PnKhachHang(); // Panel Khách hàng
 
 
-        JPanel productPanel = new JPanel(); // Panel Sản phẩm
+        SanPhamGUI productPanel = new SanPhamGUI(); // Panel Sản phẩm
         productPanel.setBackground(Color.WHITE);
-        productPanel.add(new JLabel("Panel Sản phẩm", SwingConstants.CENTER));
+//        productPanel.add(new JLabel("Panel Sản phẩm", SwingConstants.CENTER));
+
+        KhuyenMaiGUI promotionPanel = new KhuyenMaiGUI();
+        contentPanel.add(promotionPanel, "promotion");
 
         JPanel statsPanel = new JPanel(); // Panel Thống kê
         statsPanel.setBackground(Color.WHITE);
@@ -104,6 +110,7 @@ public class MainGUI extends javax.swing.JFrame {
         contentPanel.add(importPanel, "import");
         contentPanel.add(customerPanel, "customer");
         contentPanel.add(productPanel, "product");
+        contentPanel.add(promotionPanel, "promotion");
         contentPanel.add(statsPanel, "stats");
 
         // Hiển thị panel Bán hàng mặc định
@@ -119,6 +126,7 @@ public class MainGUI extends javax.swing.JFrame {
         menuLabels.add(LblNH);
         menuLabels.add(LblCustomers);
         menuLabels.add(LblProducts);
+        menuLabels.add(LblPromotions);
         menuLabels.add(LblTK);
 
         // Thêm sự kiện cho các label
@@ -147,6 +155,8 @@ public class MainGUI extends javax.swing.JFrame {
                         cardLayout.show(contentPanel, "customer");
                     } else if (label == LblProducts) {
                         cardLayout.show(contentPanel, "product");
+                    } else if (label == LblPromotions) {
+                        cardLayout.show(contentPanel, "promotion");
                     } else if (label == LblTK) {
                         cardLayout.show(contentPanel, "stats");
                     }
@@ -178,7 +188,7 @@ public class MainGUI extends javax.swing.JFrame {
         importPanel.setBackground(Color.WHITE);
         importPanel.add(new JLabel("Panel Nhập hàng", SwingConstants.CENTER));
 
-        JPanel productPanel = new JPanel(); // Panel Sản phẩm
+        SanPhamGUI productPanel = new SanPhamGUI(); // Panel Sản phẩm
         productPanel.setBackground(Color.WHITE);
         productPanel.add(new JLabel("Panel Sản phẩm", SwingConstants.CENTER));
 
@@ -326,6 +336,7 @@ public class MainGUI extends javax.swing.JFrame {
         menuLabels.add(LblNH);
         menuLabels.add(LblCustomers);
         menuLabels.add(LblProducts);
+        menuLabels.add(LblPromotions);
         menuLabels.add(LblTK);
 
         // Thêm sự kiện cho các label
@@ -398,6 +409,7 @@ public class MainGUI extends javax.swing.JFrame {
         LblNH = new javax.swing.JLabel();
         LblCustomers = new javax.swing.JLabel();
         LblProducts = new javax.swing.JLabel();
+        LblPromotions = new javax.swing.JLabel();
         LblTK = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -439,6 +451,8 @@ public class MainGUI extends javax.swing.JFrame {
 
         LblProducts.setPreferredSize(new java.awt.Dimension(250, 65));
 
+        LblPromotions.setPreferredSize(new java.awt.Dimension(250, 65));
+
         LblTK.setPreferredSize(new java.awt.Dimension(250, 65));
 
         javax.swing.GroupLayout PanelMainLayout = new javax.swing.GroupLayout(PanelMain);
@@ -451,6 +465,7 @@ public class MainGUI extends javax.swing.JFrame {
                     .addComponent(LblStaffs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(LblNH, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(LblProducts, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(LblPromotions, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(LblTK, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(LblCustomers, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -474,6 +489,8 @@ public class MainGUI extends javax.swing.JFrame {
                 .addComponent(LblNH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(LblProducts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(LblPromotions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(LblTK, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(112, Short.MAX_VALUE))
@@ -621,6 +638,7 @@ public class MainGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_XemTaiKhoan
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel LblPromotions;
     private javax.swing.JLabel LblCustomers;
     private javax.swing.JLabel LblNH;
     private javax.swing.JLabel LblProducts;
