@@ -1,4 +1,4 @@
-/*
+
 package GUI;
 
 import BUS.LoginBUS;
@@ -154,8 +154,8 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BtnLoginActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_BtnLoginActionPerformed
-    {//GEN-HEADEREND:event_BtnLoginActionPerformed
+    private void BtnLoginActionPerformed(java.awt.event.ActionEvent evt)                                         
+    {                                             
         // TODO add your handling code here:
         String username = tfUsername.getText();
         char[] password = pfPassword.getPassword();
@@ -187,7 +187,7 @@ public class Login extends javax.swing.JFrame {
         }
 
     
-
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnLogin;
     private javax.swing.JPanel Left;
@@ -200,4 +200,3 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JTextField tfUsername;
     // End of variables declaration//GEN-END:variables
 }
-*/

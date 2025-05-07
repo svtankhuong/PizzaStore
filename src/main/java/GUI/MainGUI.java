@@ -136,9 +136,7 @@ public class MainGUI extends javax.swing.JFrame {
         if (quyen.getQLNhapHang()) {
             LblNH.setVisible(true);
             menuLabels.add(LblNH);
-            JPanel importPanel = new JPanel();
-            importPanel.setBackground(Color.WHITE);
-            importPanel.add(new JLabel("Panel Nhập hàng", SwingConstants.CENTER));
+            PhieuNhapGUI importPanel = new PhieuNhapGUI();
             contentPanel.add(importPanel, "import");
             if (defaultLabel == null) {
                 defaultLabel = LblNH;
@@ -178,9 +176,7 @@ public class MainGUI extends javax.swing.JFrame {
         if (quyen.getThongKe()) {
             LblTK.setVisible(true);
             menuLabels.add(LblTK);
-            JPanel statsPanel = new JPanel();
-            statsPanel.setBackground(Color.WHITE);
-            statsPanel.add(new JLabel("Panel Thống kê", SwingConstants.CENTER));
+            ThongKeGUI statsPanel = new ThongKeGUI();
             contentPanel.add(statsPanel, "stats");
             if (defaultLabel == null) {
                 defaultLabel = LblTK;
@@ -450,8 +446,8 @@ public class MainGUI extends javax.swing.JFrame {
         pack();
     }
 
-    private void XemTaiKhoan(java.awt.event.MouseEvent evt)//GEN-FIRST:event_XemTaiKhoan
-    {//GEN-HEADEREND:event_XemTaiKhoan
+    private void XemTaiKhoan(java.awt.event.MouseEvent evt)                             
+    {                                 
         String param1 = ttdn.get(0).toString(); // username (Tên đăng nhập: admin123)
         String param2 = ttdn.get(1).toString(); // password (Mật khẩu: admin123)
         int param3 = Integer.parseInt(ttdn.get(3).toString()); // idNV (Mã nhân viên: 1)
@@ -492,7 +488,7 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel lbXemTK;
 
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 
 }
 
