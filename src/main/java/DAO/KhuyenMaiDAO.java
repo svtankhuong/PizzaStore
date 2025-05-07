@@ -80,4 +80,25 @@ public class KhuyenMaiDAO
         }
     }
 
+    public KhuyenMaiDTO timKiemKM(int MaKM){
+        KhuyenMaiDTO km = null;
+        String sql = "SELECT * FROM KhuyenMai WHERE MaKM = ?";
+
+        try ( Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1, MaKM);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int idKM = rs.getInt("MaKM");
+                String tenKM = rs.getString("TenKM");
+                LocalDate startDate = rs.getDate("NgayBatDau").toLocalDate();
+                LocalDate endDate = rs.getDate("NgayKetThuc").toLocalDate();
+                KhuyenMaiDTO kh = new KhuyenMaiDTO(idKM, tenKM, startDate, endDate);
+                km = new KhuyenMaiDTO(idKM, tenKM, startDate, endDate);
+            }
+        }catch(SQLException e)
+        {
+            System.err.println("Lỗi khi lấy danh sách khuyến mãi: " + e.getMessage());
+        }
+        return km;
+    }
 }

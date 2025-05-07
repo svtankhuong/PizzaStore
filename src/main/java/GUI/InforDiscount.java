@@ -3,8 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package GUI;
-import BUS.HoaDonBUS;
-import DTO.ThongTinKMDTO;
+import MyCustom.SelectCustomerOrDiscount;
+import DAO.*;
+import DTO.*;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
@@ -24,29 +25,40 @@ public class InforDiscount extends javax.swing.JFrame
     }
     
     private SelectCustomerOrDiscount listener;
+    private SelectCustomerOrDiscount listener1;
     
     public void setSelectDiscountListener(SelectCustomerOrDiscount listener) {
         this.listener = listener;
     }
     
+    public void setSelectDiscount1Listener(SelectCustomerOrDiscount listener){
+        this.listener1 = listener;
+    }
    private void loadDataFromSource() {
         // --- Nạp dữ liệu cho Bảng Hóa Đơn ---
         DefaultTableModel modelHoaDon = (DefaultTableModel) TableDiscount.getModel();
         modelHoaDon.setRowCount(0); // Xóa dữ liệu cũ trước khi nạp mới
         try {
-             HoaDonBUS a = new HoaDonBUS();
-             ArrayList<ThongTinKMDTO> list_data = a.data_InforDiscount();
-//         "Mã Khuyến Mãi", "Tên Khuyến Mãi", "Phần Trăm Giảm", "Ngày Kết Thúc", "Tên CTKM"
+             KhuyenMaiDAO kmdao = new KhuyenMaiDAO();
+             ArrayList<KhuyenMaiDTO> list_data = kmdao.layDSKM();
+             ChiTietKMDAO ctkmdao = new ChiTietKMDAO();
+             ArrayList<ChiTietKMDTO> list_data1 = ctkmdao.layDSCTKM();
+
             if (list_data != null) {
-                for(ThongTinKMDTO tt : list_data){
-                    Object[] rowData = {
-                        tt.getMaKM(),
-                        tt.getTenKM(),
-                        tt.getPhanTramGiam(),
-                        tt.getNgayKetThuc().format(DateTimeFormatter.ofPattern("dd/MM/YYYY")),
-                        tt.getTenCTKM()
-                    };
-                    modelHoaDon.addRow(rowData);
+                for(KhuyenMaiDTO tt : list_data){
+                    for(ChiTietKMDTO kk : list_data1 ){
+                        if(tt.getMaKM() == kk.getMaKM()){
+                        Object[] rowData = {
+                            tt.getMaKM(),
+                            tt.getTenKM(),
+                            tt.getNgayBatDau().format(DateTimeFormatter.ofPattern("dd/MM/YYYY")),
+                            tt.getNgayKetThuc().format(DateTimeFormatter.ofPattern("dd/MM/YYYY")),
+                            kk.getMACTKM(),
+                            kk.getTenCTKM()
+                        };
+                        modelHoaDon.addRow(rowData);
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
@@ -100,13 +112,14 @@ public class InforDiscount extends javax.swing.JFrame
             },
             new String []
             {
-                "Mã Khuyến Mãi", "Tên Khuyến Mãi", "Phần Trăm Giảm", "Ngày Kết Thúc", "Tên CTKM"
+                "Mã Khuyến Mãi", "Tên Khuyến Mãi", "Ngày Bắt Đầu", "Ngày Kết Thúc",
+                "Mã Chi Tiết Khuyến Mãi", "Tên Chi Tiết Khuyến Mãi"
             }
         )
         {
             boolean[] canEdit = new boolean []
             {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex)
@@ -183,10 +196,16 @@ public class InforDiscount extends javax.swing.JFrame
         int row = TableDiscount.getSelectedRow();
         if(row != -1){
             String ma_km = TableDiscount.getModel().getValueAt(row, 0).toString();
+            String ma_ctkm = TableDiscount.getModel().getValueAt(row, 4).toString();
+            String ten_ctkm = TableDiscount.getModel().getValueAt(row, 5).toString();
             String ten_km = TableDiscount.getModel().getValueAt(row, 1).toString();
-            JOptionPane.showMessageDialog(this, String.format("Bạn đã chọn khuyến mãi có tên là  %s", ten_km) , "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
             if(listener != null){
+            JOptionPane.showMessageDialog(this, String.format("Bạn đã chọn khuyến mãi có tên là  %s", ten_km) , "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
                 listener.onDiscountSelected(Integer.parseInt(ma_km),ten_km);
+            }
+            if(listener1 != null){
+            JOptionPane.showMessageDialog(this, String.format("Bạn đã chọn chi tiết khuyến mãi có tên là  %s", ten_ctkm) , "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
+                listener1.onDiscount1Selected(Integer.parseInt(ma_ctkm),ten_ctkm);
             }
             this.dispose();
         }
@@ -196,6 +215,9 @@ public class InforDiscount extends javax.swing.JFrame
     {//GEN-HEADEREND:event_BtnNoDiscountActionPerformed
         if(listener != null){
             listener.onDiscountSelected(null, null);
+        }
+        if(listener1 != null){
+            listener1.onDiscount1Selected(null, null);
         }
         this.dispose();
     }//GEN-LAST:event_BtnNoDiscountActionPerformed

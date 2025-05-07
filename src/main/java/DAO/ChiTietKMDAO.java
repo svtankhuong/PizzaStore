@@ -98,7 +98,7 @@ public class ChiTietKMDAO {
             }
        
         } catch (SQLException e) {
-            System.err.println("Lỗi tìm kiếm khuyến mãi: " + e.getMessage());
+            System.err.println("Lỗi tìm kiếm chi tiết khuyến mãi: " + e.getMessage());
             return null;
         }
         return ctkm;

@@ -2,9 +2,9 @@
 -- ============================
 -- TẠO BẢNG
 -- ============================
+CREATE DATABASE pizzastore;
 
-
-use pizzastore;
+USE pizzastore;
 
 CREATE TABLE NhanVien (
     MaNV INT AUTO_INCREMENT PRIMARY KEY,
@@ -176,11 +176,11 @@ INSERT INTO KhachHang (HoLot, Ten, SDT, DiaChi, TongChiTieu) VALUES
 ('Hoang Thi', 'Dao', '0987654321', 'Cần Thơ', 300000);
 
 INSERT INTO SanPham (Ten, DvTinh, DonGia, SoLuong, Loai, Anh) VALUES
-('Pizza Hải Sản Dứa Kem', 'Cái', 300000, 200, 'Món chính', 'D:\\PizzaStore\\src\\main\\resources\\SanPham\\pizza0.png'),
+('Pizza Hải Sản Dứa Kem', 'Cái', 300000, 300, 'Món chính', 'D:\\PizzaStore\\src\\main\\resources\\SanPham\\pizza0.png'),
 ('Pizza Hải Sản Bông Cải Xanh', 'Cái', 800000, 100, 'Món chính', 'D:\\PizzaStore\\src\\main\\resources\\SanPham\\pizza1.png'),
-('Pizza Tôm Dứa Sốt Kem Tropical', 'Cái', 450000, 80, 'Món chính', 'D:\\PizzaStore\\src\\main\\resources\\SanPham\\pizza2.png'),
-('Pepsi', 'Lon', 20000, 40, 'Đồ uống', 'D:\\PizzaStore\\src\\main\\resources\\SanPham\\douong0.jpeg'),
-('Pepsi', 'Chai', 15000, 60, 'Đồ uống', 'D:\\PizzaStore\\src\\main\\resources\\SanPham\\douong1.jpeg');
+('Pizza Tôm Dứa Sốt Kem Tropical', 'Cái', 450000, 800, 'Món chính', 'D:\\PizzaStore\\src\\main\\resources\\SanPham\\pizza2.png'),
+('Pepsi', 'Lon', 20000, 300, 'Đồ uống', 'D:\\PizzaStore\\src\\main\\resources\\SanPham\\douong0.jpeg'),
+('Pepsi', 'Chai', 15000, 300, 'Đồ uống', 'D:\\PizzaStore\\src\\main\\resources\\SanPham\\douong1.jpeg');
 
 INSERT INTO KhuyenMai (TenKM, NgayBatDau, NgayKetThuc) VALUES
 ('Giảm giá Tết', '2025-01-01', '2025-01-10'),

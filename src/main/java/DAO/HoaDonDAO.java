@@ -1,6 +1,7 @@
 package DAO;
 
 import DTO.HoaDonDTO;
+import MyCustom.QueryCondition;
 import config.JDBC;
 import java.sql.Connection;
 import java.sql.Date;
@@ -62,41 +63,32 @@ public class HoaDonDAO
         return dsHD;
     }
     
-    public HoaDonDTO layHDTheoMa(int idHD){
-        String sql = "SELECT * FROM HoaDon WHERE MaHD = ?";
-        HoaDonDTO hd = null;
-        Boolean isSuccess = false;
-        try ( Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)){
-            ps.setInt(1, idHD);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()){
-                hd = new HoaDonDTO(
-                rs.getInt("MaHD"),
-                rs.getInt("MaNV"),
-                rs.getInt("MaKH"),
-                rs.getInt("MaCTKM"),
-                rs.getDate("NgayLap").toLocalDate(),
-                rs.getLong("SoTienGiam"),
-                rs.getLong("TongTien")
-                );
-                isSuccess = true;
+    public ArrayList<HoaDonDTO> layHDTheoNFieldTheoDau(ArrayList<QueryCondition> conditions) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM HoaDon WHERE ");
+        ArrayList<Object> values = new ArrayList<>();
+
+        // Xử lý các điều kiện
+        for (int i = 0; i < conditions.size(); i++) {
+            QueryCondition qc = conditions.get(i);
+            if (i > 0) {
+                sql.append(" AND ");
             }
-        }catch(SQLException e)
-        {
-            System.err.println("Lỗi khi lấy danh sách hóa đơn: " + e.getMessage());
-        }  
-        
-        if (isSuccess)
-            return hd;
-        else
-            return null;
-    }
-    
-    public ArrayList<HoaDonDTO> layHDTheoMaNV(int maNV) {
-        String sql = "SELECT * FROM HoaDon WHERE MaNV = ?";
+            if (qc.getValue() == null) {
+                sql.append(qc.getColumn()).append(" IS NULL");
+            } else {
+                sql.append(qc.getColumn()).append(" ").append(qc.getOperator()).append(" ?");
+                values.add(qc.getValue());
+            }
+        }
+
         ArrayList<HoaDonDTO> danhSachHD = new ArrayList<>();
-        try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, maNV);
+
+        try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            // Gán giá trị cho các dấu ?
+            for (int i = 0; i < values.size(); i++) {
+                setPreparedStatementValue(ps, i + 1, values.get(i));
+            }
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 HoaDonDTO hd = new HoaDonDTO(
@@ -111,105 +103,21 @@ public class HoaDonDAO
                 danhSachHD.add(hd);
             }
         } catch (SQLException e) {
-            System.err.println("Lỗi khi lọc hóa đơn theo MaNV: " + e.getMessage());
+            System.err.println("Lỗi khi lọc hóa đơn theo N field: " + e.getMessage());
         }
+
         return danhSachHD;
     }
-
-    public ArrayList<HoaDonDTO> layHDTheoMaKH(int maKH) {
-        String sql = "SELECT * FROM HoaDon WHERE MaKH = ?";
-        ArrayList<HoaDonDTO> danhSachHD = new ArrayList<>();
-        try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, maKH);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                HoaDonDTO hd = new HoaDonDTO(
-                    rs.getInt("MaHD"),
-                    rs.getInt("MaNV"),
-                    rs.getInt("MaKH"),
-                    rs.getInt("MaCTKM"),
-                    rs.getDate("NgayLap").toLocalDate(),
-                    rs.getLong("SoTienGiam"),
-                    rs.getLong("TongTien")
-                );
-                danhSachHD.add(hd);
-            }
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi lọc hóa đơn theo MaKH: " + e.getMessage());
+ 
+    private void setPreparedStatementValue(PreparedStatement ps, int index, Object value) throws SQLException {
+        if (value instanceof Integer) {
+             ps.setInt(index, (Integer) value);
+        } else if (value instanceof Long) {
+             ps.setLong(index, (Long) value);
+        } else if (value instanceof String) {
+             ps.setString(index, (String) value);
+        } else if (value instanceof LocalDate) {
+             ps.setDate(index, java.sql.Date.valueOf((LocalDate) value));
         }
-        return danhSachHD;
     }
-
-    public ArrayList<HoaDonDTO> layHDTheoMaCTKM(Integer maCTKM) {
-        String sql = "SELECT * FROM HoaDon WHERE MaCTKM = ?";
-        ArrayList<HoaDonDTO> danhSachHD = new ArrayList<>();
-        try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, maCTKM);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                HoaDonDTO hd = new HoaDonDTO(
-                    rs.getInt("MaHD"),
-                    rs.getInt("MaNV"),
-                    rs.getInt("MaKH"),
-                    rs.getInt("MaCTKM"),
-                    rs.getDate("NgayLap").toLocalDate(),
-                    rs.getLong("SoTienGiam"),
-                    rs.getLong("TongTien")
-                );
-                danhSachHD.add(hd);
-            }
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi lọc hóa đơn theo MaCTKM: " + e.getMessage());
-        }
-        return danhSachHD;
-    }
-
-    public ArrayList<HoaDonDTO> layHDTheoNgayLap(LocalDate ngayLap) {
-        String sql = "SELECT * FROM HoaDon WHERE NgayLap = ?";
-        ArrayList<HoaDonDTO> danhSachHD = new ArrayList<>();
-        try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDate(1, java.sql.Date.valueOf(ngayLap));
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                HoaDonDTO hd = new HoaDonDTO(
-                    rs.getInt("MaHD"),
-                    rs.getInt("MaNV"),
-                    rs.getInt("MaKH"),
-                    rs.getInt("MaCTKM"),
-                    rs.getDate("NgayLap").toLocalDate(),
-                    rs.getLong("SoTienGiam"),
-                    rs.getLong("TongTien")
-                );
-                danhSachHD.add(hd);
-            }
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi lọc hóa đơn theo NgayLap: " + e.getMessage());
-        }
-        return danhSachHD;
-    }
-
-    public ArrayList<HoaDonDTO> layHDTheoTongTien(long tongTien) {
-        String sql = "SELECT * FROM HoaDon WHERE TongTien = ?";
-        ArrayList<HoaDonDTO> danhSachHD = new ArrayList<>();
-        try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, tongTien);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                HoaDonDTO hd = new HoaDonDTO(
-                    rs.getInt("MaHD"),
-                    rs.getInt("MaNV"),
-                    rs.getInt("MaKH"),
-                    rs.getInt("MaCTKM"),
-                    rs.getDate("NgayLap").toLocalDate(),
-                    rs.getLong("SoTienGiam"),
-                    rs.getLong("TongTien")
-                );
-                danhSachHD.add(hd);
-            }
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi lọc hóa đơn theo TongTien: " + e.getMessage());
-        }
-        return danhSachHD;
-    }
-
 }

@@ -1,5 +1,6 @@
 package BUS;
 
+import MyCustom.QueryCondition;
 import DAO.*;
 import DTO.*;
 import java.util.ArrayList;
@@ -7,48 +8,33 @@ import java.util.ArrayList;
 
 public class HoaDonBUS
 {
+    private final HoaDonDAO hddao;
+    private final CTHDDAO cthddao;
+    public HoaDonBUS(){
+       hddao = new HoaDonDAO();
+       cthddao = new CTHDDAO();
+    }
     public ArrayList<SanPhamDTO> hienDSSP(){
         SanPhamDAO sp = new SanPhamDAO();
         return sp.layDSSP();
     }
     
-    public boolean addReceipt(HoaDonDTO hd){
-        HoaDonDAO hddao = new HoaDonDAO();
+    public boolean addReceipt(HoaDonDTO hd){      
         return hddao.themHD(hd);
     }
     
     public boolean addDetailReceipt(ChiTietHoaDonDTO cthd){
-        CTHDDAO cthddao = new CTHDDAO();
         return cthddao.themCTHD(cthd);
     }
     
     public ArrayList<HoaDonDTO> hienDSHD(){
-        HoaDonDAO hd = new HoaDonDAO();
-        return hd.layDSHD();
+        return hddao.layDSHD();
     }
     
-    public ArrayList<ThongTinKMDTO> data_InforDiscount(){
-        ArrayList<ThongTinKMDTO> list_data = new ArrayList<>();
-        KhuyenMaiDAO a = new KhuyenMaiDAO();
-        ChiTietKMDAO b = new ChiTietKMDAO();
-        ArrayList<KhuyenMaiDTO> dskm = a.layDSKM();
-        ArrayList<ChiTietKMDTO> dsctkm = b.layDSCTKM();
-        for (KhuyenMaiDTO km : dskm) {
-            for (ChiTietKMDTO ctkm : dsctkm) {
-                if (ctkm.getMaKM() == km.getMaKM()) {
-                    list_data.add(new ThongTinKMDTO(
-                        km.getMaKM(),
-                        km.getTenKM(),
-                        ctkm.getTenCTKM(),
-                        ctkm.getPhanTramGiam(),
-                        km.getNgayKetThuc()
-                    ));
-                }
-            }
-        }
-        return list_data;
+    public ArrayList<ChiTietHoaDonDTO> hienDSCTHD(){
+        return cthddao.layDSCTHD();
     }
-    
+     
     public String timAnhChoSanPham(String maSP){
        SanPhamDAO sp = new SanPhamDAO();
        String anh = null;
@@ -57,5 +43,9 @@ public class HoaDonBUS
            anh = spdto.getAnhSP();
        }
        return anh;
+    }
+    
+    public ArrayList<HoaDonDTO> TimHDTheoNFieldTheoDau(ArrayList<QueryCondition> conditions){
+        return hddao.layHDTheoNFieldTheoDau(conditions);
     }
 }

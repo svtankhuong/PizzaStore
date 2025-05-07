@@ -4,6 +4,7 @@
  */
 
 package GUI;
+import MyCustom.SelectCustomerOrDiscount;
 import DAO.KhachHangDAO;
 import DTO.KhachHangDTO;
 import java.awt.Color;
@@ -18,9 +19,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class InforCustomer extends javax.swing.JFrame{
     private SelectCustomerOrDiscount listener;
+    private SelectCustomerOrDiscount listener1;
     
     public void setSelectCustomerListener(SelectCustomerOrDiscount listener) {
         this.listener = listener;
+    }
+    
+    public void setSelectCustomer1Listener(SelectCustomerOrDiscount listener){
+        this.listener1 = listener;
     }
 
     @Override
@@ -177,6 +183,9 @@ public class InforCustomer extends javax.swing.JFrame{
             JOptionPane.showMessageDialog(this, String.format("Bạn đã chọn khách hàng %s", ten_kh) , "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
             if(listener != null){
                 listener.onCustomerSelected(Integer.parseInt(ma_kh),ten_kh);
+            }
+            if(listener1 != null){
+                listener1.onCustomer1Selected(Integer.parseInt(ma_kh), ten_kh);
             }
             this.dispose();
         }
