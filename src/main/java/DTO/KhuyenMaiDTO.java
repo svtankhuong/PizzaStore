@@ -8,6 +8,10 @@ public class KhuyenMaiDTO {
     private LocalDate NgayBatDau;
     private LocalDate NgayKetThuc;
 
+    public KhuyenMaiDTO(){
+        MaKM = 0;
+    }
+
     public KhuyenMaiDTO(int idkm, String tenkm, LocalDate startDate, LocalDate endDate) {
         this.MaKM = idkm;
         this.TenKM = tenkm;
