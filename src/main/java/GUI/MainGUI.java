@@ -1,3 +1,4 @@
+
 package GUI;
 
 import DAO.QuyenDAO;
@@ -202,48 +203,51 @@ public class MainGUI extends javax.swing.JFrame {
         PanelMain.repaint();
     }
 
-    private void setupMenuEvents() {
-        for (JLabel label : menuLabels) {
-            label.setOpaque(true);
-            label.setBackground(clMenuItem);
-            label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            label.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    for (JLabel lbl : menuLabels) {
-                        lbl.setBackground(clMenuItem);
-                    }
-                    label.setBackground(clMenuItemSelected);
-
-                    if (label == LblSale) {
-                        cardLayout.show(contentPanel, "sale");
-                    } else if (label == LblStaffs) {
-                        cardLayout.show(contentPanel, "staff");
-                    } else if (label == LblNH) {
-
-                        cardLayout.show(contentPanel, "import");
-                    } else if (label == LblProducts) {
-                        cardLayout.show(contentPanel, "product");
-                    }
+ private void setupMenuEvents() {
+    for (JLabel label : menuLabels) {
+        label.setOpaque(true);
+        label.setBackground(clMenuItem);
+        label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                for (JLabel lbl : menuLabels) {
+                    lbl.setBackground(clMenuItem);
                 }
+                label.setBackground(clMenuItemSelected);
 
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    if (!label.getBackground().equals(clMenuItemSelected)) {
-                        label.setBackground(new Color(255, 180, 130));
-
-
-                    }
+                if (label == LblSale) {
+                    cardLayout.show(contentPanel, "sale");
+                } else if (label == LblStaffs) {
+                    cardLayout.show(contentPanel, "staff");
+                } else if (label == LblNH) {
+                    cardLayout.show(contentPanel, "import");
+                } else if (label == LblProducts) {
+                    cardLayout.show(contentPanel, "product");
+                } else if (label == LblCustomers) {
+                    cardLayout.show(contentPanel, "customer");
+                } else if (label == LblPromotions) {
+                    cardLayout.show(contentPanel, "promotion");
+                } else if (label == LblTK) {
+                    cardLayout.show(contentPanel, "stats");
                 }
+            }
 
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    if (!label.getBackground().equals(clMenuItemSelected)) {
-                        label.setBackground(clMenuItem);
-                    }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (!label.getBackground().equals(clMenuItemSelected)) {
+                    label.setBackground(new Color(255, 180, 130));
                 }
-            });
-        }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (!label.getBackground().equals(clMenuItemSelected)) {
+                    label.setBackground(clMenuItem);
+                }
+            }
+        });
+    }
 
     }
     @SuppressWarnings("unchecked")
@@ -491,4 +495,3 @@ public class MainGUI extends javax.swing.JFrame {
     // End of variables declaration                   
 
 }
-
