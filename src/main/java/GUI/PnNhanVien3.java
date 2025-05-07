@@ -13,15 +13,20 @@ import MyCustom.MyDialog;
 import MyCustom.TableCustomizer;
 
 import com.formdev.flatlaf.json.ParseException;
+import org.apache.poi.ss.usermodel.Cell;
 
 import java.awt.GridLayout;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,6 +35,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import javax.swing.table.DefaultTableModel;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -624,11 +632,11 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        xuatExcel();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void btnNhapExActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhapExActionPerformed
-
+        nhapExcel();
     }//GEN-LAST:event_btnNhapExActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
@@ -1035,5 +1043,74 @@ public class PnNhanVien3 extends javax.swing.JPanel {
             qBUS.capnhatquyen(q);  // Cập nhật quyền vào cơ sở dữ liệu
         }
     }
-
+    private void nhapExcel() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Chọn tệp Excel để nhập");
+        int userSelection = fileChooser.showOpenDialog(this);
+    
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToOpen = fileChooser.getSelectedFile();
+            try (FileInputStream fis = new FileInputStream(fileToOpen);
+                 XSSFWorkbook workbook = new XSSFWorkbook(fis)) {
+    
+                XSSFSheet sheet = workbook.getSheetAt(0);
+                DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
+                model.setRowCount(0); // Xóa dữ liệu cũ trong bảng
+    
+                // Đọc dữ liệu từ Excel và thêm vào bảng
+                for (int i = 1; i <= sheet.getLastRowNum(); i++) { // Bỏ qua dòng tiêu đề
+                    Row row = sheet.getRow(i);
+                    Object[] rowData = new Object[row.getLastCellNum()];
+                    for (int j = 0; j < row.getLastCellNum(); j++) {
+                        rowData[j] = row.getCell(j).toString();
+                    }
+                    model.addRow(rowData);
+                }
+    
+                JOptionPane.showMessageDialog(this, "Nhập dữ liệu thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Lỗi khi nhập dữ liệu: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    private void xuatExcel() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Chọn nơi lưu tệp Excel");
+        fileChooser.setSelectedFile(new File("DanhSachNhanVien.xlsx"));
+    
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+    
+            try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+                XSSFSheet sheet = workbook.createSheet("Danh sách nhân viên");
+    
+                // Tạo tiêu đề cột
+                DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
+                Row headerRow = sheet.createRow(0);
+                for (int i = 0; i < model.getColumnCount(); i++) {
+                    Cell cell = headerRow.createCell(i);
+                    cell.setCellValue(model.getColumnName(i));
+                }
+    
+                // Ghi dữ liệu từ bảng vào Excel
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    Row row = sheet.createRow(i + 1);
+                    for (int j = 0; j < model.getColumnCount(); j++) {
+                        Object value = model.getValueAt(i, j);
+                        row.createCell(j).setCellValue(value != null ? value.toString() : "");
+                    }
+                }
+    
+                // Ghi tệp Excel ra đĩa
+                try (FileOutputStream fileOut = new FileOutputStream(fileToSave)) {
+                    workbook.write(fileOut);
+                }
+    
+                JOptionPane.showMessageDialog(this, "Xuất dữ liệu thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Lỗi khi xuất dữ liệu: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
 }
