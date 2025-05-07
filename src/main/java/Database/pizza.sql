@@ -230,7 +230,7 @@ INSERT INTO chitietphieunhap (MaPN, MaNL, SoLuong, DonGia, ThanhTien) VALUES
 
 
 
---sửa PN của Thanh Hằng
+-- sửa PN của Thanh Hằng
 ALTER TABLE PhieuNhap MODIFY MaPN INT; -- Xóa AUTO_INCREMENT
 
 -- Xóa cột MaCTPN
@@ -276,7 +276,7 @@ INSERT INTO chitietphieunhap (MaPN, MaNL, SoLuong, DonGia, ThanhTien) VALUES
 (10, 2, 5, 40000, 200000);  -- NguyenLieu MaNL = 2
 
 
---thêm cho ctpn
+-- thêm cho ctpn
 INSERT INTO chitietphieunhap (MaPN, MaNL, SoLuong, DonGia, ThanhTien) VALUES
 (11, 1, 30, 50000, 1500000),
 (11, 2, 25, 40000, 1000000),

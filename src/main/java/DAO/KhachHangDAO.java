@@ -162,7 +162,7 @@ public class KhachHangDAO {
     public boolean SuaKhachHang(KhachHangDTO kh) {
         boolean result = false;
         try {
-            String sql = "UPDATE khachhang SET HotLot = ?,Ten = ?,SDT = ?,DiaChi = ? WHERE MaKH = ?";
+            String sql = "UPDATE khachhang SET HoLot = ?,Ten = ?,SDT = ?,DiaChi = ?, TongChiTieu=? WHERE MaKH = ?";
             Connection connection = JDBC.getConnection();
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setString(1, kh.getHoDem());

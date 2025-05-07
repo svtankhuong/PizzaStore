@@ -4,6 +4,7 @@ package GUI;
 import MyCustom.QueryCondition;
 import MyCustom.SelectCustomerOrDiscount;
 import BUS.HoaDonBUS;
+import BUS.KhachHangBUS;
 import DAO.*;
 import DTO.*;
 import MyCustom.CellCurrencyRenderer;
@@ -21,7 +22,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -35,6 +35,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -53,6 +55,12 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
 
@@ -170,9 +178,91 @@ public class PnQLBH extends JPanel {
                 }
             }          
         });
-        
+        btnXuatExcelHoaDon.addActionListener((ActionEvent e) -> xuatExcelHoaDon());
+        btnXuatExcelChiTiet.addActionListener((ActionEvent e) -> xuatExcelCTHoaDon());
     }
     
+    public void xuatExcelHoaDon() {
+        try {
+            Workbook workbook = new XSSFWorkbook();
+            HoaDonBUS hdbus = new HoaDonBUS();
+            // Sheet hoá đơn
+            Sheet sheetReceipt = workbook.createSheet("Hoá Đơn");
+            org.apache.poi.ss.usermodel.Row headerPN = sheetReceipt.createRow(0);
+            String[] headersPN = {"Mã Hoá Đơn", "Mã Nhân Viên", "Mã Khách Hàng","Mã Chi Tiết Khuyến Mãi", "Ngày Lập", "Số Tiền Giảm" ,"Tổng Tiền"};
+            for (int i = 0; i < headersPN.length; i++) {
+                headerPN.createCell(i).setCellValue(headersPN[i]);
+            }
+            ArrayList<HoaDonDTO> dsHD = hdbus.hienDSHD();
+            for (int i = 0; i < dsHD.size(); i++) {
+               HoaDonDTO hd = dsHD.get(i);
+                 org.apache.poi.ss.usermodel.Row row = sheetReceipt.createRow(i + 1);
+                row.createCell(0).setCellValue(hd.getMaHD());
+                row.createCell(1).setCellValue(hd.getMaNV());
+                row.createCell(2).setCellValue(hd.getMaKH());
+                row.createCell(3).setCellValue(hd.getMaCTKM());
+                row.createCell(4).setCellValue(InforAccount.formatDate(hd.getNgayLapHD().toString()));
+                row.createCell(5).setCellValue(currencyFormat.format(hd.getTongTienHD()));
+            }
+            // Lưu file
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Lưu file Excel");
+            fileChooser.setSelectedFile(new File("HoaDon.xlsx"));
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                try (FileOutputStream fos = new FileOutputStream(file)) {
+                    workbook.write(fos);
+                    JOptionPane.showMessageDialog(this, "Xuất file Excel thành công tại: " + file.getAbsolutePath());
+                }
+            }
+            workbook.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi xuất Excel: " + e.getMessage());
+        }
+    }
+    public void xuatExcelCTHoaDon() {
+        try {
+            Workbook workbook = new XSSFWorkbook();
+            HoaDonBUS hdbus = new HoaDonBUS();
+
+            // Sheet chi tiết hoá đơn
+            Sheet sheetDR = workbook.createSheet("Chi Tiết Hoá Đơn");
+            org.apache.poi.ss.usermodel.Row headerDR = sheetDR.createRow(0);
+            String[] headersDR = {"Mã Chi Tiết Hoá Đơn","Mã Hoá Đơn" , "Mã Sản Phẩm", "Mã Chi Tiết Khuyến Mãi", "Số Lượng"  ,"Đơn Giá", "Thành Tiền"};
+            for (int i = 0; i < headersDR.length; i++) {
+                headerDR.createCell(i).setCellValue(headersDR[i]);
+            }
+            ArrayList<ChiTietHoaDonDTO> listDR = hdbus.hienDSCTHD();
+            for (int i = 0; i < listDR.size(); i++) {
+                ChiTietHoaDonDTO ct = listDR.get(i);
+                org.apache.poi.ss.usermodel.Row row = sheetDR.createRow(i + 1);
+                row.createCell(0).setCellValue(ct.getMaCTHD());
+                row.createCell(1).setCellValue(ct.getMaHD());
+                row.createCell(2).setCellValue(ct.getMaSP());
+                row.createCell(3).setCellValue(ct.getMaCTKM());
+                row.createCell(4).setCellValue(ct.getSoLuong());
+                row.createCell(5).setCellValue(ct.getDonGia());
+                row.createCell(6).setCellValue(ct.getThanhTien());
+            }
+
+            // Lưu file
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Lưu file Excel");
+            fileChooser.setSelectedFile(new File("ChiTietHoaDon.xlsx"));
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                try (FileOutputStream fos = new FileOutputStream(file)) {
+                    workbook.write(fos);
+                    JOptionPane.showMessageDialog(this, "Xuất file Excel thành công tại: " + file.getAbsolutePath());
+                }
+            }
+            workbook.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi xuất Excel: " + e.getMessage());
+        }
+    }
+
+
     private void TimKiemHoaDon(){
         if(kiem_tra_thong_tin_tim_kiemHD()){
             if (co_loc_tien)
@@ -765,6 +855,15 @@ public class PnQLBH extends JPanel {
             String[] b = ttKH.getText().split("",2);  
             int n = tableHoaDon.getRowCount();
             int o = hd.hienDSCTHD().size();
+            KhachHangBUS khbus = new KhachHangBUS();
+            String[] holot_ten = b[1].trim().split(" ");
+            ArrayList<KhachHangDTO> dskh = khbus.timKiemKhachHang(b[0]); // b[0] là mã khách hàng
+            String sdt = dskh.get(0).getSdt();
+            String diachi = dskh.get(0).getDiaChi();
+            Long tong_ct_cu = dskh.get(0).getTongChiTieu();
+            Long tong_ct_moi = null;
+            String c = holot_ten[0].concat(" ").concat(holot_ten[1]);
+            System.out.println(c);
   
             for (int i = 0; i < tableGioHang.getRowCount(); i++) {
                 tong_tien_hd += parseCurrencyString(tableGioHang.getModel().getValueAt(i, 4).toString());
@@ -773,6 +872,7 @@ public class PnQLBH extends JPanel {
                 System.out.println(String.format("Tong tien cua hoa don co ma %d ( khong khuyen mai)", n));
                 System.out.println(tong_tien_hd);
                 d = new HoaDonDTO(n, MaNV, Integer.parseInt(b[0]), null, 0, tong_tien_hd);
+                tong_ct_moi = tong_ct_cu + tong_tien_hd;
                 them_hd_va_cthd_vao_csdl(MaNV, n, o, null, hd, d);
             } else {
                 String[] e = ttKM.getText().split("\\s+");
@@ -798,14 +898,19 @@ public class PnQLBH extends JPanel {
                     System.out.println(String.format("Tong tien cua hoa don co ma %d ( voi ma khuyen mai %d)", n, MaKM));
                     System.out.println(sum_with_discount);
                     d = new HoaDonDTO(n, MaNV, Integer.parseInt(b[0]), MaKM, (long) money, sum_with_discount);
+                    tong_ct_moi = tong_ct_cu + sum_with_discount;                   
                     them_hd_va_cthd_vao_csdl(MaNV, n, o, MaKM, hd, d);
                 } 
                 if((now.compareTo(hethan)) > 0){
                    System.out.println(String.format("Tong tien cua hoa don co ma %d ( da het han khuyen mai)", n));
                    System.out.println(tong_tien_hd);
                    d = new HoaDonDTO(n, MaNV, Integer.parseInt(b[0]), null, 0, tong_tien_hd);
+                   tong_ct_moi = tong_ct_cu + tong_tien_hd;
                    them_hd_va_cthd_vao_csdl(MaNV, n, o, null, hd, d);                   
                 }
+            }
+            if(khbus.TangTongChiTieu(b[0],c, holot_ten[2], sdt, diachi,tong_ct_moi )){
+                System.out.println("Đã cộng tổng tiền vào chi tiêu của khách hàng có mã là "+b[0]);
             }
         }
     }

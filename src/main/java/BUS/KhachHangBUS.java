@@ -105,7 +105,7 @@ public class KhachHangBUS {
         return flag;
     }
 
-    public boolean SuaKhachHang(String hoLot, String tenKH, String sdt, String diaChi) {
+    public void SuaKhachHang(String hoLot, String tenKH, String sdt, String diaChi) {
         hoLot = hoLot.trim();
         tenKH = tenKH.trim();
         sdt = sdt.trim();
@@ -120,16 +120,43 @@ public class KhachHangBUS {
         String error = validateKhachHang(kh);
         if (error != null) {
             new MyDialog(error, MyDialog.ERROR_DIALOG);
-            return false;
         }
 
         for (KhachHangDTO existingKhachHang : danhSachKhachHang) {
             if (existingKhachHang.getSdt().equalsIgnoreCase(sdt)) {
                 new MyDialog("Số điện thoại đã tồn tại!", MyDialog.ERROR_DIALOG);
-                return false;
             }
         }
-        boolean flag = khDAO.ThemKhachHang(kh);
+        boolean flag = khDAO.SuaKhachHang(kh);
+        if (!flag) {
+            new MyDialog("Sửa khách hàng thất bại!", MyDialog.ERROR_DIALOG);
+        } else {
+            new MyDialog("Sửa khách hàng thành công!", MyDialog.SUCCESS_DIALOG);
+        }
+    }
+    
+    public boolean TangTongChiTieu(String makh,String hoLot, String tenKH, String sdt, String diaChi, Long tongChiTieu) {
+        makh  = makh.trim();
+        hoLot = hoLot.trim();
+        tenKH = tenKH.trim();
+        sdt = sdt.trim();
+        diaChi = diaChi.trim();
+
+        KhachHangDTO kh = new KhachHangDTO();
+        kh.setMaKH(Integer.valueOf(makh));
+        kh.setHoDem(hoLot);
+        kh.setTen(tenKH);
+        kh.setSdt(sdt);
+        kh.setDiaChi(diaChi);
+        kh.setTongChiTieu(tongChiTieu);
+
+        String error = validateKhachHang(kh);
+        if (error != null) {
+            new MyDialog(error, MyDialog.ERROR_DIALOG);
+            return false;
+        }
+
+        boolean flag = khDAO.SuaKhachHang(kh);
         if (!flag) {
             new MyDialog("Sửa khách hàng thất bại!", MyDialog.ERROR_DIALOG);
         } else {

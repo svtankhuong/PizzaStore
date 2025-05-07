@@ -20,12 +20,13 @@ public class ChiTietKMDAO {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
+                int idCTKM = rs.getInt("MACTKM");
                 int idKM = rs.getInt("MaKM");
                 long phanTramGiam = rs.getLong("PhanTramGiam");
                 long toiThieuGiam = rs.getLong("Toithieugiam");
                 String tenCTKM = rs.getString("TenCTKM");
 
-                ChiTietKMDTO kh = new ChiTietKMDTO(idKM, phanTramGiam, toiThieuGiam, tenCTKM);
+                ChiTietKMDTO kh = new ChiTietKMDTO( idCTKM ,idKM, phanTramGiam, toiThieuGiam, tenCTKM);
                 dsCTKM.add(kh);
             }
         } catch (SQLException e) {

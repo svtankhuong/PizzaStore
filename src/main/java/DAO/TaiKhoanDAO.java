@@ -107,11 +107,10 @@ public class TaiKhoanDAO {
                 thong_tin_DN.add(username);        // 0: username
                 thong_tin_DN.add(matkhau);         // 1: password
                 thong_tin_DN.add(maquyen);         // 2: idNV (MaQuyen)
-                thong_tin_DN.add(manv);            // 3: tenNV (MaNV)
                 String ho_ten_nhan_vien = b.getHoLot() + " " + b.getTen();
+                thong_tin_DN.add(ho_ten_nhan_vien);            // 3: tenNV (MaNV)
                 thong_tin_DN.add(ngaysinh);        // 4: ngaysinh
                 thong_tin_DN.add(gioitinh);        // 5: gioitinh
-                thong_tin_DN.add(ho_ten_nhan_vien); // 6: quyen (ho_ten)
                 QuyenBUS c = new QuyenBUS();
                 String tenQuyen = c.getTenQuyenTheoMa(maquyen);
                 thong_tin_DN.add(tenQuyen);        // 7: tenQuyen
