@@ -11,11 +11,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-public class ThongKeGUI extends JFrame {
+public class ThongKeGUI extends JPanel {
     private final ThongKeDoanhThuBUS thongKeDoanhThuBUS;
     private final ThongKeDoanhChiBUS thongKeDoanhChiBUS;
     private JTabbedPane tabbedPane;
@@ -31,6 +33,8 @@ public class ThongKeGUI extends JFrame {
     private JTextField quyField;
     private JComboBox<String> loaiThongKeComboBox;
     private JButton btnThongKe;
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    private final DecimalFormat df = new DecimalFormat("#,###");
 
     public ThongKeGUI() {
         thongKeDoanhThuBUS = new ThongKeDoanhThuBUS();
@@ -39,11 +43,8 @@ public class ThongKeGUI extends JFrame {
     }
 
     private void initComponents() {
-        setTitle("Thống Kê Doanh Thu và Chi Phí");
-        setSize(1200, 750);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-
+        setLayout(new BorderLayout());
+        setPreferredSize(new Dimension(1200, 750));
         // Font chung
         Font labelFont = new Font("Segoe UI", Font.PLAIN, 16);
         Font fieldFont = new Font("Segoe UI", Font.PLAIN, 16);
@@ -178,8 +179,8 @@ public class ThongKeGUI extends JFrame {
         doanhThuTable.setFont(tableFont);
         doanhThuTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         customizeTable(doanhThuTable);
-        JScrollPane doanhThuScrollPane = new JScrollPane(doanhThuTable, 
-            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane doanhThuScrollPane = new JScrollPane(doanhThuTable,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         customizeScrollPane(doanhThuScrollPane);
         doanhThuPanel.add(doanhThuScrollPane, BorderLayout.CENTER);
         tabbedPane.addTab("Thống Kê Doanh Thu", doanhThuPanel);
@@ -191,8 +192,8 @@ public class ThongKeGUI extends JFrame {
         chiPhiTable.setFont(tableFont);
         chiPhiTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         customizeTable(chiPhiTable);
-        JScrollPane chiPhiScrollPane = new JScrollPane(chiPhiTable, 
-            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane chiPhiScrollPane = new JScrollPane(chiPhiTable,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         customizeScrollPane(chiPhiScrollPane);
         chiPhiPanel.add(chiPhiScrollPane, BorderLayout.CENTER);
         tabbedPane.addTab("Thống Kê Doanh Chi", chiPhiPanel);
@@ -204,8 +205,8 @@ public class ThongKeGUI extends JFrame {
         nhanVienTable.setFont(tableFont);
         nhanVienTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         customizeTable(nhanVienTable);
-        JScrollPane nhanVienScrollPane = new JScrollPane(nhanVienTable, 
-            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane nhanVienScrollPane = new JScrollPane(nhanVienTable,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         customizeScrollPane(nhanVienScrollPane);
         nhanVienPanel.add(nhanVienScrollPane, BorderLayout.CENTER);
         tabbedPane.addTab("Thống Kê Theo Nhân Viên", nhanVienPanel);
@@ -217,55 +218,55 @@ public class ThongKeGUI extends JFrame {
         khachHangTable.setFont(tableFont);
         khachHangTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         customizeTable(khachHangTable);
-        JScrollPane khachHangScrollPane = new JScrollPane(khachHangTable, 
-            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane khachHangScrollPane = new JScrollPane(khachHangTable,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         customizeScrollPane(khachHangScrollPane);
         khachHangPanel.add(khachHangScrollPane, BorderLayout.CENTER);
         tabbedPane.addTab("Thống Kê Theo Khách Hàng", khachHangPanel);
 
-        // Thêm vào frame
+        // Thêm vào panel
         add(controlPanel, BorderLayout.NORTH);
         add(tabbedPane, BorderLayout.CENTER);
     }
-private void customizeTable(JTable table) {
-    table.setRowHeight(30);
-    table.getTableHeader().setBackground(new Color(30, 144, 255));
-    table.getTableHeader().setForeground(Color.WHITE);
-    table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
 
-    // Renderer tùy chỉnh cho các ô
-    table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                                                       boolean hasFocus, int row, int column) {
-            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (!isSelected) {
-                c.setBackground(row % 2 == 0 ? new Color(240, 248, 255) : new Color(255, 255, 255));
-            }
-            return c;
-        }
-    });
+    private void customizeTable(JTable table) {
+        table.setRowHeight(30);
+        table.getTableHeader().setBackground(new Color(30, 144, 255));
+        table.getTableHeader().setForeground(Color.WHITE);
+        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
 
-    // Renderer tùy chỉnh cho các cột số (TongThu, TongChi)
-    table.setDefaultRenderer(Number.class, new DefaultTableCellRenderer() {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                                                       boolean hasFocus, int row, int column) {
-            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (value instanceof Number) {
-                // Định dạng số với dấu phân cách hàng nghìn
-                java.text.DecimalFormat df = new java.text.DecimalFormat("#,###");
-                setText(df.format(value));
+        // Renderer tùy chỉnh cho các ô
+        table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                           boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (!isSelected) {
+                    c.setBackground(row % 2 == 0 ? new Color(240, 248, 255) : new Color(255, 255, 255));
+                }
+                return c;
             }
-            if (!isSelected) {
-                c.setBackground(row % 2 == 0 ? new Color(240, 248, 255) : new Color(255, 255, 255));
-            }
-            return c;
-        }
-    });
+        });
 
-    table.setGridColor(new Color(173, 216, 230));
-}
+        // Renderer tùy chỉnh cho các cột số (TongThu, TongChi)
+        table.setDefaultRenderer(Number.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                           boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (value instanceof Number) {
+                    setText(df.format(value));
+                }
+                if (!isSelected) {
+                    c.setBackground(row % 2 == 0 ? new Color(240, 248, 255) : new Color(255, 255, 255));
+                }
+                return c;
+            }
+        });
+
+        table.setGridColor(new Color(173, 216, 230));
+    }
+
     private void customizeScrollPane(JScrollPane scrollPane) {
         scrollPane.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
             @Override
@@ -285,100 +286,207 @@ private void customizeTable(JTable table) {
 
     private void thongKe() {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String loaiThongKe = (String) loaiThongKeComboBox.getSelectedItem();
 
             // Thống kê tổng thu
             if ("Tổng thu".equals(loaiThongKe)) {
                 // Theo khoảng thời gian
                 if (!tuNgayField.getText().isEmpty() && !denNgayField.getText().isEmpty()) {
-                    Date tuNgay = sdf.parse(tuNgayField.getText());
-                    Date denNgay = sdf.parse(denNgayField.getText());
+                    Date tuNgay = validateAndParseDate(tuNgayField.getText(), "Từ ngày không hợp lệ");
+                    Date denNgay = validateAndParseDate(denNgayField.getText(), "Đến ngày không hợp lệ");
                     List<ThongKeDoanhThuDTO> thuResult = thongKeDoanhThuBUS.thongKeTongThuTheoKhoangThoiGian(tuNgay, denNgay);
                     updateDoanhThuTable(thuResult);
+                    if (thuResult.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Không có dữ liệu doanh thu cho khoảng thời gian này",
+                                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
                 // Theo ngày
                 else if (!ngayField.getText().isEmpty()) {
-                    Date ngay = sdf.parse(ngayField.getText());
+                    Date ngay = validateAndParseDate(ngayField.getText(), "Ngày không hợp lệ");
                     List<ThongKeDoanhThuDTO> thuResult = thongKeDoanhThuBUS.thongKeTongThuTheoNgay(ngay);
                     updateDoanhThuTable(thuResult);
+                    if (thuResult.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Không có dữ liệu doanh thu cho ngày này",
+                                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
                 // Theo tháng
                 else if (!thangField.getText().isEmpty() && !namField.getText().isEmpty()) {
-                    int thang = Integer.parseInt(thangField.getText());
-                    int nam = Integer.parseInt(namField.getText());
+                    int thang = validateAndParseInt(thangField.getText(), "Tháng không hợp lệ", 1, 12);
+                    int nam = validateAndParseInt(namField.getText(), "Năm không hợp lệ", 1900, 9999);
                     List<ThongKeDoanhThuDTO> thuResult = thongKeDoanhThuBUS.thongKeTongThuTheoThang(thang, nam);
                     updateDoanhThuTableThangNam(thuResult, thang, nam);
+                    if (thuResult.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Không có dữ liệu doanh thu cho tháng này",
+                                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
                 // Theo năm
                 else if (!namField.getText().isEmpty() && thangField.getText().isEmpty() && quyField.getText().isEmpty()) {
-                    int nam = Integer.parseInt(namField.getText());
+                    int nam = validateAndParseInt(namField.getText(), "Năm không hợp lệ", 1900, 9999);
                     List<ThongKeDoanhThuDTO> thuResult = thongKeDoanhThuBUS.thongKeTongThuTheoNam(nam);
                     updateDoanhThuTableNam(thuResult, nam);
+                    if (thuResult.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Không có dữ liệu doanh thu cho năm này",
+                                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
                 // Theo quý
                 else if (!quyField.getText().isEmpty() && !namField.getText().isEmpty()) {
-                    int quy = Integer.parseInt(quyField.getText());
-                    int nam = Integer.parseInt(namField.getText());
+                    int quy = validateAndParseInt(quyField.getText(), "Quý không hợp lệ", 1, 4);
+                    int nam = validateAndParseInt(namField.getText(), "Năm không hợp lệ", 1900, 9999);
                     List<ThongKeDoanhThuDTO> thuResult = thongKeDoanhThuBUS.thongKeTongThuTheoQuy(quy, nam);
                     updateDoanhThuTableQuy(thuResult, quy, nam);
+                    if (thuResult.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Không có dữ liệu doanh thu cho quý này",
+                                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin để thống kê tổng thu",
+                            "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             }
 
             // Thống kê tổng chi
-            if ("Tổng chi".equals(loaiThongKe)) {
+            else if ("Tổng chi".equals(loaiThongKe)) {
                 // Theo khoảng thời gian
                 if (!tuNgayField.getText().isEmpty() && !denNgayField.getText().isEmpty()) {
-                    Date tuNgay = sdf.parse(tuNgayField.getText());
-                    Date denNgay = sdf.parse(denNgayField.getText());
+                    Date tuNgay = validateAndParseDate(tuNgayField.getText(), "Từ ngày không hợp lệ");
+                    Date denNgay = validateAndParseDate(denNgayField.getText(), "Đến ngày không hợp lệ");
                     List<ThongKeDoanhChiDTO> chiResult = thongKeDoanhChiBUS.thongKeTongChiTheoKhoangThoiGian(tuNgay, denNgay);
                     updateChiPhiTable(chiResult);
+                    if (chiResult.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Không có dữ liệu chi phí cho khoảng thời gian này",
+                                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
                 // Theo ngày
                 else if (!ngayField.getText().isEmpty()) {
-                    Date ngay = sdf.parse(ngayField.getText());
+                    Date ngay = validateAndParseDate(ngayField.getText(), "Ngày không hợp lệ");
                     List<ThongKeDoanhChiDTO> chiResult = thongKeDoanhChiBUS.thongKeTongChiTheoNgay(ngay);
                     updateChiPhiTable(chiResult);
+                    if (chiResult.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Không có dữ liệu chi phí cho ngày này",
+                                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
                 // Theo tháng
                 else if (!thangField.getText().isEmpty() && !namField.getText().isEmpty()) {
-                    int thang = Integer.parseInt(thangField.getText());
-                    int nam = Integer.parseInt(namField.getText());
+                    int thang = validateAndParseInt(thangField.getText(), "Tháng không hợp lệ", 1, 12);
+                    int nam = validateAndParseInt(namField.getText(), "Năm không hợp lệ", 1900, 9999);
                     List<ThongKeDoanhChiDTO> chiResult = thongKeDoanhChiBUS.thongKeTongChiTheoThang(thang, nam);
                     updateChiPhiTableThangNam(chiResult, thang, nam);
+                    if (chiResult.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Không có dữ liệu chi phí cho tháng này",
+                                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
                 // Theo năm
                 else if (!namField.getText().isEmpty() && thangField.getText().isEmpty() && quyField.getText().isEmpty()) {
-                    int nam = Integer.parseInt(namField.getText());
+                    int nam = validateAndParseInt(namField.getText(), "Năm không hợp lệ", 1900, 9999);
                     List<ThongKeDoanhChiDTO> chiResult = thongKeDoanhChiBUS.thongKeTongChiTheoNam(nam);
                     updateChiPhiTableNam(chiResult, nam);
+                    if (chiResult.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Không có dữ liệu chi phí cho năm này",
+                                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
                 // Theo quý
                 else if (!quyField.getText().isEmpty() && !namField.getText().isEmpty()) {
-                    int quy = Integer.parseInt(quyField.getText());
-                    int nam = Integer.parseInt(namField.getText());
+                    int quy = validateAndParseInt(quyField.getText(), "Quý không hợp lệ", 1, 4);
+                    int nam = validateAndParseInt(namField.getText(), "Năm không hợp lệ", 1900, 9999);
                     List<ThongKeDoanhChiDTO> chiResult = thongKeDoanhChiBUS.thongKeTongChiTheoQuy(quy, nam);
                     updateChiPhiTableQuy(chiResult, quy, nam);
+                    if (chiResult.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Không có dữ liệu chi phí cho quý này",
+                                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin để thống kê tổng chi",
+                            "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             }
 
             // Thống kê theo nhân viên
-            if ("Theo nhân viên".equals(loaiThongKe) && !quyField.getText().isEmpty() && !namField.getText().isEmpty()) {
-                int quy = Integer.parseInt(quyField.getText());
-                int nam = Integer.parseInt(namField.getText());
-                List<ThongKeDoanhThuDTO> nhanVienResult = thongKeDoanhThuBUS.thongKeTongThuTheoNhanVienQuy(quy, nam);
-                updateNhanVienTable(nhanVienResult);
+            else if ("Theo nhân viên".equals(loaiThongKe)) {
+                if (!quyField.getText().isEmpty() && !namField.getText().isEmpty()) {
+                    int quy = validateAndParseInt(quyField.getText(), "Quý không hợp lệ", 1, 4);
+                    int nam = validateAndParseInt(namField.getText(), "Năm không hợp lệ", 1900, 9999);
+                    List<ThongKeDoanhThuDTO> nhanVienResult = thongKeDoanhThuBUS.thongKeTongThuTheoNhanVienQuy(quy, nam);
+                    updateNhanVienTable(nhanVienResult);
+                    if (nhanVienResult.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Không có dữ liệu doanh thu theo nhân viên cho quý này",
+                                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập quý và năm để thống kê theo nhân viên",
+                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
             }
 
             // Thống kê theo khách hàng
-            if ("Theo khách hàng".equals(loaiThongKe) && !quyField.getText().isEmpty() && !namField.getText().isEmpty()) {
-                int quy = Integer.parseInt(quyField.getText());
-                int nam = Integer.parseInt(namField.getText());
-                List<ThongKeDoanhThuDTO> khachHangResult = thongKeDoanhThuBUS.thongKeTongThuTheoKhachHangQuy(quy, nam);
-                updateKhachHangTable(khachHangResult);
+            else if ("Theo khách hàng".equals(loaiThongKe)) {
+                if (!quyField.getText().isEmpty() && !namField.getText().isEmpty()) {
+                    int quy = validateAndParseInt(quyField.getText(), "Quý không hợp lệ", 1, 4);
+                    int nam = validateAndParseInt(namField.getText(), "Năm không hợp lệ", 1900, 9999);
+                    List<ThongKeDoanhThuDTO> khachHangResult = thongKeDoanhThuBUS.thongKeTongThuTheoKhachHangQuy(quy, nam);
+                    updateKhachHangTable(khachHangResult);
+                    if (khachHangResult.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Không có dữ liệu doanh thu theo khách hàng cho quý này",
+                                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập quý và năm để thống kê theo khách hàng",
+                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
             }
+
+            // Chuyển đến tab tương ứng
+            switch (loaiThongKe) {
+                case "Tổng thu":
+                    tabbedPane.setSelectedIndex(0);
+                    break;
+                case "Tổng chi":
+                    tabbedPane.setSelectedIndex(1);
+                    break;
+                case "Theo nhân viên":
+                    tabbedPane.setSelectedIndex(2);
+                    break;
+                case "Theo khách hàng":
+                    tabbedPane.setSelectedIndex(3);
+                    break;
+            }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private Date validateAndParseDate(String input, String errorMessage) throws ParseException {
+        if (input == null || input.trim().isEmpty()) {
+            throw new ParseException(errorMessage, 0);
+        }
+        try {
+            java.util.Date utilDate = sdf.parse(input);
+            return new Date(utilDate.getTime());
+        } catch (ParseException e) {
+            throw new ParseException(errorMessage, 0);
+        }
+    }
+
+    private int validateAndParseInt(String input, String errorMessage, int min, int max) throws NumberFormatException {
+        if (input == null || input.trim().isEmpty()) {
+            throw new NumberFormatException(errorMessage);
+        }
+        try {
+            int value = Integer.parseInt(input);
+            if (value < min || value > max) {
+                throw new NumberFormatException(errorMessage);
+            }
+            return value;
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(errorMessage);
         }
     }
 
@@ -388,12 +496,11 @@ private void customizeTable(JTable table) {
         model.addColumn("Đến ngày");
         model.addColumn("Tổng thu");
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         for (ThongKeDoanhThuDTO tk : data) {
             model.addRow(new Object[]{
-                tk.getTuNgay() != null ? sdf.format(tk.getTuNgay()) : "",
-                tk.getDenNgay() != null ? sdf.format(tk.getDenNgay()) : "",
-                tk.getTongThu()
+                    tk.getTuNgay() != null ? sdf.format(tk.getTuNgay()) : "",
+                    tk.getDenNgay() != null ? sdf.format(tk.getDenNgay()) : "",
+                    tk.getTongThu() != null ? df.format(tk.getTongThu()) : "0"
             });
         }
         doanhThuTable.setModel(model);
@@ -403,28 +510,28 @@ private void customizeTable(JTable table) {
             doanhThuTable.getColumnModel().getColumn(2).setPreferredWidth(200);
         }
     }
-private void updateChiPhiTable(List<ThongKeDoanhChiDTO> data) {
-    DefaultTableModel model = new DefaultTableModel();
-    model.addColumn("Từ ngày");
-    model.addColumn("Đến ngày");
-    model.addColumn("Tổng chi");
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    java.text.DecimalFormat df = new java.text.DecimalFormat("#,###"); // Định dạng số
-    for (ThongKeDoanhChiDTO tk : data) {
-        model.addRow(new Object[]{
-            tk.getTuNgay() != null ? sdf.format(tk.getTuNgay()) : "",
-            tk.getDenNgay() != null ? sdf.format(tk.getDenNgay()) : "",
-            df.format(tk.getTongChi()) // Định dạng TongChi thành chuỗi
-        });
+    private void updateChiPhiTable(List<ThongKeDoanhChiDTO> data) {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Từ ngày");
+        model.addColumn("Đến ngày");
+        model.addColumn("Tổng chi");
+
+        for (ThongKeDoanhChiDTO tk : data) {
+            model.addRow(new Object[]{
+                    tk.getTuNgay() != null ? sdf.format(tk.getTuNgay()) : "",
+                    tk.getDenNgay() != null ? sdf.format(tk.getDenNgay()) : "",
+                    tk.getTongChi() != null ? df.format(tk.getTongChi()) : "0"
+            });
+        }
+        chiPhiTable.setModel(model);
+        if (chiPhiTable.getColumnCount() >= 3) {
+            chiPhiTable.getColumnModel().getColumn(0).setPreferredWidth(150);
+            chiPhiTable.getColumnModel().getColumn(1).setPreferredWidth(150);
+            chiPhiTable.getColumnModel().getColumn(2).setPreferredWidth(200);
+        }
     }
-    chiPhiTable.setModel(model);
-    if (chiPhiTable.getColumnCount() >= 3) {
-        chiPhiTable.getColumnModel().getColumn(0).setPreferredWidth(150);
-        chiPhiTable.getColumnModel().getColumn(1).setPreferredWidth(150);
-        chiPhiTable.getColumnModel().getColumn(2).setPreferredWidth(200);
-    }
-}
+
     private void updateDoanhThuTableThangNam(List<ThongKeDoanhThuDTO> data, int thang, int nam) {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Tháng");
@@ -433,9 +540,9 @@ private void updateChiPhiTable(List<ThongKeDoanhChiDTO> data) {
 
         for (ThongKeDoanhThuDTO tk : data) {
             model.addRow(new Object[]{
-                thang,
-                nam,
-                tk.getTongThu()
+                    thang,
+                    nam,
+                    tk.getTongThu() != null ? df.format(tk.getTongThu()) : "0"
             });
         }
         doanhThuTable.setModel(model);
@@ -454,9 +561,9 @@ private void updateChiPhiTable(List<ThongKeDoanhChiDTO> data) {
 
         for (ThongKeDoanhChiDTO tk : data) {
             model.addRow(new Object[]{
-                thang,
-                nam,
-                tk.getTongChi()
+                    thang,
+                    nam,
+                    tk.getTongChi() != null ? df.format(tk.getTongChi()) : "0"
             });
         }
         chiPhiTable.setModel(model);
@@ -474,8 +581,8 @@ private void updateChiPhiTable(List<ThongKeDoanhChiDTO> data) {
 
         for (ThongKeDoanhThuDTO tk : data) {
             model.addRow(new Object[]{
-                nam,
-                tk.getTongThu()
+                    nam,
+                    tk.getTongThu() != null ? df.format(tk.getTongThu()) : "0"
             });
         }
         doanhThuTable.setModel(model);
@@ -492,8 +599,8 @@ private void updateChiPhiTable(List<ThongKeDoanhChiDTO> data) {
 
         for (ThongKeDoanhChiDTO tk : data) {
             model.addRow(new Object[]{
-                nam,
-                tk.getTongChi()
+                    nam,
+                    tk.getTongChi() != null ? df.format(tk.getTongChi()) : "0"
             });
         }
         chiPhiTable.setModel(model);
@@ -511,9 +618,9 @@ private void updateChiPhiTable(List<ThongKeDoanhChiDTO> data) {
 
         for (ThongKeDoanhThuDTO tk : data) {
             model.addRow(new Object[]{
-                quy,
-                nam,
-                tk.getTongThu()
+                    quy,
+                    nam,
+                    tk.getTongThu() != null ? df.format(tk.getTongThu()) : "0"
             });
         }
         doanhThuTable.setModel(model);
@@ -532,9 +639,9 @@ private void updateChiPhiTable(List<ThongKeDoanhChiDTO> data) {
 
         for (ThongKeDoanhChiDTO tk : data) {
             model.addRow(new Object[]{
-                quy,
-                nam,
-                tk.getTongChi()
+                    quy,
+                    nam,
+                    tk.getTongChi() != null ? df.format(tk.getTongChi()) : "0"
             });
         }
         chiPhiTable.setModel(model);
@@ -555,11 +662,11 @@ private void updateChiPhiTable(List<ThongKeDoanhChiDTO> data) {
 
         for (ThongKeDoanhThuDTO tk : data) {
             model.addRow(new Object[]{
-                tk.getMaNV(),
-                tk.getTenNV(),
-                tk.getTongThu(),
-                tk.getQuy(),
-                tk.getNam()
+                    tk.getMaNV(),
+                    tk.getTenNV() != null ? tk.getTenNV() : "",
+                    tk.getTongThu() != null ? df.format(tk.getTongThu()) : "0",
+                    tk.getQuy(),
+                    tk.getNam()
             });
         }
         nhanVienTable.setModel(model);
@@ -582,11 +689,11 @@ private void updateChiPhiTable(List<ThongKeDoanhChiDTO> data) {
 
         for (ThongKeDoanhThuDTO tk : data) {
             model.addRow(new Object[]{
-                tk.getMaKH(),
-                tk.getTenKH(),
-                tk.getTongThu(),
-                tk.getQuy(),
-                tk.getNam()
+                    tk.getMaKH(),
+                    tk.getTenKH() != null ? tk.getTenKH() : "",
+                    tk.getTongThu() != null ? df.format(tk.getTongThu()) : "0",
+                    tk.getQuy(),
+                    tk.getNam()
             });
         }
         khachHangTable.setModel(model);
@@ -597,9 +704,5 @@ private void updateChiPhiTable(List<ThongKeDoanhChiDTO> data) {
             khachHangTable.getColumnModel().getColumn(3).setPreferredWidth(100);
             khachHangTable.getColumnModel().getColumn(4).setPreferredWidth(100);
         }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ThongKeGUI().setVisible(true));
     }
 }

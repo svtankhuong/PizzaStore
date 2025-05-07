@@ -1,4 +1,4 @@
-
+/*
 package GUI;
 
 import BUS.LoginBUS;
@@ -185,11 +185,7 @@ public class Login extends javax.swing.JFrame {
                 b.setVisible(true);
             }
         }
-    }//GEN-LAST:event_BtnLoginActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -204,3 +200,4 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JTextField tfUsername;
     // End of variables declaration//GEN-END:variables
 }
+*/

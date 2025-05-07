@@ -277,7 +277,7 @@ INSERT INTO chitietphieunhap (MaPN, MaNL, SoLuong, DonGia, ThanhTien) VALUES
 
 
 --thêm cho ctpn
-INSERT INTO CTPhieuNhap (MaPN, MaNL, SoLuong, DonGia, ThanhTien) VALUES
+INSERT INTO chitietphieunhap (MaPN, MaNL, SoLuong, DonGia, ThanhTien) VALUES
 (11, 1, 30, 50000, 1500000),
 (11, 2, 25, 40000, 1000000),
 (12, 1, 20, 50000, 1000000),

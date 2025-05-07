@@ -1,4 +1,3 @@
-
 package GUI;
 
 import MyCustom.ImagePanel;
@@ -17,7 +16,8 @@ import javax.swing.SwingConstants;
 import javax.swing.JFrame;
 
 import GUI.SanPhamGUI;
-import GUI.PhieuNhapGUI; 
+import GUI.PhieuNhapGUI;
+import GUI.ThongKeGUI;
 
 public class MainGUI extends javax.swing.JFrame {
     private CardLayout cardLayout;
@@ -85,11 +85,11 @@ public class MainGUI extends javax.swing.JFrame {
         SanPhamGUI productPanel = new SanPhamGUI();
         productPanel.setBackground(Color.WHITE);
         KhuyenMaiGUI promotionPanel = new KhuyenMaiGUI();
-        PhieuNhapGUI importPanel = new PhieuNhapGUI(); // Thay thế JPanel
+        PhieuNhapGUI importPanel = new PhieuNhapGUI();
         importPanel.setBackground(Color.WHITE);
-        JPanel statsPanel = new JPanel();
+        ThongKeGUI statsPanel = new ThongKeGUI();
+        statsPanel.setPreferredSize(new Dimension(1200, 750));
         statsPanel.setBackground(Color.WHITE);
-        statsPanel.add(new JLabel("Panel Thống kê", SwingConstants.CENTER));
 
         contentPanel.add(salePanel, "sale");
         contentPanel.add(staffPanel, "staff");
@@ -108,7 +108,7 @@ public class MainGUI extends javax.swing.JFrame {
         contentPanel = new JPanel(cardLayout);
         contentPanel.setPreferredSize(new Dimension(1250, 770));
 
-        PhieuNhapGUI importPanel = new PhieuNhapGUI(); // Thay thế JPanel
+        PhieuNhapGUI importPanel = new PhieuNhapGUI();
         importPanel.setBackground(Color.WHITE);
         SanPhamGUI productPanel = new SanPhamGUI();
         productPanel.setBackground(Color.WHITE);
@@ -117,10 +117,10 @@ public class MainGUI extends javax.swing.JFrame {
         contentPanel.add(productPanel, "product");
 
         cardLayout.show(contentPanel, "import");
-        LblNH.setBackground(clMenuItemSelected); // Đổi thành LblNH
+        LblNH.setBackground(clMenuItemSelected);
     }
+
     private void setupMenuEvents_Chef() {
-        // Lưu các label menu vào danh sách để quản lý
         menuLabels = new ArrayList<>();
         menuLabels.add(LblSale);
         menuLabels.add(LblStaffs);
@@ -129,22 +129,18 @@ public class MainGUI extends javax.swing.JFrame {
         menuLabels.add(LblProducts);
         menuLabels.add(LblTK);
 
-        // Thêm sự kiện cho các label
         for (JLabel label : menuLabels) {
-            label.setOpaque(true); // Cho phép hiển thị màu nền
+            label.setOpaque(true);
             label.setBackground(clMenuItem);
             label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    // Đặt lại màu nền của tất cả các label
                     for (JLabel lbl : menuLabels) {
                         lbl.setBackground(clMenuItem);
                     }
-                    // Đặt màu nền cho label được chọn
                     label.setBackground(clMenuItemSelected);
 
-                    // Hiển thị panel tương ứng
                     if (label == LblNH) {
                         cardLayout.show(contentPanel, "import");
                     } else if (label == LblProducts) {
@@ -155,7 +151,7 @@ public class MainGUI extends javax.swing.JFrame {
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     if (!label.getBackground().equals(clMenuItemSelected)) {
-                        label.setBackground(new Color(255, 180, 130)); // Màu hover
+                        label.setBackground(new Color(255, 180, 130));
                     }
                 }
 
@@ -168,8 +164,8 @@ public class MainGUI extends javax.swing.JFrame {
             });
         }
     }
+
     private void setupMenuEvents_Sale() {
-        // Lưu các label menu vào danh sách để quản lý
         menuLabels = new ArrayList<>();
         menuLabels.add(LblSale);
         menuLabels.add(LblStaffs);
@@ -178,22 +174,18 @@ public class MainGUI extends javax.swing.JFrame {
         menuLabels.add(LblProducts);
         menuLabels.add(LblTK);
 
-        // Thêm sự kiện cho các label
         for (JLabel label : menuLabels) {
-            label.setOpaque(true); // Cho phép hiển thị màu nền
+            label.setOpaque(true);
             label.setBackground(clMenuItem);
             label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    // Đặt lại màu nền của tất cả các label
                     for (JLabel lbl : menuLabels) {
                         lbl.setBackground(clMenuItem);
                     }
-                    // Đặt màu nền cho label được chọn
                     label.setBackground(clMenuItemSelected);
 
-                    // Hiển thị panel tương ứng
                     if (label == LblSale) {
                         cardLayout.show(contentPanel, "sale");
                     } else if (label == LblCustomers) {
@@ -206,7 +198,7 @@ public class MainGUI extends javax.swing.JFrame {
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     if (!label.getBackground().equals(clMenuItemSelected)) {
-                        label.setBackground(new Color(255, 180, 130)); // Màu hover
+                        label.setBackground(new Color(255, 180, 130));
                     }
                 }
 
@@ -219,34 +211,27 @@ public class MainGUI extends javax.swing.JFrame {
             });
         }
     }
+
     private void initializeCardLayout_Sale() {
-        // Khởi tạo CardLayout và contentPanel thay cho jPanel4
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
         contentPanel.setPreferredSize(new Dimension(1250, 770));
 
-        // Thêm các panel vào contentPanel
         PnQLBH salePanel = new PnQLBH(ttdn);
-
-        JPanel customerPanel = new JPanel(); // Panel Khách hàng
-        customerPanel.setBackground(Color.WHITE);
-        customerPanel.add(new JLabel("Panel Khách hàng", SwingConstants.CENTER));
-
-        JPanel statsPanel = new JPanel(); // Panel Thống kê
+        PnKhachHang customerPanel = new PnKhachHang();
+        ThongKeGUI statsPanel = new ThongKeGUI();
+        statsPanel.setPreferredSize(new Dimension(1200, 750));
         statsPanel.setBackground(Color.WHITE);
-        statsPanel.add(new JLabel("Panel Thống kê", SwingConstants.CENTER));
 
-        // Thêm các panel vào CardLayout với tên định danh
         contentPanel.add(salePanel, "sale");
         contentPanel.add(customerPanel, "customer");
         contentPanel.add(statsPanel, "stats");
 
-        // Hiển thị panel Bán hàng mặc định
         cardLayout.show(contentPanel, "sale");
         LblSale.setBackground(clMenuItemSelected);
     }
+
     private void setupMenuEvents_Employee() {
-        // Lưu các label menu vào danh sách để quản lý
         menuLabels = new ArrayList<>();
         menuLabels.add(LblSale);
         menuLabels.add(LblStaffs);
@@ -256,22 +241,18 @@ public class MainGUI extends javax.swing.JFrame {
         menuLabels.add(LblPromotions);
         menuLabels.add(LblTK);
 
-        // Thêm sự kiện cho các label
         for (JLabel label : menuLabels) {
-            label.setOpaque(true); // Cho phép hiển thị màu nền
+            label.setOpaque(true);
             label.setBackground(clMenuItem);
             label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    // Đặt lại màu nền của tất cả các label
                     for (JLabel lbl : menuLabels) {
                         lbl.setBackground(clMenuItem);
                     }
-                    // Đặt màu nền cho label được chọn
                     label.setBackground(clMenuItemSelected);
 
-                    // Hiển thị panel tương ứng
                     if (label == LblSale) {
                         cardLayout.show(contentPanel, "sale");
                     }
@@ -280,7 +261,7 @@ public class MainGUI extends javax.swing.JFrame {
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     if (!label.getBackground().equals(clMenuItemSelected)) {
-                        label.setBackground(new Color(255, 180, 130)); // Màu hover
+                        label.setBackground(new Color(255, 180, 130));
                     }
                 }
 
@@ -293,32 +274,77 @@ public class MainGUI extends javax.swing.JFrame {
             });
         }
     }
+
     private void initializeCardLayout_Employee() {
-        // Khởi tạo CardLayout và contentPanel thay cho jPanel4
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
         contentPanel.setPreferredSize(new Dimension(1250, 770));
 
-        // Thêm các panel vào contentPanel
         PnQLBH salePanel = new PnQLBH(ttdn);
-
-        // Thêm các panel vào CardLayout với tên định danh
         contentPanel.add(salePanel, "sale");
 
-        // Hiển thị panel Bán hàng mặc định
         cardLayout.show(contentPanel, "sale");
         LblSale.setBackground(clMenuItemSelected);
     }
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
 
+    private void setupMenuEvents() {
+        menuLabels = new ArrayList<>();
+        menuLabels.add(LblSale);
+        menuLabels.add(LblStaffs);
+        menuLabels.add(LblNH);
+        menuLabels.add(LblCustomers);
+        menuLabels.add(LblProducts);
+        menuLabels.add(LblPromotions);
+        menuLabels.add(LblTK);
+
+        for (JLabel label : menuLabels) {
+            label.setOpaque(true);
+            label.setBackground(clMenuItem);
+            label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    for (JLabel lbl : menuLabels) {
+                        lbl.setBackground(clMenuItem);
+                    }
+                    label.setBackground(clMenuItemSelected);
+
+                    if (label == LblSale) {
+                        cardLayout.show(contentPanel, "sale");
+                    } else if (label == LblStaffs) {
+                        cardLayout.show(contentPanel, "staff");
+                    } else if (label == LblNH) {
+                        cardLayout.show(contentPanel, "import");
+                    } else if (label == LblCustomers) {
+                        cardLayout.show(contentPanel, "customer");
+                    } else if (label == LblProducts) {
+                        cardLayout.show(contentPanel, "product");
+                    } else if (label == LblPromotions) {
+                        cardLayout.show(contentPanel, "promotion");
+                    } else if (label == LblTK) {
+                        cardLayout.show(contentPanel, "stats");
+                    }
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    if (!label.getBackground().equals(clMenuItemSelected)) {
+                        label.setBackground(new Color(255, 180, 130));
+                    }
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    if (!label.getBackground().equals(clMenuItemSelected)) {
+                        label.setBackground(clMenuItem);
+                    }
+                }
+            });
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initComponents() {
         PanelMain = new javax.swing.JPanel();
         PanelBrand = new ImagePanel("src/main/resources/ManagerUI/pizza-brand.png", 140, 110);
         LblSale = new javax.swing.JLabel();
@@ -341,7 +367,7 @@ public class MainGUI extends javax.swing.JFrame {
         setResizable(false);
 
         PanelMain.setBackground(new java.awt.Color(255, 204, 153));
-        PanelMain.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        PanelMain.setFont(new java.awt.Font("Segoe UI", 0, 18));
         PanelMain.setPreferredSize(new java.awt.Dimension(250, 750));
 
         PanelBrand.setBackground(new java.awt.Color(255, 204, 153));
@@ -359,17 +385,11 @@ public class MainGUI extends javax.swing.JFrame {
         );
 
         LblSale.setPreferredSize(new java.awt.Dimension(250, 65));
-
         LblStaffs.setPreferredSize(new java.awt.Dimension(250, 65));
-
         LblNH.setPreferredSize(new java.awt.Dimension(250, 65));
-
         LblCustomers.setPreferredSize(new java.awt.Dimension(250, 65));
-
         LblProducts.setPreferredSize(new java.awt.Dimension(250, 65));
-
         LblPromotions.setPreferredSize(new java.awt.Dimension(250, 65));
-
         LblTK.setPreferredSize(new java.awt.Dimension(250, 65));
 
         javax.swing.GroupLayout PanelMainLayout = new javax.swing.GroupLayout(PanelMain);
@@ -432,14 +452,12 @@ public class MainGUI extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 51));
         jPanel2.setPreferredSize(new java.awt.Dimension(250, 40));
 
-        lbXemTK.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
+        lbXemTK.setFont(new java.awt.Font("Times New Roman", 0, 24));
         lbXemTK.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbXemTK.setText("Xem tài khoản");
         lbXemTK.setPreferredSize(new java.awt.Dimension(250, 40));
-        lbXemTK.addMouseListener(new java.awt.event.MouseAdapter()
-        {
-            public void mouseClicked(java.awt.event.MouseEvent evt)
-            {
+        lbXemTK.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
                 XemTaiKhoan(evt);
             }
         });
@@ -462,7 +480,7 @@ public class MainGUI extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(255, 153, 255));
         jPanel3.setPreferredSize(new java.awt.Dimension(1250, 40));
 
-        jLabel2.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 0, 24));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Phần Mềm Quản Lý Cửa Hàng Bán Bánh Pizza");
         jLabel2.setPreferredSize(new java.awt.Dimension(1250, 40));
@@ -523,11 +541,9 @@ public class MainGUI extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
-    private void XemTaiKhoan(java.awt.event.MouseEvent evt)//GEN-FIRST:event_XemTaiKhoan
-    {//GEN-HEADEREND:event_XemTaiKhoan
-        // TODO add your handling code here:
+    private void XemTaiKhoan(java.awt.event.MouseEvent evt) {
         String param1 = ttdn.get(0).toString();
         String param2 = ttdn.get(1).toString();
         int param3 = Integer.parseInt(ttdn.get(2).toString());
@@ -536,7 +552,6 @@ public class MainGUI extends javax.swing.JFrame {
         String param6 = ttdn.get(5).toString();
         String param7 = ttdn.get(6).toString();
 
-        // Print all parameters
         System.out.println("Parameters passed to InforAccount constructor:");
         System.out.println("Param 1: " + param1);
         System.out.println("Param 2: " + param2);
@@ -546,15 +561,12 @@ public class MainGUI extends javax.swing.JFrame {
         System.out.println("Param 6: " + param6);
         System.out.println("Param 7: " + param7);
 
-        // Create the InforAccount object
         InforAccount account = new InforAccount(param1, param2, param3, param4, param5, param6, param7);
-
         account.setLocationRelativeTo(null);
         account.setVisible(true);
         account.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    }//GEN-LAST:event_XemTaiKhoan
+    }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LblPromotions;
     private javax.swing.JLabel LblCustomers;
     private javax.swing.JLabel LblNH;
@@ -570,6 +582,4 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel lbXemTK;
-    // End of variables declaration//GEN-END:variables
-
 }

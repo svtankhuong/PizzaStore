@@ -1,14 +1,15 @@
 package DTO;
 
-import java.util.Date;
+import java.sql.Date;
+import java.math.BigDecimal;
 
 public class ThongKeDoanhThuDTO {
     private Date tuNgay;
     private Date denNgay;
-    private double tongThu;
-    private String maNV;
+    private BigDecimal tongThu;
+    private int maNV;
     private String tenNV;
-    private String maKH;
+    private int maKH;
     private String tenKH;
     private int quy;
     private int nam;
@@ -17,8 +18,8 @@ public class ThongKeDoanhThuDTO {
     public ThongKeDoanhThuDTO() {}
 
     // Constructor đầy đủ
-    public ThongKeDoanhThuDTO(Date tuNgay, Date denNgay, double tongThu, 
-                              String maNV, String tenNV, String maKH, String tenKH, int quy, int nam) {
+    public ThongKeDoanhThuDTO(Date tuNgay, Date denNgay, BigDecimal tongThu,
+                              int maNV, String tenNV, int maKH, String tenKH, int quy, int nam) {
         this.tuNgay = tuNgay;
         this.denNgay = denNgay;
         this.tongThu = tongThu;
@@ -37,17 +38,17 @@ public class ThongKeDoanhThuDTO {
     public Date getDenNgay() { return denNgay; }
     public void setDenNgay(Date denNgay) { this.denNgay = denNgay; }
 
-    public double getTongThu() { return tongThu; }
-    public void setTongThu(double tongThu) { this.tongThu = tongThu; }
+    public BigDecimal getTongThu() { return tongThu; }
+    public void setTongThu(BigDecimal tongThu) { this.tongThu = tongThu; }
 
-    public String getMaNV() { return maNV; }
-    public void setMaNV(String maNV) { this.maNV = maNV; }
+    public int getMaNV() { return maNV; }
+    public void setMaNV(int maNV) { this.maNV = maNV; }
 
     public String getTenNV() { return tenNV; }
     public void setTenNV(String tenNV) { this.tenNV = tenNV; }
 
-    public String getMaKH() { return maKH; }
-    public void setMaKH(String maKH) { this.maKH = maKH; }
+    public int getMaKH() { return maKH; }
+    public void setMaKH(int maKH) { this.maKH = maKH; }
 
     public String getTenKH() { return tenKH; }
     public void setTenKH(String tenKH) { this.tenKH = tenKH; }

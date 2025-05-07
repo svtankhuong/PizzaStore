@@ -1,19 +1,20 @@
 package DTO;
 
-import java.util.Date;
+import java.sql.Date;
+import java.math.BigDecimal;
 
 public class ThongKeDoanhChiDTO {
     private Date tuNgay;
     private Date denNgay;
-    private double tongChi;
+    private BigDecimal tongChi;
     private int quy;
     private int nam;
 
     // Constructor mặc định
     public ThongKeDoanhChiDTO() {}
 
-    // Constructor đầy đủ
-    public ThongKeDoanhChiDTO(Date tuNgay, Date denNgay, double tongChi, int quy, int nam) {
+
+    public ThongKeDoanhChiDTO(Date tuNgay, Date denNgay, BigDecimal tongChi, int quy, int nam) {
         this.tuNgay = tuNgay;
         this.denNgay = denNgay;
         this.tongChi = tongChi;
@@ -28,8 +29,8 @@ public class ThongKeDoanhChiDTO {
     public Date getDenNgay() { return denNgay; }
     public void setDenNgay(Date denNgay) { this.denNgay = denNgay; }
 
-    public double getTongChi() { return tongChi; }
-    public void setTongChi(double tongChi) { this.tongChi = tongChi; }
+    public BigDecimal getTongChi() { return tongChi; }
+    public void setTongChi(BigDecimal tongChi) { this.tongChi = tongChi; }
 
     public int getQuy() { return quy; }
     public void setQuy(int quy) { this.quy = quy; }

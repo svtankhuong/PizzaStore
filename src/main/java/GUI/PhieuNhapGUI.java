@@ -424,7 +424,6 @@ public class PhieuNhapGUI extends JPanel {
         dialog.setVisible(true);
     }
 
-
     private void showTimKiemPanel() {
         pnContent.removeAll();
         JPanel pnTimKiem = new JPanel(new BorderLayout());
@@ -470,6 +469,21 @@ public class PhieuNhapGUI extends JPanel {
         // Bảng kết quả tìm kiếm
         phieuNhapModel = new DefaultTableModel(new String[]{"Mã PN", "Mã NCC", "Mã NV", "Tổng tiền", "Ngày lập"}, 0);
         phieuNhapTable = new JTable(phieuNhapModel);
+        phieuNhapTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                int row = phieuNhapTable.getSelectedRow();
+                if (row >= 0) {
+                    int maPN = (int) phieuNhapModel.getValueAt(row, 0);
+                    PhieuNhapDTO pn = phieuNhapBUS.TimTheoMaPN(maPN);
+                    ArrayList<CTPhieuNhapDTO> dsCTPN = ctPhieuNhapBUS.LayDanhSachCTPhieuNhap().stream()
+                            .filter(ct -> ct.getMaPN() == maPN)
+                            .collect(Collectors.toCollection(ArrayList::new));
+                    showPrintDialog(pn, dsCTPN);
+                }
+            }
+        });
+        loadPhieuNhapTable();
         JScrollPane scrollPane = new JScrollPane(phieuNhapTable);
 
         pnTimKiem.add(pnSearch, BorderLayout.NORTH);
@@ -637,7 +651,7 @@ public class PhieuNhapGUI extends JPanel {
             boolean chiTietSuccess = luuChiTietPhieuNhap(maPN, ctPhieuNhapModel);
             if (!chiTietSuccess) {
                 // Rollback phiếu nhập nếu thêm chi tiết thất bại
-                phieuNhapBUS.XoaPhieuNhap(maPN); // Giả sử có hàm XoaPhieuNhap
+                phieuNhapBUS.XoaPhieuNhap(maPN);
                 JOptionPane.showMessageDialog(this, "Lỗi khi thêm chi tiết phiếu nhập!");
                 return;
             }
@@ -645,6 +659,17 @@ public class PhieuNhapGUI extends JPanel {
             // Cập nhật tổng tiền trên giao diện
             txtTongTien.setText(tongTien.toString());
             JOptionPane.showMessageDialog(this, "Thêm phiếu nhập và chi tiết thành công! MaPN: " + maPN);
+
+            // Lấy thông tin phiếu nhập và chi tiết để hiển thị
+            PhieuNhapDTO addedPN = phieuNhapBUS.TimTheoMaPN(maPN);
+            ArrayList<CTPhieuNhapDTO> dsCTPN = ctPhieuNhapBUS.LayDanhSachCTPhieuNhap().stream()
+                    .filter(ct -> ct.getMaPN() == maPN)
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            // Hiển thị dialog in
+            showPrintDialog(addedPN, dsCTPN);
+
+            // Làm mới giao diện
             lamMoiGiaoDien(txtMaPN, txtMaNCC, txtMaNV, txtTongTien, dateNgayLap, ctPhieuNhapModel);
             loadPhieuNhapTable();
         } catch (NumberFormatException e) {
@@ -655,6 +680,7 @@ public class PhieuNhapGUI extends JPanel {
             e.printStackTrace();
         }
     }
+
     private boolean luuChiTietPhieuNhap(int maPN, DefaultTableModel ctPhieuNhapModel) {
         try {
             CTPhieuNhapBUS ctPhieuNhapBUS = new CTPhieuNhapBUS();
@@ -925,6 +951,60 @@ public class PhieuNhapGUI extends JPanel {
             e.printStackTrace();
         }
     }
+
+    private void showPrintDialog(PhieuNhapDTO pn, ArrayList<CTPhieuNhapDTO> dsCTPN) {
+        JDialog printDialog = new JDialog(SwingUtilities.getWindowAncestor(this), "In Phiếu Nhập", Dialog.ModalityType.APPLICATION_MODAL);
+        printDialog.setSize(800, 600);
+        printDialog.setLocationRelativeTo(this);
+        JPanel pnPrint = new JPanel(new BorderLayout(10, 10));
+
+        // Panel thông tin phiếu nhập
+        JPanel pnPhieuNhapInfo = new JPanel(new GridLayout(5, 2, 5, 5));
+        pnPhieuNhapInfo.setBorder(BorderFactory.createTitledBorder("Thông tin phiếu nhập"));
+        Font font = new Font("Arial", Font.PLAIN, 12);
+        new JLabel(String.valueOf(pn.getMaPN())).add(pnPhieuNhapInfo.add(new JLabel("Mã PN:")));
+        new JLabel(String.valueOf(pn.getMaNCC())).add(pnPhieuNhapInfo.add(new JLabel("Mã NCC:")));
+        new JLabel(String.valueOf(pn.getMaNV())).add(pnPhieuNhapInfo.add(new JLabel("Mã NV:")));
+        new JLabel(pn.getTongTien().toString()).add(pnPhieuNhapInfo.add(new JLabel("Tổng tiền:")));
+        new JLabel(pn.getNgayLap().toString()).add(pnPhieuNhapInfo.add(new JLabel("Ngày lập:")));
+
+        // Bảng chi tiết phiếu nhập
+        DefaultTableModel ctPhieuNhapModel = new DefaultTableModel(new String[]{"Mã PN", "Mã NL", "Số lượng", "Đơn giá", "Thành tiền"}, 0);
+        JTable ctPhieuNhapTable = new JTable(ctPhieuNhapModel);
+        for (CTPhieuNhapDTO ct : dsCTPN) {
+            ctPhieuNhapModel.addRow(new Object[]{ct.getMaPN(), ct.getMaNL(), ct.getSoLuong(), ct.getDonGia(), ct.getThanhTien()});
+        }
+        JScrollPane scrollPane = new JScrollPane(ctPhieuNhapTable);
+
+        // Panel nút
+        JPanel pnButtons = new JPanel(new FlowLayout());
+        JButton btnOK = new JButton("OK");
+        JButton btnSua = new JButton("Sửa phiếu nhập");
+        btnOK.setBackground(new Color(30, 144, 255));
+        btnSua.setBackground(new Color(255, 215, 0));
+        btnOK.setForeground(Color.WHITE);
+        btnSua.setForeground(Color.BLACK);
+        btnOK.addActionListener(e -> printDialog.dispose());
+        btnSua.addActionListener(e -> {
+            printDialog.dispose();
+            showSuaPanel();
+            txtSearchMaPN.setText(String.valueOf(pn.getMaPN()));
+            searchPhieuNhapForSua();
+            showEditDialog(pn.getMaPN());
+        });
+        pnButtons.add(btnOK);
+        pnButtons.add(btnSua);
+
+        // Sắp xếp giao diện
+        pnPrint.add(pnPhieuNhapInfo, BorderLayout.NORTH);
+        pnPrint.add(scrollPane, BorderLayout.CENTER);
+        pnPrint.add(pnButtons, BorderLayout.SOUTH);
+        printDialog.add(pnPrint);
+        printDialog.setVisible(true);
+    }
+
+
+
 
 
     private void themChiTietPhieuNhap(DefaultTableModel ctPhieuNhapModel) {
