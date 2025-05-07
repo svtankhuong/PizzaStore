@@ -6,10 +6,23 @@
     <artifactId>PizzaStore</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>21</maven.compiler.release> <!-- Sử dụng JDK 21 -->
+        <maven.compiler.release>23</maven.compiler.release> <!-- Sử dụng JDK 21 -->
         <exec.mainClass>GUI.PizzaStore</exec.mainClass>
         <poi.version>5.2.3</poi.version> <!-- Phiên bản ổn định của Apache POI -->
         <log4j.version>2.17.1</log4j.version> <!-- Phiên bản ổn định của Log4j -->

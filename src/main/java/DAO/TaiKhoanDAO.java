@@ -91,7 +91,6 @@ public class TaiKhoanDAO {
     }
 
     public ArrayList<Object> getInforAccount(String username) {
-
         String sql = "SELECT MaNV, MatKhau, MaQuyen FROM TaiKhoan WHERE TenDangNhap=?";
         ArrayList<Object> thong_tin_DN = new ArrayList<>();
         try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -105,16 +104,17 @@ public class TaiKhoanDAO {
                 NhanVienDTO b = a.getNhanVien(manv);
                 String ngaysinh = b.getNgaysinh();
                 String gioitinh = b.getGioiTinh();
-                thong_tin_DN.add(username);
-                thong_tin_DN.add(matkhau);
-                thong_tin_DN.add(manv);
+                thong_tin_DN.add(username);        // 0: username
+                thong_tin_DN.add(matkhau);         // 1: password
+                thong_tin_DN.add(maquyen);         // 2: idNV (MaQuyen)
+                thong_tin_DN.add(manv);            // 3: tenNV (MaNV)
                 String ho_ten_nhan_vien = b.getHoLot() + " " + b.getTen();
-                thong_tin_DN.add(ho_ten_nhan_vien);
-                thong_tin_DN.add(ngaysinh);
-                thong_tin_DN.add(gioitinh);
+                thong_tin_DN.add(ngaysinh);        // 4: ngaysinh
+                thong_tin_DN.add(gioitinh);        // 5: gioitinh
+                thong_tin_DN.add(ho_ten_nhan_vien); // 6: quyen (ho_ten)
                 QuyenBUS c = new QuyenBUS();
                 String tenQuyen = c.getTenQuyenTheoMa(maquyen);
-                thong_tin_DN.add(tenQuyen);
+                thong_tin_DN.add(tenQuyen);        // 7: tenQuyen
             }
         } catch (SQLException e) {
             System.err.println("Lỗi : " + e.getMessage());
