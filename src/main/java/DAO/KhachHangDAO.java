@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class KhachHangDAO {
 
     public ArrayList<KhachHangDTO> layDSKH() {
-        String sql = "SELECT * FROM KhachHang WHERE isDelete = 0";
+        String sql = "SELECT * FROM khachhang WHERE isDelete = 0";
         ArrayList<KhachHangDTO> dsKH = new ArrayList<>();
 
         try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -35,7 +35,7 @@ public class KhachHangDAO {
     public KhachHangDTO getKhachHangTheoMa(int makh) {
         KhachHangDTO kh = null;
         try {
-            String sql = "SELECT * FROM KhachHang WHERE MaKH=? and isDelete = 0";
+            String sql = "SELECT * FROM khachhang WHERE MaKH=? and isDelete = 0";
             Connection connection = JDBC.getConnection();
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setInt(1, makh);
@@ -57,7 +57,7 @@ public class KhachHangDAO {
 
     public ArrayList<KhachHangDTO> timKiemKhachHang(String tuKhoa) {
         ArrayList<KhachHangDTO> danhSachKhachHang = new ArrayList<>();
-        String sql = "SELECT * FROM KhachHang WHERE isDelete = 0 AND (MaKH LIKE ? OR HoLot LIKE ? OR Ten LIKE ? OR SDT LIKE ?)";
+        String sql = "SELECT * FROM khachhang WHERE isDelete = 0 AND (MaKH LIKE ? OR HoLot LIKE ? OR Ten LIKE ? OR SDT LIKE ?)";
 
         try {
             Connection connection = JDBC.getConnection();
@@ -115,7 +115,7 @@ public class KhachHangDAO {
     public boolean ThemKhachHang(KhachHangDTO kh) {
         boolean result = false;
         try {
-            String sql = "INSERT INTO khachhang (MaKH, HoLot, Ten, SDT, DiaChi, TongChiTieu) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO khachhang (MaKH, HoLot, Ten, SDT, DiaChi) VALUES (?, ?, ?, ?, ?)";
             Connection connection = JDBC.getConnection();
             PreparedStatement pre = connection.prepareStatement(sql);
             pre.setInt(1, kh.getMaKH());
@@ -123,7 +123,6 @@ public class KhachHangDAO {
             pre.setString(3, kh.getTen());
             pre.setString(4, kh.getSdt());
             pre.setString(5, kh.getDiaChi());
-            pre.setLong(6, kh.getTongChiTieu());
 
             int rowsAffected = pre.executeUpdate();
             if (rowsAffected > 0) {

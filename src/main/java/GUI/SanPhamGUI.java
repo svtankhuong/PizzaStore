@@ -189,17 +189,17 @@ public class SanPhamGUI extends JPanel {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
         JButton btnThem = createButtonWithIcon("Thêm",
-                "D:\\Java\\PizzaStore\\src\\main\\resources\\image\\add-icon.png", e -> them());
+                "D:\\PizzaStore\\src\\main\\resources\\image\\add-icon.png", e -> them());
         JButton btnSua = createButtonWithIcon("Sửa", "D:\\PizzaStore\\src\\main\\resources\\image\\fix.png",
                 e -> sua());
         JButton btnXoa = createButtonWithIcon("Xoá",
-                "D:\\Java\\PizzaStore\\src\\main\\resources\\image\\delete-icon.png", e -> xoa());
+                "D:\\PizzaStore\\src\\main\\resources\\image\\delete-icon.png", e -> xoa());
         JButton btnTimKiem = createButtonWithIcon("Tìm kiếm",
-                "D:\\Java\\PizzaStore\\src\\main\\resources\\image\\Search-icon.png", e -> timKiem());
+                "D:\\PizzaStore\\src\\main\\resources\\image\\Search-icon.png", e -> timKiem());
         JButton btnXuat = createButtonWithIcon("Xuất Excel",
-                "D:\\Java\\PizzaStore\\src\\main\\resources\\image\\excel-icon.png", e -> xuatExcelOption());
+                "D:\\PizzaStore\\src\\main\\resources\\image\\excel-icon.png", e -> xuatExcelOption());
         JButton btnLamMoi = createButtonWithIcon("Làm mới",
-                "D:\\Java\\PizzaStore\\src\\main\\resources\\image\\Refresh-icon.png", e -> lamMoi());
+                "D:\\PizzaStore\\src\\main\\resources\\image\\Refresh-icon.png", e -> lamMoi());
 
         buttonPanel.add(btnThem);
         buttonPanel.add(btnSua);

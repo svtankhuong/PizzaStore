@@ -188,7 +188,7 @@ public class KhuyenMaiGUI extends JPanel {
                 int col = tableKhuyenMai.columnAtPoint(e.getPoint());
 
                 if (col == 4) {
-                    ImageIcon iconEye = new ImageIcon("D:\\PizzaStore\\src\\main\\resources\\image\\eye.png");
+                    ImageIcon iconEye = new ImageIcon("/image/eye.png");
                     iconEye = new ImageIcon(iconEye.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
                     tableModel.setValueAt(iconEye, row, col);
 
@@ -199,7 +199,7 @@ public class KhuyenMaiGUI extends JPanel {
                     dialog.setVisible(true);
 
                     // Trả lại icon view.png sau khi đóng dialog
-                    ImageIcon iconView = new ImageIcon("D:\\PizzaStore\\src\\main\\resources\\image\\view.png");
+                    ImageIcon iconView = new ImageIcon("/image/view.png");
                     iconView = new ImageIcon(iconView.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
                     tableModel.setValueAt(iconView, row, col);
                 }
