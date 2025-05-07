@@ -1,9 +1,13 @@
 package DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 import DTO.ChiTietKMDTO;
 import config.JDBC;
-import java.sql.*;
-import java.util.ArrayList;
 
 public class ChiTietKMDAO {
 
@@ -12,17 +16,16 @@ public class ChiTietKMDAO {
         ArrayList<ChiTietKMDTO> dsCTKM = new ArrayList<>();
 
         try (Connection conn = JDBC.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int idCTKM = rs.getInt("MACTKM");
                 int idKM = rs.getInt("MaKM");
                 long phanTramGiam = rs.getLong("PhanTramGiam");
                 long toiThieuGiam = rs.getLong("Toithieugiam");
                 String tenCTKM = rs.getString("TenCTKM");
 
-                ChiTietKMDTO kh = new ChiTietKMDTO(idCTKM, idKM, phanTramGiam, toiThieuGiam, tenCTKM);
+                ChiTietKMDTO kh = new ChiTietKMDTO(idKM, phanTramGiam, toiThieuGiam, tenCTKM);
                 dsCTKM.add(kh);
             }
         } catch (SQLException e) {
@@ -36,7 +39,7 @@ public class ChiTietKMDAO {
         String sql = "INSERT INTO chitietkhuyenmai (MaKM, PhanTramGiam, Toithieugiam, TenCTKM) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = JDBC.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, km.getMaKM());
             ps.setLong(2, km.getPhanTramGiam());
@@ -50,16 +53,17 @@ public class ChiTietKMDAO {
         }
     }
 
-    public boolean suaChiTietKM(ChiTietKMDTO km) {
-        String sql = "UPDATE chitietkhuyenmai SET PhanTramGiam = ?, Toithieugiam = ?, TenCTKM = ? WHERE MACTKM = ?";
+    public boolean suaChiTietKM(ChiTietKMDTO km, String oldTenCTKM) {
+        String sql = "UPDATE chitietkhuyenmai SET PhanTramGiam = ?, Toithieugiam = ?, TenCTKM = ? WHERE MaKM = ? AND TenCTKM = ?";
 
         try (Connection conn = JDBC.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, km.getPhanTramGiam());
             ps.setLong(2, km.getToithieugiam());
             ps.setString(3, km.getTenCTKM());
-            ps.setInt(4, km.getMACTKM());
+            ps.setInt(4, km.getMaKM());
+            ps.setString(5, oldTenCTKM);
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -68,13 +72,14 @@ public class ChiTietKMDAO {
         }
     }
 
-    public boolean xoaChiTietKM(int maCTKM) {
-        String sql = "DELETE FROM chitietkhuyenmai WHERE MACTKM = ?";
+    public boolean xoaChiTietKM(int maKM, String tenCTKM) {
+        String sql = "DELETE FROM chitietkhuyenmai WHERE MaKM = ? AND TenCTKM = ?";
 
         try (Connection conn = JDBC.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, maCTKM);
+            ps.setInt(1, maKM);
+            ps.setString(2, tenCTKM);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Lỗi khi xóa chi tiết khuyến mãi: " + e.getMessage());

@@ -2,21 +2,26 @@ package DTO;
 
 public class SanPhamDTO {
     final private int MaSP; // bien final khong cho phep thay doi MaSP
-    private String TenSP;
+    private String Ten;
     private String DvTinh;
     private long DonGia;
     private int SoLuong;
     private String Loai;
-    private String AnhSP;
+    private String Anh;
+
+    public SanPhamDTO() {
+        this.MaSP = 0;
+    }
+
     
     public SanPhamDTO(int idSP, String tenSP, String dvtinh, long DonGia, int soluong, String loai, String anh) {
         this.MaSP = idSP;
-        this.TenSP = tenSP;
+        this.Ten = tenSP;
         this.DvTinh = dvtinh;
         this.DonGia = DonGia;
         this.SoLuong = soluong;
         this.Loai = loai;
-        this.AnhSP = anh;
+        this.Anh = anh;
     }
 
     // Getter cho MaSP
@@ -26,11 +31,11 @@ public class SanPhamDTO {
 
     // Getter và Setter cho TenSP
     public String getTenSP() {
-        return TenSP;
+        return Ten;
     }
 
     public void setTenSP(String tenSP) {
-        this.TenSP = tenSP;
+        this.Ten = tenSP;
     }
 
     // Getter và Setter cho DvTinh
@@ -70,11 +75,11 @@ public class SanPhamDTO {
     }
     
     public void setAnhSP(String anhsp){
-        this.AnhSP = anhsp;
+        this.Anh = anhsp;
     }
     
     public String getAnhSP(){
-        return AnhSP;
+        return Anh;
     }
 }
 

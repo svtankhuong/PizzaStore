@@ -57,8 +57,8 @@ public class InforCustomer extends javax.swing.JFrame{
                 for (KhachHangDTO kh : dsKH) {
                     Object[] rowData = {
                         kh.getMaKH(),
-                        kh.getHoLot()+" "+kh.getTenKH(),
-                        kh.getSDT(),
+                        kh.getHoDem()+" "+kh.getTen(),
+                        kh.getSdt(),
                         kh.getDiaChi()
                     };
                     modelHoaDon.addRow(rowData);

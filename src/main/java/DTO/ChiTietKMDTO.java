@@ -1,22 +1,19 @@
 package DTO;
 
 public class ChiTietKMDTO {
-    final private int MACTKM;
     private int MaKM;
     private long PhanTramGiam;
     private long Toithieugiam;
     private String TenCTKM;
 
-    public ChiTietKMDTO(int MACTKM, int MaKM, long phamtramgiam, long toithieugiam, String tenctkm) {
-        this.MACTKM = MACTKM;
-        this.MaKM = MaKM;
-        this.PhanTramGiam = phamtramgiam;
-        this.Toithieugiam = toithieugiam;
-        this.TenCTKM = tenctkm;
+    public ChiTietKMDTO() {
     }
 
-    public int getMACTKM() {
-        return MACTKM;
+    public ChiTietKMDTO(int MaKM, long phantramgiam, long toithieugiam, String tenctkm) {
+        this.MaKM = MaKM;
+        this.PhanTramGiam = phantramgiam;
+        this.Toithieugiam = toithieugiam;
+        this.TenCTKM = tenctkm;
     }
 
     public int getMaKM() {
@@ -51,4 +48,3 @@ public class ChiTietKMDTO {
         TenCTKM = tenCTKM;
     }
 }
-

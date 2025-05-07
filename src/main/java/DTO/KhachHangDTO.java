@@ -1,64 +1,70 @@
 package DTO;
 
 public class KhachHangDTO {
-    final private int MaKH;
-    private String HoLot;
-    private String TenKH;
-    private String SDT;
-    private String DiaChi;
-    private Long TongChiTieu;
+    private int maKH;
+    private String hoDem;
+    private String ten;
+    private String sdt;
+    private String diaChi;
+    private Long tongChiTieu;
 
-    public KhachHangDTO(int idKH, String holot, String ten, String sdt, String diachi, Long tct) {
-        this.MaKH = idKH;
-        this.HoLot = holot;
-        this.TenKH = ten;
-        this.SDT = sdt;
-        this.DiaChi = diachi;
-        this.TongChiTieu = tct;
+    public KhachHangDTO() {
+    }
+
+    public KhachHangDTO(int maKH, String hoDem, String ten, String sdt, String diaChi, Long tongChiTieu) {
+        this.maKH = maKH;
+        this.hoDem = hoDem;
+        this.ten = ten;
+        this.sdt = sdt;
+        this.diaChi = diaChi;
+        this.tongChiTieu = tongChiTieu;
     }
 
     public int getMaKH() {
-        return MaKH;
+        return maKH;
     }
 
-    public String getHoLot() {
-        return HoLot;
+    public void setMaKH(int maKH) {
+        this.maKH = maKH;
     }
 
-    public void setHoLot(String hoLot) {
-        this.HoLot = hoLot;
+    public String getHoDem() {
+        return hoDem;
     }
 
-    public String getTenKH() {
-        return TenKH;
+    public void setHoDem(String hoDem) {
+        this.hoDem = hoDem;
     }
 
-    public void setTenKH(String tenKH) {
-        this.TenKH = tenKH;
+    public String getTen() {
+        return ten;
     }
 
-    public String getSDT() {
-        return SDT;
+    public void setTen(String ten) {
+        this.ten = ten;
     }
 
-    public void setSDT(String sdt) {
-        this.SDT = sdt;
+    public String getSdt() {
+        return sdt;
+    }
+
+    public void setSdt(String sdt) {
+        this.sdt = sdt;
     }
 
     public String getDiaChi() {
-        return DiaChi;
+        return diaChi;
     }
 
     public void setDiaChi(String diaChi) {
-        this.DiaChi = diaChi;
+        this.diaChi = diaChi;
     }
 
     public Long getTongChiTieu() {
-        return TongChiTieu;
+        return tongChiTieu;
     }
 
     public void setTongChiTieu(Long tongChiTieu) {
-        this.TongChiTieu = tongChiTieu;
+        this.tongChiTieu = tongChiTieu;
     }
 }
-
