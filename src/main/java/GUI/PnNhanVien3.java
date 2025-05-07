@@ -6,25 +6,29 @@ package GUI;
 
 import BUS.NhanVienBUS;
 import BUS.QuyenBUS;
-import DAO.NhanVienDAO;
+
 import DTO.NhanVienDTO;
 import DTO.QuyenDTO;
 import MyCustom.MyDialog;
 import MyCustom.TableCustomizer;
-import static MyCustom.TableCustomizer.customize;
 
 import com.formdev.flatlaf.json.ParseException;
+
 import java.awt.GridLayout;
-import java.sql.Date;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JCheckBox;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
 import javax.swing.JTextField;
+
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -45,7 +49,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         loadDataToTable(); // Tải dữ liệu nhân viên lên JTable
         loadDataCmbQuyen();
         loadChiTietQuyen();
-        
+
     }
 
     /**
@@ -80,7 +84,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         txtNgaySinh = new com.toedter.calendar.JDateChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblNhanVien = new javax.swing.JTable();
-        jButton4 = new javax.swing.JButton();
+        btnNhapEx = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         btnCapTaiKhoan = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
@@ -304,11 +308,11 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tblNhanVien);
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/excel-icon.png"))); // NOI18N
-        jButton4.setText("Nhập");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnNhapEx.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/excel-icon.png"))); // NOI18N
+        btnNhapEx.setText("Nhập");
+        btnNhapEx.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnNhapExActionPerformed(evt);
             }
         });
 
@@ -347,7 +351,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton4)
+                                .addComponent(btnNhapEx)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton5))
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -382,7 +386,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
                             .addComponent(btnXoa))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton4)
+                            .addComponent(btnNhapEx)
                             .addComponent(jButton5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnCapTaiKhoan)
@@ -623,9 +627,9 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void btnNhapExActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhapExActionPerformed
+
+    }//GEN-LAST:event_btnNhapExActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         xulysuanhanvien();
@@ -732,6 +736,7 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PnTitle1;
     private javax.swing.JButton btnCapTaiKhoan;
+    private javax.swing.JButton btnNhapEx;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSua;
     private javax.swing.JButton btnThem;
@@ -747,7 +752,6 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbThongKe;
     private javax.swing.JComboBox<String> cbbGioiTinh;
     private javax.swing.JComboBox<QuyenDTO> cbbNhomQuyen;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
