@@ -1,3 +1,5 @@
+package GUI;
+
 import BUS.CTPhieuNhapBUS;
 import BUS.PhieuNhapBUS;
 import DTO.CTPhieuNhapDTO;
@@ -16,6 +18,8 @@ import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PhieuNhapGUI extends JPanel {
@@ -25,6 +29,8 @@ public class PhieuNhapGUI extends JPanel {
     private JTextField txtSearchMaPN;
     private JTable phieuNhapTable;
     private DefaultTableModel phieuNhapModel;
+    private JTable displayPhieuNhapTable;
+    private DefaultTableModel displayPhieuNhapModel;
 
     public PhieuNhapGUI() {
         phieuNhapBUS = new PhieuNhapBUS();
@@ -204,9 +210,9 @@ public class PhieuNhapGUI extends JPanel {
         btnThemCT.setForeground(Color.WHITE);
         btnSuaCT.setForeground(Color.WHITE);
         btnXoaCT.setForeground(Color.WHITE);
-        btnThemCT.addActionListener(e -> themCTPhieuNhap(txtMaPN, txtMaNL, txtSoLuong, txtDonGia, txtThanhTien, ctPhieuNhapModel, txtTongTien));
-        btnSuaCT.addActionListener(e -> suaCTPhieuNhap(txtMaPN, txtMaNL, txtSoLuong, txtDonGia, txtThanhTien, ctPhieuNhapModel, txtTongTien));
-        btnXoaCT.addActionListener(e -> xoaCTPhieuNhap(txtMaPN, txtMaNL, ctPhieuNhapModel, txtTongTien));
+        btnThemCT.addActionListener(e -> themChiTietTam(txtMaPN, txtMaNL, txtSoLuong, txtDonGia, txtThanhTien, ctPhieuNhapModel, txtTongTien));
+        btnSuaCT.addActionListener(e -> capNhatChiTietTam(ctPhieuNhapModel, txtMaNL, txtSoLuong, txtDonGia, txtThanhTien, txtTongTien));
+        btnXoaCT.addActionListener(e -> xoaChiTietTam(ctPhieuNhapModel, txtMaNL, txtTongTien));
         pnCTButtons.add(btnThemCT);
         pnCTButtons.add(btnSuaCT);
         pnCTButtons.add(btnXoaCT);
@@ -567,22 +573,13 @@ public class PhieuNhapGUI extends JPanel {
         }
     }
 
-    private void themPhieuNhap(JTextField txtMaPN, JTextField txtMaNCC, JTextField txtMaNV, JTextField txtTongTien, JDateChooser dateNgayLap, DefaultTableModel ctPhieuNhapModel) {
+
+    private int currentMaPN = -1; // Biến lưu MaPN thực tế sau khi thêm
+
+    private void themPhieuNhap(JTextField txtMaPN, JTextField txtMaNCC, JTextField txtMaNV, JTextField txtTongTien,
+                               JDateChooser dateNgayLap, DefaultTableModel ctPhieuNhapModel) {
         try {
-            // Validate required fields for PhieuNhap
-            if (txtMaPN.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Mã phiếu nhập không được để trống!");
-                return;
-            }
-            if (!txtMaPN.getText().matches("\\d+")) {
-                JOptionPane.showMessageDialog(this, "Mã phiếu nhập phải là số nguyên dương!");
-                return;
-            }
-            int maPN = Integer.parseInt(txtMaPN.getText());
-            if (phieuNhapBUS.KiemTraMaPhieuNhap(maPN)) {
-                JOptionPane.showMessageDialog(this, "Mã phiếu nhập đã tồn tại!");
-                return;
-            }
+            // Validate required fields
             if (txtMaNCC.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Mã nhà cung cấp không được để trống!");
                 return;
@@ -608,65 +605,398 @@ public class PhieuNhapGUI extends JPanel {
                 return;
             }
 
-            // Create PhieuNhapDTO
+            // Kiểm tra trùng mã nguyên liệu trong bảng chi tiết
+            Set<Integer> maNLSet = new HashSet<>();
+            for (int i = 0; i < ctPhieuNhapModel.getRowCount(); i++) {
+                int maNL = (Integer) ctPhieuNhapModel.getValueAt(i, 1);
+                if (!maNLSet.add(maNL)) {
+                    JOptionPane.showMessageDialog(this, "Mã nguyên liệu " + maNL + " bị trùng trong bảng chi tiết!");
+                    return;
+                }
+            }
+
+            // Tính tổng tiền từ chi tiết
+            BigDecimal tongTien = tinhTongTienChiTiet(ctPhieuNhapModel);
+
+            // Tạo PhieuNhapDTO
             PhieuNhapDTO pn = new PhieuNhapDTO();
-            pn.setMaPN(maPN);
             pn.setMaNCC(Integer.parseInt(txtMaNCC.getText()));
             pn.setMaNV(Integer.parseInt(txtMaNV.getText()));
-            pn.setTongTien(new BigDecimal(txtTongTien.getText().isEmpty() ? "0" : txtTongTien.getText()));
+            pn.setTongTien(tongTien);
             pn.setNgayLap(new Date(dateNgayLap.getDate().getTime()));
-            boolean themPNThanhCong = phieuNhapBUS.ThemPhieuNhap(pn);
 
-            // Add all chi tiết phiếu nhập from table
-            boolean themCTPNThanhCong = true;
-            if (themPNThanhCong) {
-                for (int i = 0; i < ctPhieuNhapModel.getRowCount(); i++) {
-                    CTPhieuNhapDTO ct = new CTPhieuNhapDTO();
-                    ct.setMaPN(maPN);
-                    ct.setMaNL((Integer) ctPhieuNhapModel.getValueAt(i, 1));
-                    ct.setSoLuong((Integer) ctPhieuNhapModel.getValueAt(i, 2));
-                    ct.setDonGia((Double) ctPhieuNhapModel.getValueAt(i, 3));
-                    ct.setThanhTien((Double) ctPhieuNhapModel.getValueAt(i, 4));
-                    try {
-                        if (!ctPhieuNhapBUS.ThemCTPhieuNhap(ct)) {
-                            JOptionPane.showMessageDialog(this, "Lỗi khi thêm chi tiết phiếu nhập (Mã NL: " + ct.getMaNL() + "). Kiểm tra mã nguyên liệu hoặc cơ sở dữ liệu!");
-                            themCTPNThanhCong = false;
-                            break;
-                        }
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(this, "Lỗi khi thêm chi tiết phiếu nhập (Mã NL: " + ct.getMaNL() + "): " + ex.getMessage());
-                        themCTPNThanhCong = false;
-                        break;
-                    }
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Lỗi khi thêm phiếu nhập!");
-                themCTPNThanhCong = false;
+            // Thêm phiếu nhập và lấy MaPN
+            PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+            int maPN = phieuNhapBUS.ThemPhieuNhap(pn);
+            if (maPN <= 0) {
+                JOptionPane.showMessageDialog(this, "Lỗi thêm phiếu nhập: Kiểm tra dữ liệu hoặc kết nối cơ sở dữ liệu!");
+                return;
             }
 
-            if (themPNThanhCong && themCTPNThanhCong) {
-                JOptionPane.showMessageDialog(this, "Thêm phiếu nhập và chi tiết thành công!");
-                // Clear inputs and table
-                txtMaPN.setText("");
-                txtMaNCC.setText("");
-                txtMaNV.setText("");
-                txtTongTien.setText("");
-                dateNgayLap.setDate(null);
-                ctPhieuNhapModel.setRowCount(0);
-            } else {
-                JOptionPane.showMessageDialog(this, "Thêm thất bại! Vui lòng kiểm tra dữ liệu nhập.");
-                if (themPNThanhCong) {
-                    phieuNhapBUS.XoaPhieuNhap(maPN); // Rollback
-                }
+            // Thêm chi tiết phiếu nhập
+            boolean chiTietSuccess = luuChiTietPhieuNhap(maPN, ctPhieuNhapModel);
+            if (!chiTietSuccess) {
+                // Rollback phiếu nhập nếu thêm chi tiết thất bại
+                phieuNhapBUS.XoaPhieuNhap(maPN); // Giả sử có hàm XoaPhieuNhap
+                JOptionPane.showMessageDialog(this, "Lỗi khi thêm chi tiết phiếu nhập!");
+                return;
             }
+
+            // Cập nhật tổng tiền trên giao diện
+            txtTongTien.setText(tongTien.toString());
+            JOptionPane.showMessageDialog(this, "Thêm phiếu nhập và chi tiết thành công! MaPN: " + maPN);
+            lamMoiGiaoDien(txtMaPN, txtMaNCC, txtMaNV, txtTongTien, dateNgayLap, ctPhieuNhapModel);
+            loadPhieuNhapTable();
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Dữ liệu nhập không hợp lệ! Vui lòng kiểm tra định dạng số.");
+            JOptionPane.showMessageDialog(this, "Dữ liệu nhập không hợp lệ! Kiểm tra định dạng số: " + e.getMessage());
+            e.printStackTrace();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    private boolean luuChiTietPhieuNhap(int maPN, DefaultTableModel ctPhieuNhapModel) {
+        try {
+            CTPhieuNhapBUS ctPhieuNhapBUS = new CTPhieuNhapBUS();
+            boolean allSuccess = true;
+
+            for (int i = 0; i < ctPhieuNhapModel.getRowCount(); i++) {
+                CTPhieuNhapDTO ct = new CTPhieuNhapDTO();
+                ct.setMaPN(maPN);
+                ct.setMaNL((Integer) ctPhieuNhapModel.getValueAt(i, 1));
+                ct.setSoLuong((Integer) ctPhieuNhapModel.getValueAt(i, 2));
+                ct.setDonGia((Double) ctPhieuNhapModel.getValueAt(i, 3));
+                ct.setThanhTien((Double) ctPhieuNhapModel.getValueAt(i, 4));
+
+                if (!ctPhieuNhapBUS.ThemCTPhieuNhap(ct)) {
+                    allSuccess = false;
+                    JOptionPane.showMessageDialog(this, "Lỗi khi thêm chi tiết (Mã NL: " + ct.getMaNL() + ")");
+                    break;
+                }
+            }
+            return allSuccess;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi khi thêm chi tiết: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private void themChiTietTam(JTextField txtMaPN, JTextField txtMaNL, JTextField txtSoLuong, JTextField txtDonGia,
+                                JTextField txtThanhTien, DefaultTableModel ctPhieuNhapModel, JTextField txtTongTien) {
+        try {
+            // Kiểm tra mã nguyên liệu
+            if (txtMaNL.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập mã nguyên liệu!");
+                return;
+            }
+            if (!txtMaNL.getText().matches("\\d+")) {
+                JOptionPane.showMessageDialog(this, "Mã nguyên liệu phải là số nguyên dương!");
+                return;
+            }
+            int maNL = Integer.parseInt(txtMaNL.getText());
+
+            // Kiểm tra số lượng
+            if (txtSoLuong.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng!");
+                return;
+            }
+            if (!txtSoLuong.getText().matches("\\d+")) {
+                JOptionPane.showMessageDialog(this, "Số lượng phải là số nguyên dương!");
+                return;
+            }
+
+            // Kiểm tra đơn giá
+            if (txtDonGia.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đơn giá!");
+                return;
+            }
+            if (!txtDonGia.getText().matches("\\d+(\\.\\d+)?")) {
+                JOptionPane.showMessageDialog(this, "Đơn giá phải là số thực không âm!");
+                return;
+            }
+
+            // Kiểm tra trùng mã nguyên liệu trong bảng tạm
+            for (int i = 0; i < ctPhieuNhapModel.getRowCount(); i++) {
+                if (Integer.parseInt(ctPhieuNhapModel.getValueAt(i, 1).toString()) == maNL) {
+                    JOptionPane.showMessageDialog(this, "Mã nguyên liệu " + maNL + " đã tồn tại trong bảng chi tiết!");
+                    return;
+                }
+            }
+
+            // Thêm vào bảng tạm
+            int maPN = 0; // MaPN sẽ được gán sau khi thêm phiếu nhập
+            int soLuong = Integer.parseInt(txtSoLuong.getText());
+            double donGia = Double.parseDouble(txtDonGia.getText());
+            double thanhTien = Double.parseDouble(txtThanhTien.getText());
+            ctPhieuNhapModel.addRow(new Object[]{maPN, maNL, soLuong, donGia, thanhTien});
+            updateTongTien(txtMaPN, txtTongTien, ctPhieuNhapModel);
+            JOptionPane.showMessageDialog(this, "Thêm chi tiết vào bảng tạm thành công!");
+
+            // Xóa trắng các ô nhập liệu
+            txtMaNL.setText("");
+            txtSoLuong.setText("");
+            txtDonGia.setText("");
+            txtThanhTien.setText("");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Dữ liệu nhập không đúng định dạng số!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private BigDecimal tinhTongTienChiTiet(DefaultTableModel ctPhieuNhapModel) {
+        BigDecimal tongTien = BigDecimal.ZERO;
+        try {
+            for (int i = 0; i < ctPhieuNhapModel.getRowCount(); i++) {
+                double thanhTien = (Double) ctPhieuNhapModel.getValueAt(i, 4);
+                tongTien = tongTien.add(BigDecimal.valueOf(thanhTien));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi khi tính tổng tiền: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return tongTien;
+    }
+    private void lamMoiGiaoDien(JTextField txtMaPN, JTextField txtMaNCC, JTextField txtMaNV, JTextField txtTongTien,
+                                JDateChooser dateNgayLap, DefaultTableModel ctPhieuNhapModel) {
+        txtMaPN.setText("");
+        txtMaNCC.setText("");
+        txtMaNV.setText("");
+        txtTongTien.setText("");
+        dateNgayLap.setDate(null);
+        ctPhieuNhapModel.setRowCount(0);
+        currentMaPN = -1; // Reset MaPN
+    }
+
+
+    private void capNhatChiTietTam(DefaultTableModel ctPhieuNhapModel, JTextField txtMaNL, JTextField txtSoLuong,
+                                   JTextField txtDonGia, JTextField txtThanhTien, JTextField txtTongTien) {
+        try {
+            // Kiểm tra mã nguyên liệu
+            if (txtMaNL.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập mã nguyên liệu!");
+                return;
+            }
+            if (!txtMaNL.getText().matches("\\d+")) {
+                JOptionPane.showMessageDialog(this, "Mã nguyên liệu phải là số nguyên dương!");
+                return;
+            }
+            int maNL;
+            try {
+                maNL = Integer.parseInt(txtMaNL.getText().trim());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Mã nguyên liệu không hợp lệ!");
+                return;
+            }
+
+            // Kiểm tra số lượng
+            if (txtSoLuong.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng!");
+                return;
+            }
+            if (!txtSoLuong.getText().matches("\\d+")) {
+                JOptionPane.showMessageDialog(this, "Số lượng phải là số nguyên dương!");
+                return;
+            }
+            int soLuong;
+            try {
+                soLuong = Integer.parseInt(txtSoLuong.getText().trim());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Số lượng không hợp lệ!");
+                return;
+            }
+
+            // Kiểm tra đơn giá
+            if (txtDonGia.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đơn giá!");
+                return;
+            }
+            if (!txtDonGia.getText().matches("\\d+(\\.\\d+)?")) {
+                JOptionPane.showMessageDialog(this, "Đơn giá phải là số thực không âm!");
+                return;
+            }
+            double donGia;
+            try {
+                donGia = Double.parseDouble(txtDonGia.getText().trim());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Đơn giá không hợp lệ!");
+                return;
+            }
+
+            // Kiểm tra thành tiền
+            if (txtThanhTien.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập thành tiền!");
+                return;
+            }
+            double thanhTien;
+            try {
+                thanhTien = Double.parseDouble(txtThanhTien.getText().trim());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Thành tiền không hợp lệ!");
+                return;
+            }
+
+            // Tìm dòng có MaNL khớp
+            int selectedRow = -1;
+            for (int i = 0; i < ctPhieuNhapModel.getRowCount(); i++) {
+                if (Integer.parseInt(ctPhieuNhapModel.getValueAt(i, 1).toString()) == maNL) {
+                    selectedRow = i;
+                    break;
+                }
+            }
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy mã nguyên liệu " + maNL + " trong bảng chi tiết!");
+                return;
+            }
+
+            // Kiểm tra trùng mã nguyên liệu (nếu MaNL mới khác MaNL cũ)
+            int maNLMoi = maNL;
+            for (int i = 0; i < ctPhieuNhapModel.getRowCount(); i++) {
+                if (i != selectedRow && Integer.parseInt(ctPhieuNhapModel.getValueAt(i, 1).toString()) == maNLMoi) {
+                    JOptionPane.showMessageDialog(this, "Mã nguyên liệu " + maNLMoi + " đã tồn tại trong bảng chi tiết!");
+                    return;
+                }
+            }
+
+            // Cập nhật dòng được chọn trong bảng tạm
+            ctPhieuNhapModel.setValueAt(maNL, selectedRow, 1);
+            ctPhieuNhapModel.setValueAt(soLuong, selectedRow, 2);
+            ctPhieuNhapModel.setValueAt(donGia, selectedRow, 3);
+            ctPhieuNhapModel.setValueAt(thanhTien, selectedRow, 4);
+
+            updateTongTien(null, txtTongTien, ctPhieuNhapModel);
+            JOptionPane.showMessageDialog(this, "Cập nhật chi tiết trong bảng tạm thành công!");
+
+            // Xóa trắng các ô nhập liệu
+            txtMaNL.setText("");
+            txtSoLuong.setText("");
+            txtDonGia.setText("");
+            txtThanhTien.setText("");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void xoaChiTietTam(DefaultTableModel ctPhieuNhapModel, JTextField txtMaNL, JTextField txtTongTien) {
+        try {
+            // Kiểm tra mã nguyên liệu
+            if (txtMaNL.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập mã nguyên liệu để xóa!");
+                return;
+            }
+            if (!txtMaNL.getText().matches("\\d+")) {
+                JOptionPane.showMessageDialog(this, "Mã nguyên liệu phải là số nguyên dương!");
+                return;
+            }
+            int maNL;
+            try {
+                maNL = Integer.parseInt(txtMaNL.getText().trim());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Mã nguyên liệu không hợp lệ!");
+                return;
+            }
+
+            // Tìm dòng có MaNL khớp
+            int selectedRow = -1;
+            for (int i = 0; i < ctPhieuNhapModel.getRowCount(); i++) {
+                if (Integer.parseInt(ctPhieuNhapModel.getValueAt(i, 1).toString()) == maNL) {
+                    selectedRow = i;
+                    break;
+                }
+            }
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy mã nguyên liệu " + maNL + " trong bảng chi tiết!");
+                return;
+            }
+
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Bạn có chắc muốn xóa chi tiết với mã nguyên liệu " + maNL + " khỏi bảng tạm?",
+                    "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                ctPhieuNhapModel.removeRow(selectedRow);
+                updateTongTien(null, txtTongTien, ctPhieuNhapModel);
+                JOptionPane.showMessageDialog(this, "Xóa chi tiết khỏi bảng tạm thành công!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi khi xóa chi tiết: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
 
+    private void themChiTietPhieuNhap(DefaultTableModel ctPhieuNhapModel) {
+        try {
+            // Kiểm tra nếu chưa có MaPN từ bước thêm phiếu nhập
+            if (currentMaPN <= 0) {
+                JOptionPane.showMessageDialog(this, "Vui lòng thêm phiếu nhập trước khi thêm chi tiết!");
+                return;
+            }
+            if (ctPhieuNhapModel.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "Vui lòng thêm ít nhất một chi tiết phiếu nhập!");
+                return;
+            }
+
+            // Kiểm tra trùng mã nguyên liệu trong bảng tạm
+            Set<Integer> maNLSet = new HashSet<>();
+            for (int i = 0; i < ctPhieuNhapModel.getRowCount(); i++) {
+                int maNL = (Integer) ctPhieuNhapModel.getValueAt(i, 1);
+                if (!maNLSet.add(maNL)) {
+                    JOptionPane.showMessageDialog(this, "Mã nguyên liệu " + maNL + " bị trùng trong bảng chi tiết!");
+                    return;
+                }
+            }
+
+            // Thêm danh sách chi tiết phiếu nhập
+            boolean themCTPNThanhCong = true;
+            String errorMessage = "";
+            for (int i = 0; i < ctPhieuNhapModel.getRowCount(); i++) {
+                CTPhieuNhapDTO ct = new CTPhieuNhapDTO();
+                ct.setMaPN(currentMaPN); // Dùng MaPN đã lưu
+                ct.setMaNL((Integer) ctPhieuNhapModel.getValueAt(i, 1));
+                ct.setSoLuong((Integer) ctPhieuNhapModel.getValueAt(i, 2));
+                ct.setDonGia((Double) ctPhieuNhapModel.getValueAt(i, 3));
+                ct.setThanhTien((Double) ctPhieuNhapModel.getValueAt(i, 4));
+                System.out.println("Thêm chi tiết: maPN=" + ct.getMaPN() + ", maNL=" + ct.getMaNL() + ", soLuong=" + ct.getSoLuong() + ", donGia=" + ct.getDonGia() + ", thanhTien=" + ct.getThanhTien());
+                try {
+                    if (!ctPhieuNhapBUS.ThemCTPhieuNhap(ct)) {
+                        errorMessage = "Lỗi thêm chi tiết phiếu nhập (Mã NL: " + ct.getMaNL() + "): Mã nguyên liệu không tồn tại hoặc lỗi cơ sở dữ liệu!";
+                        themCTPNThanhCong = false;
+                        break;
+                    }
+                } catch (Exception ex) {
+                    errorMessage = "Lỗi thêm chi tiết phiếu nhập (Mã NL: " + ct.getMaNL() + "): " + ex.getMessage();
+                    themCTPNThanhCong = false;
+                    break;
+                }
+            }
+
+            if (themCTPNThanhCong) {
+                JOptionPane.showMessageDialog(this, "Thêm chi tiết phiếu nhập thành công!");
+                // Xóa bảng chi tiết sau khi thêm thành công
+                ctPhieuNhapModel.setRowCount(0);
+                currentMaPN = -1; // Reset MaPN sau khi hoàn tất
+                // Tải lại bảng phiếu nhập (nếu cần)
+                loadPhieuNhapTable();
+            } else {
+                // Hiển thị thông báo lỗi cụ thể
+                String displayMessage = "Thêm chi tiết thất bại! Nguyên nhân: " + (errorMessage.isEmpty() ? "Dữ liệu nhập không hợp lệ hoặc lỗi hệ thống." : errorMessage);
+                JOptionPane.showMessageDialog(this, displayMessage);
+                // In lỗi ra console
+                System.out.println("Lỗi khi thêm chi tiết phiếu nhập: " + displayMessage);
+                if (!errorMessage.isEmpty()) {
+                    System.out.println("Chi tiết lỗi: " + errorMessage);
+                }
+            }
+        } catch (Exception e) {
+            String errorMessage = "Lỗi hệ thống: " + e.getMessage();
+            JOptionPane.showMessageDialog(this, errorMessage);
+            System.out.println("Lỗi hệ thống: " + errorMessage);
+            e.printStackTrace();
+        }
+    }
     private void suaPhieuNhap(JTextField txtMaPN, JTextField txtMaNCC, JTextField txtMaNV, JTextField txtTongTien, JDateChooser dateNgayLap) {
         try {
             // Sửa phiếu nhập

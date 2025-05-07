@@ -301,3 +301,4 @@ INSERT INTO CTPhieuNhap (MaPN, MaNL, SoLuong, DonGia, ThanhTien) VALUES
 (17, 2, 10, 40000, 400000),
 (17, 3, 20, 15000, 300000),
 (17, 5, 60, 20000, 1200000);
+

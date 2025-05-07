@@ -14,22 +14,27 @@ import java.math.BigDecimal;
 import java.sql.Date;
 
 public class PhieuNhapDAO {
-
-    public boolean ThemPhieuNhap(PhieuNhapDTO phieuNhap) {
+    public int ThemPhieuNhap(PhieuNhapDTO phieuNhap) {
         String sql = "INSERT INTO PhieuNhap(MaNCC, MaNV, TongTien, NgayLap) VALUES(?, ?, ?, ?)";
         try (Connection conn = JDBC.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, phieuNhap.getMaNCC());
             stmt.setInt(2, phieuNhap.getMaNV());
             stmt.setBigDecimal(3, phieuNhap.getTongTien());
             stmt.setDate(4, new java.sql.Date(phieuNhap.getNgayLap().getTime()));
-            return stmt.executeUpdate() > 0;
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1); // Lấy MaPN tự động tạo
+                }
+            }
+            return -1; // Trả về -1 nếu thất bại
         } catch (SQLException ex) {
             Logger.getLogger(PhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            return -1;
         }
     }
-
     public boolean SuaPhieuNhap(PhieuNhapDTO phieuNhap) {
         String sql = "UPDATE PhieuNhap SET MaNCC = ?, MaNV = ?, TongTien = ?, NgayLap = ? WHERE MaPN = ?";
         try (Connection conn = JDBC.getConnection();

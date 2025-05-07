@@ -20,8 +20,7 @@ public class PhieuNhapBUS {
     public ArrayList<PhieuNhapDTO> LayDanhSachPhieuNhap() {
         return new ArrayList<>(phieuNhapDAO.LayDanhSachPhieuNhap());
     }
-
-    public boolean ThemPhieuNhap(PhieuNhapDTO phieuNhap) {
+    public int ThemPhieuNhap(PhieuNhapDTO phieuNhap) {
         return phieuNhapDAO.ThemPhieuNhap(phieuNhap);
     }
 
