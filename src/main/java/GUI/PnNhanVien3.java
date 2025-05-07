@@ -13,15 +13,21 @@ import MyCustom.MyDialog;
 import MyCustom.TableCustomizer;
 
 import com.formdev.flatlaf.json.ParseException;
+import org.apache.poi.ss.usermodel.Cell;
 
 import java.awt.GridLayout;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,6 +36,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import javax.swing.table.DefaultTableModel;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -37,7 +46,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class PnNhanVien3 extends javax.swing.JPanel {
 
-    private NhanVienBUS nvBUS;
+    private final NhanVienBUS nvBUS;
 
     /**
      * Creates new form PnNhanVien1
@@ -624,11 +633,11 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        xuatExcel();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void btnNhapExActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhapExActionPerformed
-
+        nhapExcel();
     }//GEN-LAST:event_btnNhapExActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
@@ -782,8 +791,6 @@ public class PnNhanVien3 extends javax.swing.JPanel {
     private javax.swing.JTextField txtTen;
     // End of variables declaration//GEN-END:variables
     private void loadDataToTable() {
-        NhanVienBUS nvBUS = new NhanVienBUS();
-
         String[] columnNames = {"Mã NV", "Họ đệm", "Tên", "Ngày sinh", "Giới tính", "Tên đăng nhập", "Mật Khẩu", " Quyền"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
@@ -1036,4 +1043,101 @@ public class PnNhanVien3 extends javax.swing.JPanel {
         }
     }
 
+    public void nhapExcel() {
+        try {
+            // Tạo đối tượng JFileChooser để chọn file Excel
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Chọn file Excel");
+
+            // Mở hộp thoại cho phép người dùng chọn file
+            int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                // Lấy file được chọn
+                File file = fileChooser.getSelectedFile();
+                FileInputStream fis = new FileInputStream(file);
+                XSSFWorkbook workbook = new XSSFWorkbook(fis);
+                XSSFSheet sheet = workbook.getSheetAt(0);  // Lấy sheet đầu tiên
+
+                // Định dạng ngày
+                SimpleDateFormat excelDateFormat = new SimpleDateFormat("dd/MM/yyyy"); // Format của Excel
+                SimpleDateFormat mysqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");  // Format của MySQL
+
+                // Duyệt qua các dòng trong Excel (bỏ qua dòng đầu tiên nếu đó là header)
+                for (Row row : sheet) {
+                    // Bỏ qua dòng header (dòng 0)
+                    if (row.getRowNum() == 0) {
+                        continue;
+                    }
+
+                    // Lấy giá trị từ các cột
+                    String hoLot = row.getCell(0).getStringCellValue();  // Cột Họ Lót
+                    String ten = row.getCell(1).getStringCellValue();    // Cột Tên
+                    String ngaySinhStr = row.getCell(2).getStringCellValue();  // Cột Ngày Sinh (Là Text)
+                    String gioiTinh = row.getCell(3).getStringCellValue();  // Cột Giới Tính
+
+                    // Chuyển đổi định dạng ngày
+                    String ngaySinhFormatted;
+                    try {
+                        Date ngaySinhDate = excelDateFormat.parse(ngaySinhStr); // Parse chuỗi ngày từ Excel
+                        ngaySinhFormatted = mysqlDateFormat.format(ngaySinhDate); // Format lại thành YYYY-MM-DD
+                    } catch (Exception e) {
+                        System.out.println("Lỗi định dạng ngày cho nhân viên " + hoLot + " " + ten + ": " + ngaySinhStr);
+                        continue; // Bỏ qua dòng này nếu ngày không hợp lệ
+                    }
+
+                    // Gọi hàm thêm nhân viên với ngày đã được định dạng
+                    nvBUS.themNhanVien(hoLot, ten, gioiTinh, ngaySinhFormatted);
+                    loadDataToTable();
+                }
+
+                fis.close();  // Đóng file Excel
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void xuatExcel() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Chọn nơi lưu tệp Excel");
+        fileChooser.setSelectedFile(new File("DanhSachNhanVien.xlsx"));
+
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+
+            try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+                XSSFSheet sheet = workbook.createSheet("Danh sách nhân viên");
+
+                // Tạo tiêu đề cột
+                DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
+                Row headerRow = sheet.createRow(0);
+                for (int i = 0; i < model.getColumnCount(); i++) {
+                    Cell cell = headerRow.createCell(i);
+                    cell.setCellValue(model.getColumnName(i));
+                }
+
+                // Ghi dữ liệu từ bảng vào Excel
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    Row row = sheet.createRow(i + 1);
+                    for (int j = 0; j < model.getColumnCount(); j++) {
+                        Object value = model.getValueAt(i, j);
+                        row.createCell(j).setCellValue(value != null ? value.toString() : "");
+                    }
+                }
+
+                // Ghi tệp Excel ra đĩa
+                try (FileOutputStream fileOut = new FileOutputStream(fileToSave)) {
+                    workbook.write(fileOut);
+                }
+
+                JOptionPane.showMessageDialog(this, "Xuất dữ liệu thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Lỗi khi xuất dữ liệu: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
 }

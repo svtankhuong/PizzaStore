@@ -13,10 +13,22 @@ import DTO.KhachHangDTO;
 
 import MyCustom.MyDialog;
 import MyCustom.TableCustomizer;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class PnKhachHang extends javax.swing.JPanel {
 
@@ -451,11 +463,11 @@ public class PnKhachHang extends javax.swing.JPanel {
     }//GEN-LAST:event_txtTenActionPerformed
 
     private void btnNhapExActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhapExActionPerformed
-
+        nhapExcel();
     }//GEN-LAST:event_btnNhapExActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        xuatExcel();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void txtSDTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSDTActionPerformed
@@ -516,7 +528,7 @@ public void loadtablekhachhang() {
         String[] columnNames = {"Mã KH", "Họ đệm", "Tên", "Số điện thoại", "Địa chỉ", "Tổng chi tiêu"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-        ArrayList<KhachHangDTO> dsKH = khbus.getDanhSachKhachHang();
+        ArrayList<KhachHangDTO> dsKH = khbus.layDSKH();
         for (KhachHangDTO kh : dsKH) {
             Object[] row = {
                 kh.getMaKH(),
@@ -654,4 +666,175 @@ public void loadtablekhachhang() {
         }
     }
 
+    public void nhapExcel() {
+        FileInputStream fis = null;
+        XSSFWorkbook workbook = null;
+        try {
+            // Tạo JFileChooser để chọn file Excel
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Chọn file Excel");
+
+            // Mở hộp thoại chọn file
+            int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                // Lấy file được chọn
+                File file = fileChooser.getSelectedFile();
+                fis = new FileInputStream(file);
+                workbook = new XSSFWorkbook(fis);
+                XSSFSheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên
+
+                // In danh sách SDT hiện có để kiểm tra trùng lặp
+                int successCount = 0; // Đếm số khách hàng thêm thành công
+
+                // Duyệt qua các dòng trong Excel (bỏ qua dòng tiêu đề)
+                for (Row row : sheet) {
+                    if (row.getRowNum() == 0) { // Bỏ qua dòng tiêu đề
+                        continue;
+                    }
+
+                    // Lấy giá trị từ các cột
+                    String hoLot = row.getCell(0) != null ? row.getCell(0).getStringCellValue().trim() : "";
+                    String ten = row.getCell(1) != null ? row.getCell(1).getStringCellValue().trim() : "";
+
+                    // Xử lý cột SDT
+                    String sdt = "";
+                    Cell sdtCell = row.getCell(2);
+                    if (sdtCell != null) {
+                        if (sdtCell.getCellType() == CellType.STRING) {
+                            sdt = sdtCell.getStringCellValue().trim();
+                            // Thêm số 0 đầu nếu SDT không bắt đầu bằng 0 và đủ 9 chữ số
+                            if (sdt.length() == 9 && sdt.matches("[0-9]+")) {
+                                sdt = "0" + sdt;
+                            }
+                        } else if (sdtCell.getCellType() == CellType.NUMERIC) {
+                            // Chuyển số thành chuỗi 10 chữ số với 0 đầu
+                            long sdtValue = (long) sdtCell.getNumericCellValue();
+                            sdt = String.format("0%d", sdtValue); // Thêm 0 đầu
+                            // Đảm bảo SDT đủ 10 chữ số
+                            if (sdt.length() > 10) {
+                                sdt = "0" + sdt.substring(sdt.length() - 9); // Lấy 9 chữ số cuối và thêm 0
+                            }
+                        }
+                    }
+
+                    String diaChi = row.getCell(3) != null ? row.getCell(3).getStringCellValue().trim() : "";
+
+                    // Kiểm tra SDT có đúng định dạng 10 chữ số bắt đầu bằng 0
+                    if (!sdt.matches("^0[0-9]{9}$")) {
+                        System.out.println("SDT không hợp lệ cho khách hàng " + hoLot + " " + ten + ": " + sdt);
+                        continue; // Bỏ qua dòng này
+                    }
+
+                    // Gọi hàm thêm khách hàng
+                    boolean resultInsert = khbus.themKhachHang(hoLot, ten, sdt, diaChi);
+
+                    // Ghi log kết quả
+                    if (resultInsert) {
+                        System.out.println("Khách hàng " + hoLot + " " + ten + " thêm thành công.");
+                        successCount++;
+                    } else {
+                        System.out.println("Thêm khách hàng " + hoLot + " " + ten + " thất bại. (SDT: " + sdt + ")");
+                    }
+                }
+
+                // Hiển thị thông báo kết quả
+                if (successCount > 0) {
+                    new MyDialog("Nhập Excel hoàn tất! Đã thêm " + successCount + " khách hàng.", MyDialog.SUCCESS_DIALOG);
+                } else {
+                    new MyDialog("Không có khách hàng nào được thêm vào cơ sở dữ liệu!", MyDialog.ERROR_DIALOG);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            new MyDialog("Lỗi đọc file Excel: " + e.getMessage(), MyDialog.ERROR_DIALOG);
+        } catch (Exception e) {
+            e.printStackTrace();
+            new MyDialog("Lỗi không xác định: " + e.getMessage(), MyDialog.ERROR_DIALOG);
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (workbook != null) {
+                    workbook.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        loadtablekhachhang();
+    }
+
+    public void xuatExcel() {
+        FileOutputStream fos = null;
+        XSSFWorkbook workbook = null;
+        try {
+            // Lấy danh sách khách hàng từ cơ sở dữ liệu
+            ArrayList<KhachHangDTO> dsKH = khbus.layDSKH();
+            if (dsKH.isEmpty()) {
+                new MyDialog("Không có khách hàng để xuất!", MyDialog.ERROR_DIALOG);
+                return;
+            }
+
+            // Tạo workbook và sheet
+            workbook = new XSSFWorkbook();
+            XSSFSheet sheet = workbook.createSheet("DanhSachKhachHang");
+
+            // Tạo dòng tiêu đề
+            XSSFRow headerRow = sheet.createRow(0);
+            String[] headers = {"HoLot", "Ten", "SDT", "DiaChi"};
+            for (int i = 0; i < headers.length; i++) {
+                XSSFCell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+            }
+
+            // Thêm dữ liệu khách hàng
+            int rowNum = 1;
+            for (KhachHangDTO kh : dsKH) {
+                XSSFRow row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(kh.getHoDem());
+                row.createCell(1).setCellValue(kh.getTen());
+                row.createCell(2).setCellValue(kh.getSdt()); // SDT lưu dạng text
+                row.createCell(3).setCellValue(kh.getDiaChi());
+            }
+
+            // Tạo JFileChooser để chọn vị trí lưu file
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Chọn vị trí lưu file Excel");
+            fileChooser.setSelectedFile(new File("DanhSachKhachHang.xlsx")); // Tên file mặc định
+
+            // Mở hộp thoại lưu file
+            int result = fileChooser.showSaveDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                // Đảm bảo file có đuôi .xlsx
+                String filePath = file.getAbsolutePath();
+                if (!filePath.endsWith(".xlsx")) {
+                    filePath += ".xlsx";
+                }
+
+                // Ghi file
+                fos = new FileOutputStream(filePath);
+                workbook.write(fos);
+                new MyDialog("Xuất file Excel thành công!", MyDialog.SUCCESS_DIALOG);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            new MyDialog("Lỗi khi xuất file Excel: " + e.getMessage(), MyDialog.ERROR_DIALOG);
+        } catch (Exception e) {
+            e.printStackTrace();
+            new MyDialog("Lỗi không xác định: " + e.getMessage(), MyDialog.ERROR_DIALOG);
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+                if (workbook != null) {
+                    workbook.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

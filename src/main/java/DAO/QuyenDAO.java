@@ -82,4 +82,31 @@ public class QuyenDAO {
         return false;
     }
 
+    public QuyenDTO getQuyenByMaQuyen(int maQuyen) throws SQLException {
+        QuyenDTO quyen = null;
+        String query = "SELECT * FROM Quyen WHERE MaQuyen = ?";
+
+        try (Connection conn = JDBC.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, maQuyen);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    quyen = new QuyenDTO();
+                    quyen.setMaQuyen(rs.getInt("MaQuyen"));
+                    quyen.setTenQuyen(rs.getString("TenQuyen"));
+                    quyen.setQLBanHang(rs.getBoolean("QLbanhang"));
+                    quyen.setQLKhuyenMai(rs.getBoolean("QLkhuyenmai"));
+                    quyen.setQLSanPham(rs.getBoolean("QLsanpham"));
+                    quyen.setQLNhanVien(rs.getBoolean("QLNhanVien"));
+                    quyen.setQLKhachHang(rs.getBoolean("QLkhachhang"));
+                    quyen.setQLNhapHang(rs.getBoolean("QLnhaphang"));
+                    quyen.setThongKe(rs.getBoolean("ThongKe"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        return quyen;
+    }
 }
