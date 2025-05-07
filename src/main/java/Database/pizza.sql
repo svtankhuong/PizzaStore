@@ -42,8 +42,7 @@ CREATE TABLE KhachHang (
     Ten VARCHAR(255),
     SDT VARCHAR(10),
     DiaChi VARCHAR(255) NOT NULL,
-    TongChiTieu DECIMAL(10, 2) DEFAULT 0,  
-    isDelete TINYINT(1) DEFAULT 0  
+    TongChiTieu DECIMAL
 );
 
 CREATE TABLE SanPham (
@@ -125,6 +124,7 @@ CREATE TABLE PhieuNhap (
 );
 
 CREATE TABLE chitietphieunhap (
+    MACTPN INT AUTO_INCREMENT PRIMARY KEY,
     MaPN INT,
     MaNL INT,
     SoLuong INT,
@@ -227,6 +227,16 @@ INSERT INTO chitietphieunhap (MaPN, MaNL, SoLuong, DonGia, ThanhTien) VALUES
 (2, 3, 50, 15000, 750000),
 (3, 4, 30, 30000, 900000);
 
+
+
+
+--sửa PN của Thanh Hằng
+ALTER TABLE PhieuNhap MODIFY MaPN INT; -- Xóa AUTO_INCREMENT
+
+-- Xóa cột MaCTPN
+ALTER TABLE chitietphieunhap DROP PRIMARY KEY;
+ALTER TABLE chitietphieunhap DROP COLUMN MaCTPN;
+
 -- Thêm khóa chính 
 ALTER TABLE chitietphieunhap ADD PRIMARY KEY (MaPN, MaNL);
 
@@ -265,8 +275,30 @@ INSERT INTO chitietphieunhap (MaPN, MaNL, SoLuong, DonGia, ThanhTien) VALUES
 (10, 1, 5, 50000, 250000),  -- NguyenLieu MaNL = 1
 (10, 2, 5, 40000, 200000);  -- NguyenLieu MaNL = 2
 
--- Cập nhật TongTien trong PhieuNhap
-UPDATE PhieuNhap SET TongTien = 750000 WHERE MaPN = 2;
-UPDATE PhieuNhap SET TongTien = 900000 WHERE MaPN = 3;
-UPDATE PhieuNhap SET TongTien = 1950000 WHERE MaPN = 9;
-UPDATE PhieuNhap SET TongTien = 1300000 WHERE MaPN = 10;
+
+--thêm cho ctpn
+INSERT INTO chitietphieunhap (MaPN, MaNL, SoLuong, DonGia, ThanhTien) VALUES
+(11, 1, 30, 50000, 1500000),
+(11, 2, 25, 40000, 1000000),
+(12, 1, 20, 50000, 1000000),
+(12, 3, 40, 15000, 600000),
+(12, 5, 30, 20000, 600000),
+(13, 2, 25, 40000, 1000000),
+(13, 4, 25, 30000, 750000),
+(13, 5, 5, 20000, 100000),
+(14, 1, 30, 50000, 1500000),
+(14, 3, 40, 15000, 600000),
+(14, 4, 20, 30000, 600000),
+(14, 5, 5, 20000, 100000),
+(15, 2, 20, 40000, 800000),
+(15, 3, 30, 15000, 450000),
+(15, 5, 35, 20000, 700000),
+(16, 1, 5, 50000, 250000),
+(16, 2, 5, 40000, 200000),
+(16, 3, 10, 15000, 150000),
+(16, 4, 20, 30000, 600000),
+(16, 5, 5, 20000, 100000),
+(17, 2, 10, 40000, 400000),
+(17, 3, 20, 15000, 300000),
+(17, 5, 60, 20000, 1200000);
+

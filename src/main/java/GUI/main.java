@@ -1,3 +1,4 @@
+/*
 package GUI;
 
 import javax.swing.UIManager;
@@ -27,3 +28,4 @@ public class main {
         });
     }
 }
+*/
