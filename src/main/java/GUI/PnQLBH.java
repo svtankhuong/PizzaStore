@@ -7,7 +7,7 @@ import BUS.HoaDonBUS;
 import BUS.KhachHangBUS;
 import DAO.*;
 import DTO.*;
-import MyCustom.CellCurrencyRenderer;
+import MyCustom.*;
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
 import be.quodlibet.boxable.Row;
@@ -32,6 +32,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -59,7 +61,12 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.basic.BasicMenuUI;
 
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
@@ -80,7 +87,7 @@ public class PnQLBH extends JPanel {
     private JFormattedTextField tfMinMoney;
     private JFormattedTextField tfMaxMoney;
     private JTextField tfChiTietKM;
-    private JButton btnKM;
+    private JButton btnCTKM;
     private JButton btnTimKiem;
     private JTextField tfNameDiscount;
     private JTextField tfDetailDiscountName;
@@ -118,6 +125,7 @@ public class PnQLBH extends JPanel {
     private final int IMAGE_WIDTH = 200;
     private final int IMAGE_HEIGHT = 200;
     private ArrayList<String[]> list_bought_pizza;
+    private ArrayList<ChiTietHoaDonDTO> dsCTHD;
     private int tong_tien_hd;
     private DecimalFormat currencyFormat;
     private NumberFormatter numberFormatter;
@@ -127,6 +135,8 @@ public class PnQLBH extends JPanel {
     private String cot_loc_tien="";
 
     public PnQLBH(ArrayList<Object> tk) {
+        HoaDonBUS hdbus = new HoaDonBUS();
+        dsCTHD = hdbus.hienDSCTHD();
         initComponents();
         setupTableModels(tk);
         loadDataFromSource();
@@ -134,12 +144,12 @@ public class PnQLBH extends JPanel {
         JButton a = (JButton) fields[6];
         a.addActionListener((e) -> showTableCustomer());
         JButton b = (JButton) fields[7];
-        b.addActionListener((e) -> showTableDiscount());
+        b.addActionListener((e) -> showTableDiscount(false));
         btnThemVaoGio.addActionListener((e) -> ThemVaoGioHang());
         btnTaoHoaDon.addActionListener((e) -> TaoHoaDon(tk));
         btnXoaKhoiGio.addActionListener((e) -> XoaKhoiGioHang());
         btnXuatHoaDon.addActionListener((e) -> {
-            if (list_bought_pizza.isEmpty())
+            if (list_bought_pizza == null)
             {
                 JOptionPane.showMessageDialog(this, "Bạn phải nhấn tạo hoá đơn trước khi xuất hoá đơn", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }else{
@@ -147,7 +157,7 @@ public class PnQLBH extends JPanel {
             }         
         });
         btnKH.addActionListener((ActionEvent e) -> showTableCustomer());
-        btnKM.addActionListener((ActionEvent e) -> showTableDiscount());
+        btnCTKM.addActionListener((ActionEvent e) -> showTableDiscount(true));
         btnTimKiem.addActionListener((ActionEvent e) -> TimKiemHoaDon());
         cbbMaHD.addItemListener(new ItemListener()
         {
@@ -206,7 +216,7 @@ public class PnQLBH extends JPanel {
             }
             // Lưu file
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Lưu file Excel");
+            fileChooser.setDialogTitle("Chọn nơi lưu file excel hóa đơn");
             fileChooser.setSelectedFile(new File("HoaDon.xlsx"));
             if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
@@ -247,7 +257,7 @@ public class PnQLBH extends JPanel {
 
             // Lưu file
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Lưu file Excel");
+            fileChooser.setDialogTitle("Chon noi lưu file Excel CTHD");
             fileChooser.setSelectedFile(new File("ChiTietHoaDon.xlsx"));
             if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
@@ -575,238 +585,248 @@ public class PnQLBH extends JPanel {
         return count;
     }
     
-    private void XuatPDFHoaDon(ArrayList<Object> tk){
-        try
-        {
-            String tenfile="";
-            String output_path = "D:\\Receipt_Pizza_Store\\";
-            
-         // Tạo tên file pdf cho hoá đơn
-            int sl = countReceiptPDFs(output_path);
-            if(sl == 0 ){
-               tenfile = "receipt1.pdf";             
-            } else{
-                tenfile=String.format("receipt%d.pdf",sl + 1);
-            }
-            
-            // Thêm nội dung vào hoá đơn
-            PDDocument document = new PDDocument();
-            PDPage page = new PDPage();
-            // mặc định kích thước của trang letter là 612 * 792 point
-            document.addPage(page);
-            
-            PDPageContentStream contentStream = new PDPageContentStream(document, page);
-  
-            InputStream fontStream = getClass().getResourceAsStream("/BeVietnamPro-Regular.ttf");
-            PDType0Font font = PDType0Font.load(document, fontStream);
-            float margin = 72;
-            float yPosition = 655;
-            float pageWidth = page.getMediaBox().getWidth();
-            
-            InputStream logoStream = getClass().getResourceAsStream("/ManagerUI/pizza-brand.png");
-            if (logoStream != null) {
-                PDImageXObject logo = PDImageXObject.createFromByteArray(document, logoStream.readAllBytes(), "logo");
-                float logoWidth = 170;
-                float logoHeight = 115;
-                float logoX = (pageWidth - logoWidth) / 2;
-                contentStream.drawImage(logo, logoX, yPosition, logoWidth, logoHeight);
-            } else {
-                System.out.println("Không tìm thấy ảnh logo!");
-            }
+    private void XuatPDFHoaDon(ArrayList<Object> tk) {
+       try {
+           // Sử dụng JFileChooser để người dùng chọn nơi lưu file
+           JFileChooser fileChooser = new JFileChooser();
+           fileChooser.setDialogTitle("Chọn nơi lưu pdf hóa đơn");
+           fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-            
-            // Sau khi vẽ logo xong
-            yPosition -= 24;
+           int userSelection = fileChooser.showSaveDialog(null);
 
-            // Người lập hoá đơn
-            String text_taohd = String.format("Người Lập Hoá Đơn: %s", tk.get(3).toString());
-            float text_taohd_width = font.getStringWidth(text_taohd) / 1000 * 16;
-            contentStream.beginText();
-            contentStream.setFont(font, 16);
-            contentStream.newLineAtOffset((pageWidth - text_taohd_width) / 2, yPosition);
-            contentStream.showText(text_taohd);
-            contentStream.endText();
-            yPosition -= 24;
+           // Nếu người dùng chọn thư mục
+           if (userSelection == JFileChooser.APPROVE_OPTION) {
+               File selectedDirectory = fileChooser.getSelectedFile();
+               String output_path = selectedDirectory.getAbsolutePath() + "\\";
 
-            // Mã Nhân Viên
-            String text_manv = String.format("Mã Nhân Viên: %s", tk.get(2));
-            float text_manv_width = font.getStringWidth(text_manv) / 1000 * 16;
-            contentStream.beginText();
-            contentStream.setFont(font, 16);
-            contentStream.newLineAtOffset((pageWidth - text_manv_width) / 2, yPosition);
-            contentStream.showText(text_manv);
-            contentStream.endText();
-            yPosition -= 24;
+               // Tạo tên file PDF cho hoá đơn
+               String tenfile = "";
+               int sl = countReceiptPDFs(output_path);
+               if (sl == 0) {
+                   tenfile = "receipt1.pdf";
+               } else {
+                   tenfile = String.format("receipt%d.pdf", sl + 1);
+               }
 
-            // Người Mua Pizza
-            String[] b = ttKH.getText().split("",2); 
-            String text_tenkh = String.format("Người Mua Pizza: %s", b[1]);
-            float text_tenkh_width = font.getStringWidth(text_tenkh) / 1000 * 16;
-            contentStream.beginText();
-            contentStream.setFont(font, 16);
-            contentStream.newLineAtOffset((pageWidth - text_tenkh_width) / 2, yPosition);
-            contentStream.showText(text_tenkh);
-            contentStream.endText();
-            yPosition -= 24;
+                PDDocument document = new PDDocument();
+                PDPage page = new PDPage();
+                // mặc định kích thước của trang letter là 612 * 792 point
+                document.addPage(page);
 
-            // Mã Khách Hàng
-            String text_kh = String.format("Mã Khách Hàng: %s", b[0]);
-            float text_kh_width = font.getStringWidth(text_kh) / 1000 * 16;
-            contentStream.beginText();
-            contentStream.setFont(font, 16);
-            contentStream.newLineAtOffset((pageWidth - text_kh_width) / 2, yPosition);
-            contentStream.showText(text_kh);
-            contentStream.endText();
-            yPosition -= 24;
+                PDPageContentStream contentStream = new PDPageContentStream(document, page);
 
-            // Mã Hoá Đơn
-            int n = tableHoaDon.getRowCount();    
-            String text_hd = String.format("Mã Hoá Đơn:  %d", n);
-            float text_hd_width = font.getStringWidth(text_hd) / 1000 * 16;
-            contentStream.beginText();
-            contentStream.setFont(font, 16);
-            contentStream.newLineAtOffset((pageWidth - text_hd_width) / 2, yPosition);
-            contentStream.showText(text_hd);
-            contentStream.endText();
-            yPosition -= 24;
+                InputStream fontStream = getClass().getResourceAsStream("/BeVietnamPro-Regular.ttf");
+                PDType0Font font = PDType0Font.load(document, fontStream);
+                float margin = 72;
+                float yPosition = 655;
+                float pageWidth = page.getMediaBox().getWidth();
 
-            // Ngày Lập Hoá Đơn
-            LocalDate tght = LocalDate.now();
-            String text_ngaylap_hd = String.format("Ngày Lập Hoá Đơn: %s", InforAccount.formatDate(tght.toString()));
-            float text_ngaylap_hd_width = font.getStringWidth(text_ngaylap_hd) / 1000 * 16;
-            contentStream.beginText();
-            contentStream.setFont(font, 16);
-            contentStream.newLineAtOffset((pageWidth - text_ngaylap_hd_width) / 2, yPosition);
-            contentStream.showText(text_ngaylap_hd);
-            contentStream.endText();
-            yPosition -= 24;
+                InputStream logoStream = getClass().getResourceAsStream("/ManagerUI/pizza-brand.png");
+                if (logoStream != null) {
+                    PDImageXObject logo = PDImageXObject.createFromByteArray(document, logoStream.readAllBytes(), "logo");
+                    float logoWidth = 170;
+                    float logoHeight = 115;
+                    float logoX = (pageWidth - logoWidth) / 2;
+                    contentStream.drawImage(logo, logoX, yPosition, logoWidth, logoHeight);
+                } else {
+                    System.out.println("Không tìm thấy ảnh logo!");
+                }
 
-            
-            // Kẻ cái bảng sản phầm có 4 cột, tên sản phẩm, đơn giá, số lượng, thành tiền
-            contentStream.beginText();
-            contentStream.setFont(font, 16);
-            float tableWidth = pageWidth - 2 * margin;
-            BaseTable tableSP = new BaseTable(yPosition, yPosition, 20, tableWidth, margin, document, page, true, true);
-            
-            Row<PDPage> headerRow = tableSP.createRow(20);
-            ArrayList<Float> ds_chieu_rong = new ArrayList<>();
-            String a = "Tên Sản Phẩm";
-            Cell<PDPage> cell = headerRow.createCell(46, a);
-            ds_chieu_rong.add(46f);
-            cell.setFont(font);
-            cell.setFontSize(12);
-            
-            String a2 = "Đơn Giá";
-            Cell<PDPage> cell1 = headerRow.createCell(18 , a2);
-            ds_chieu_rong.add(18f);
-            cell1.setFont(font);
-            cell1.setFontSize(12);
-            
-            String b1 = "SL";
-            Cell<PDPage> cell2 = headerRow.createCell(10 , b1);
-            ds_chieu_rong.add(10f);
-            cell2.setFont(font);
-            cell2.setFontSize(12);
-            
-            String c = "Thành Tiền";
-            Cell<PDPage> cell3 = headerRow.createCell(26 , c);
-            ds_chieu_rong.add(26f);
-            cell3.setFont(font);
-            cell3.setFontSize(12);
-            
-            for ( int k = 0; k < list_bought_pizza.size(); k++) {
-                Row<PDPage> row = tableSP.createRow(20);
-                for(int l = 0; l < list_bought_pizza.get(k).length; l++) {
-                    if(l > 0){
-                        Cell<PDPage> cella = row.createCell(ds_chieu_rong.get(l - 1), list_bought_pizza.get(k)[l]);
-                        cella.setFont(font);
-                        cella.setFontSize(12); 
+
+                // Sau khi vẽ logo xong
+                yPosition -= 24;
+
+                // Người lập hoá đơn
+                String text_taohd = String.format("Người Lập Hoá Đơn: %s", tk.get(3).toString());
+                float text_taohd_width = font.getStringWidth(text_taohd) / 1000 * 16;
+                contentStream.beginText();
+                contentStream.setFont(font, 16);
+                contentStream.newLineAtOffset((pageWidth - text_taohd_width) / 2, yPosition);
+                contentStream.showText(text_taohd);
+                contentStream.endText();
+                yPosition -= 24;
+
+                // Mã Nhân Viên
+                String text_manv = String.format("Mã Nhân Viên: %s", tk.get(2));
+                float text_manv_width = font.getStringWidth(text_manv) / 1000 * 16;
+                contentStream.beginText();
+                contentStream.setFont(font, 16);
+                contentStream.newLineAtOffset((pageWidth - text_manv_width) / 2, yPosition);
+                contentStream.showText(text_manv);
+                contentStream.endText();
+                yPosition -= 24;
+
+                // Người Mua Pizza
+                String[] b = ttKH.getText().split("",2); 
+                String text_tenkh = String.format("Người Mua Pizza: %s", b[1]);
+                float text_tenkh_width = font.getStringWidth(text_tenkh) / 1000 * 16;
+                contentStream.beginText();
+                contentStream.setFont(font, 16);
+                contentStream.newLineAtOffset((pageWidth - text_tenkh_width) / 2, yPosition);
+                contentStream.showText(text_tenkh);
+                contentStream.endText();
+                yPosition -= 24;
+
+                // Mã Khách Hàng
+                String text_kh = String.format("Mã Khách Hàng: %s", b[0]);
+                float text_kh_width = font.getStringWidth(text_kh) / 1000 * 16;
+                contentStream.beginText();
+                contentStream.setFont(font, 16);
+                contentStream.newLineAtOffset((pageWidth - text_kh_width) / 2, yPosition);
+                contentStream.showText(text_kh);
+                contentStream.endText();
+                yPosition -= 24;
+
+                // Mã Hoá Đơn
+                int n = tableHoaDon.getRowCount();    
+                String text_hd = String.format("Mã Hoá Đơn:  %d", n);
+                float text_hd_width = font.getStringWidth(text_hd) / 1000 * 16;
+                contentStream.beginText();
+                contentStream.setFont(font, 16);
+                contentStream.newLineAtOffset((pageWidth - text_hd_width) / 2, yPosition);
+                contentStream.showText(text_hd);
+                contentStream.endText();
+                yPosition -= 24;
+
+                // Ngày Lập Hoá Đơn
+                LocalDate tght = LocalDate.now();
+                String text_ngaylap_hd = String.format("Ngày Lập Hoá Đơn: %s", InforAccount.formatDate(tght.toString()));
+                float text_ngaylap_hd_width = font.getStringWidth(text_ngaylap_hd) / 1000 * 16;
+                contentStream.beginText();
+                contentStream.setFont(font, 16);
+                contentStream.newLineAtOffset((pageWidth - text_ngaylap_hd_width) / 2, yPosition);
+                contentStream.showText(text_ngaylap_hd);
+                contentStream.endText();
+                yPosition -= 24;
+
+
+                // Kẻ cái bảng sản phầm có 4 cột, tên sản phẩm, đơn giá, số lượng, thành tiền
+                contentStream.beginText();
+                contentStream.setFont(font, 16);
+                float tableWidth = pageWidth - 2 * margin;
+                BaseTable tableSP = new BaseTable(yPosition, yPosition, 20, tableWidth, margin, document, page, true, true);
+
+                Row<PDPage> headerRow = tableSP.createRow(20);
+                ArrayList<Float> ds_chieu_rong = new ArrayList<>();
+                String a = "Tên Sản Phẩm";
+                Cell<PDPage> cell = headerRow.createCell(46, a);
+                ds_chieu_rong.add(46f);
+                cell.setFont(font);
+                cell.setFontSize(12);
+
+                String a2 = "Đơn Giá";
+                Cell<PDPage> cell1 = headerRow.createCell(18 , a2);
+                ds_chieu_rong.add(18f);
+                cell1.setFont(font);
+                cell1.setFontSize(12);
+
+                String b1 = "SL";
+                Cell<PDPage> cell2 = headerRow.createCell(10 , b1);
+                ds_chieu_rong.add(10f);
+                cell2.setFont(font);
+                cell2.setFontSize(12);
+
+                String c = "Thành Tiền";
+                Cell<PDPage> cell3 = headerRow.createCell(26 , c);
+                ds_chieu_rong.add(26f);
+                cell3.setFont(font);
+                cell3.setFontSize(12);
+
+                for ( int k = 0; k < list_bought_pizza.size(); k++) {
+                    Row<PDPage> row = tableSP.createRow(20);
+                    for(int l = 0; l < list_bought_pizza.get(k).length; l++) {
+                        if(l > 0){
+                            Cell<PDPage> cella = row.createCell(ds_chieu_rong.get(l - 1), list_bought_pizza.get(k)[l]);
+                            cella.setFont(font);
+                            cella.setFontSize(12); 
+                        }
                     }
                 }
-            }
-             // Lấy vị trí y của table 
-            float yWrite = tableSP.draw();
-            contentStream.endText();
-            contentStream.close();
-            
+                 // Lấy vị trí y của table 
+                contentStream.endText();
+                contentStream.close();
+                float yWrite = tableSP.draw();
 
-            String text_tongcong = String.format("Tổng tiền ban đầu: %s",currencyFormat.format(tong_tien_hd));
-            PDPage lastPage = document.getPage(document.getNumberOfPages() - 1);
-            PDPageContentStream contentStream2 = new PDPageContentStream(document, lastPage, PDPageContentStream.AppendMode.APPEND, true);
-            yWrite -= 24;
-            contentStream2.beginText();
-            contentStream2.setFont(font, 16);
-            float text_tongcong_width = font.getStringWidth(text_tongcong) / 1000 * 16;
-            contentStream2.newLineAtOffset((pageWidth - text_tongcong_width) / 2, yWrite);
-            contentStream2.showText(text_tongcong);
-            contentStream2.endText();
-            yWrite -= 24;
-            
-            String giamgiatext = ttKM.getText();
-            String text = "";
-            long sum_with_discount = 0;
-            if (giamgiatext.equals("Không khuyến mãi"))
-            {
-                text="Giảm Giá: 0VNĐ";
-            } else
-            {
-                String[] giamgia = ttKM.getText().split("\\s+");
-                KhuyenMaiDAO kmdao = new KhuyenMaiDAO();
-                int MaKM = Integer.parseInt(giamgia[0]);
-                KhuyenMaiDTO km = kmdao.timKiemKM(MaKM);
-                LocalDate now = LocalDate.now();
-                LocalDate hethan = km.getNgayKetThuc(); 
-                if((now.compareTo(hethan)) > 0){
+
+                String text_tongcong = String.format("Tổng tiền ban đầu: %s",currencyFormat.format(tong_tien_hd));
+                PDPage lastPage = document.getPage(document.getNumberOfPages() - 1);
+                PDPageContentStream contentStream2 = new PDPageContentStream(document, lastPage, PDPageContentStream.AppendMode.APPEND, true);
+                yWrite -= 24;
+                contentStream2.beginText();
+                contentStream2.setFont(font, 16);
+                float text_tongcong_width = font.getStringWidth(text_tongcong) / 1000 * 16;
+                contentStream2.newLineAtOffset((pageWidth - text_tongcong_width) / 2, yWrite);
+                contentStream2.showText(text_tongcong);
+                contentStream2.endText();
+                yWrite -= 24;
+
+                String giamgiatext = ttKM.getText();
+                String text = "";
+                long sum_with_discount = 0;
+                if (giamgiatext.equals("Không khuyến mãi"))
+                {
                     text="Giảm Giá: 0VNĐ";
-                }
-                ChiTietKMDAO ctkmdao = new ChiTietKMDAO();
-                ChiTietKMDTO ctkm = ctkmdao.timKiemCTKM(MaKM);
-                if (ctkm != null && (now.compareTo(hethan)) <= 0) {
-                    double discount = (double) ctkm.getPhanTramGiam();
-                    long min_decrease = ctkm.getToithieugiam();
-                    double money = (discount / 100) * (double) tong_tien_hd;
-                    if (money <= min_decrease) {
-                        sum_with_discount = tong_tien_hd - min_decrease;
-                        money = min_decrease;
-                    } else {
-                        sum_with_discount = tong_tien_hd - (long) money;
+                } else
+                {
+                    String[] giamgia = ttKM.getText().split("\\s+");
+                    KhuyenMaiDAO kmdao = new KhuyenMaiDAO();
+                    int MaKM = Integer.parseInt(giamgia[0]);
+                    KhuyenMaiDTO km = kmdao.timKiemKM(MaKM);
+                    LocalDate now = LocalDate.now();
+                    LocalDate hethan = km.getNgayKetThuc(); 
+                    if((now.compareTo(hethan)) > 0){
+                        text="Giảm Giá: 0VNĐ";
                     }
-                    text = String.format("Giam gia: %s", currencyFormat.format(money));
-                    System.out.println(sum_with_discount);
+                    ChiTietKMDAO ctkmdao = new ChiTietKMDAO();
+                    ChiTietKMDTO ctkm = ctkmdao.timKiemCTKM(MaKM);
+                    if (ctkm != null && (now.compareTo(hethan)) <= 0) {
+                        double discount = (double) ctkm.getPhanTramGiam();
+                        long min_decrease = ctkm.getToithieugiam();
+                        double money = (discount / 100) * (double) tong_tien_hd;
+                        if (money <= min_decrease) {
+                            sum_with_discount = tong_tien_hd - min_decrease;
+                            money = min_decrease;
+                        } else {
+                            sum_with_discount = tong_tien_hd - (long) money;
+                        }
+                        text = String.format("Giam gia: %s", currencyFormat.format(money));
+                        System.out.println(sum_with_discount);
+                    }
                 }
-            }
-            
-            float text_width = font.getStringWidth(text) / 1000 * 16;
-            contentStream2.beginText();
-            contentStream2.newLineAtOffset((pageWidth - text_width) / 2, yWrite);
-            contentStream2.showText(text);     
-            contentStream2.endText();
-            yWrite -= 24;
-            
-            String final_text = null;
-            if (sum_with_discount == 0)
-            {
-                final_text = String.format("Tổng tiền sau khi trừ đi giảm giá: %s", currencyFormat.format(tong_tien_hd));
-            } else
-            {
-                final_text = String.format("Tổng tiền sau khi trừ đi giảm giá: %s", currencyFormat.format(sum_with_discount));               
-            }
-            
-            float final_text_width = font.getStringWidth(final_text) / 1000 * 16;
-            contentStream2.beginText();
-            contentStream2.newLineAtOffset((pageWidth - final_text_width) / 2, yWrite);
-            contentStream2.showText(final_text);
-            contentStream2.endText();
-            contentStream2.close();
-            document.save(output_path.concat(tenfile));
-            document.close();
-            list_bought_pizza = new ArrayList<>();
-            JOptionPane.showMessageDialog(this, String.format("Đã tạo xong file %s được lưu ở %s", tenfile, output_path));
-        } catch (Exception e)
-        {
-            System.out.println("Có lỗi "+e.getMessage());
-        }
-    }
+
+                float text_width = font.getStringWidth(text) / 1000 * 16;
+                contentStream2.beginText();
+                contentStream2.newLineAtOffset((pageWidth - text_width) / 2, yWrite);
+                contentStream2.showText(text);     
+                contentStream2.endText();
+                yWrite -= 24;
+
+                String final_text = null;
+                if (sum_with_discount == 0)
+                {
+                    final_text = String.format("Tổng tiền sau khi trừ đi giảm giá: %s", currencyFormat.format(tong_tien_hd));
+                } else
+                {
+                    final_text = String.format("Tổng tiền sau khi trừ đi giảm giá: %s", currencyFormat.format(sum_with_discount));               
+                }
+
+                float final_text_width = font.getStringWidth(final_text) / 1000 * 16;
+                contentStream2.beginText();
+                contentStream2.newLineAtOffset((pageWidth - final_text_width) / 2, yWrite);
+                contentStream2.showText(final_text);
+                contentStream2.endText();
+                contentStream2.close();
+               document.save(output_path + tenfile);
+               document.close();
+                list_bought_pizza = null;
+               JOptionPane.showMessageDialog(this, String.format("Đã tạo xong file %s được lưu ở %s", tenfile, output_path));
+           } else {
+               System.out.println("Người dùng đã hủy chọn thư mục lưu.");
+           }
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+   }
     
     private ArrayList<String[]> convert_table_sang_list(JTable a){
         ArrayList<String[]> data = new ArrayList<>();
@@ -853,7 +873,7 @@ public class PnQLBH extends JPanel {
         } else {
             HoaDonBUS hd = new HoaDonBUS();
             String[] b = ttKH.getText().split("",2);  
-            int n = tableHoaDon.getRowCount();
+            int n = hd.hienDSHD().size();
             int o = hd.hienDSCTHD().size();
             KhachHangBUS khbus = new KhachHangBUS();
             String[] holot_ten = b[1].trim().split(" ");
@@ -873,7 +893,7 @@ public class PnQLBH extends JPanel {
                 System.out.println(tong_tien_hd);
                 d = new HoaDonDTO(n, MaNV, Integer.parseInt(b[0]), null, 0, tong_tien_hd);
                 tong_ct_moi = tong_ct_cu + tong_tien_hd;
-                them_hd_va_cthd_vao_csdl(MaNV, n, o, null, hd, d);
+                them_hd_va_cthd_vao_csdl(MaNV, o, null, hd, d);
             } else {
                 String[] e = ttKM.getText().split("\\s+");
                 int MaKM = Integer.parseInt(e[0]);
@@ -899,50 +919,56 @@ public class PnQLBH extends JPanel {
                     System.out.println(sum_with_discount);
                     d = new HoaDonDTO(n, MaNV, Integer.parseInt(b[0]), MaKM, (long) money, sum_with_discount);
                     tong_ct_moi = tong_ct_cu + sum_with_discount;                   
-                    them_hd_va_cthd_vao_csdl(MaNV, n, o, MaKM, hd, d);
+                    them_hd_va_cthd_vao_csdl(MaNV, o, MaKM, hd, d);
                 } 
                 if((now.compareTo(hethan)) > 0){
                    System.out.println(String.format("Tong tien cua hoa don co ma %d ( da het han khuyen mai)", n));
                    System.out.println(tong_tien_hd);
                    d = new HoaDonDTO(n, MaNV, Integer.parseInt(b[0]), null, 0, tong_tien_hd);
                    tong_ct_moi = tong_ct_cu + tong_tien_hd;
-                   them_hd_va_cthd_vao_csdl(MaNV, n, o, null, hd, d);                   
+                   them_hd_va_cthd_vao_csdl(MaNV, o, null, hd, d);                   
                 }
             }
             if(khbus.TangTongChiTieu(b[0],c, holot_ten[2], sdt, diachi,tong_ct_moi )){
+                updateUI();
                 System.out.println("Đã cộng tổng tiền vào chi tiêu của khách hàng có mã là "+b[0]);
             }
         }
     }
     
-    private void them_hd_va_cthd_vao_csdl(int MaNV, int n, int o, Integer maCTKM, HoaDonBUS hd, HoaDonDTO d) {
+    private void them_hd_va_cthd_vao_csdl(int MaNV, int o, Integer maCTKM, HoaDonBUS hd, HoaDonDTO d) {
         Integer masp_trong = null;
         HashMap<Integer, Integer> dssp_damua = new HashMap<>();
-        Boolean flag = true;
-        int sodong_giohang = tableGioHang.getRowCount();
-        for (int i = 0; i < sodong_giohang; i++) {
-            int MaSP = (Integer) tableGioHang.getModel().getValueAt(i, 0);
-            int slSP = (Integer) tableGioHang.getModel().getValueAt(i, 3);
-            long dongiaSP = parseCurrencyString(tableGioHang.getModel().getValueAt(i, 2).toString());
-            long thanhtien = parseCurrencyString(tableGioHang.getModel().getValueAt(i, 4).toString());
-            int l = o + i;
-            ChiTietHoaDonDTO cthd = new ChiTietHoaDonDTO(l, n, MaSP, MaNV, maCTKM, slSP, dongiaSP, thanhtien);
-            if (!hd.addDetailReceipt(cthd)) {
-                System.out.println("Them CTHD Vao CSDL That Bai");
-                flag = false;
-                break;
-            } else {
-                flag = true;
-                dssp_damua.put(MaSP, slSP);
-            }
-        }
+        ArrayList<ChiTietHoaDonDTO> ds_cthd = new ArrayList<>();
         Boolean kt = hd.addReceipt(d);
         if (!kt) {
             JOptionPane.showMessageDialog(this, "Thêm Hoá Đơn Thất Bại", "Lỗi", JOptionPane.ERROR_MESSAGE);       
         } else {
-            if (flag) {
-                boolean suaSP = true;
-                JOptionPane.showMessageDialog(this, "Thêm Hoá Đơn Thành Công!");
+            boolean suaSP = true;
+            JOptionPane.showMessageDialog(this, "Thêm Hoá Đơn Thành Công!");
+ 
+            int n = hd.hienDSHD().size();         
+            
+            //"Mã SP", "Tên Sản Phẩm", "Đơn Giá", "SL", "Thành Tiền"
+            int sodong_giohang = tableGioHang.getRowCount();
+            for (int i = 0; i < sodong_giohang; i++) {
+                int MaSP = Integer.valueOf(tableGioHang.getModel().getValueAt(i, 0).toString());
+                int slSP = Integer.valueOf(tableGioHang.getModel().getValueAt(i, 3).toString());
+                long dongiaSP = parseCurrencyString(tableGioHang.getModel().getValueAt(i, 2).toString());
+                long thanhtien = parseCurrencyString(tableGioHang.getModel().getValueAt(i, 4).toString());
+                int l = o + i;
+                ChiTietHoaDonDTO cthd = new ChiTietHoaDonDTO(l, n, MaSP, MaNV, maCTKM, slSP, dongiaSP, thanhtien);
+                ds_cthd.add(cthd);
+                dssp_damua.put(MaSP, slSP);
+            }
+            if(hd.addArrayListDR(ds_cthd)){
+                JOptionPane.showMessageDialog(this, "Thêm CTHD vào CSDL thành công");
+                dsCTHD.addAll(ds_cthd);
+                
+
+                System.out.println(dsCTHD);
+                
+                
                 for (int MaSP : dssp_damua.keySet()) {
                     SanPhamDAO spdao = new SanPhamDAO();
                     ArrayList<SanPhamDTO> dssp = spdao.timKiemSanPham(String.valueOf(MaSP));
@@ -964,14 +990,14 @@ public class PnQLBH extends JPanel {
                         SanPhamDAO sp = new SanPhamDAO();
                         sp.xoaSanPham(String.valueOf(masp_trong));
                     }
+
                     list_bought_pizza = convert_table_sang_list(tableGioHang);
+
+                    updateUI();
+
                     loadDataFromSource();
-                    // updateUI(); // Hàm này chưa được định nghĩa, có thể bỏ hoặc triển khai
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, "Thêm Toàn Bộ Chi Tiết Hoá Đơn Vào CSDL Thất Bại", "Lỗi", JOptionPane.ERROR_MESSAGE);    
-                JOptionPane.showMessageDialog(this, "Thêm Hoá Đơn Thất Bại", "Lỗi", JOptionPane.ERROR_MESSAGE);  
-            }         
+            }        
         }
     }
     
@@ -1088,8 +1114,8 @@ public class PnQLBH extends JPanel {
         a.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
-    private void showTableDiscount() {
-        InforDiscount b = new InforDiscount();
+    private void showTableDiscount(boolean isTabHD) {
+        InforDiscount b = new InforDiscount(isTabHD);
         b.setSelectDiscountListener(new SelectCustomerOrDiscount() {
             @Override
             public void onCustomerSelected(int maKH, String tenKH) {
@@ -1357,9 +1383,9 @@ public class PnQLBH extends JPanel {
         tfChiTietKM.setFont(fieldFont);
         tfChiTietKM.setPreferredSize(new Dimension(100, 25));
         kmFilterPanel.add(tfChiTietKM, BorderLayout.CENTER);
-        btnKM = new JButton(FontIcon.of(FontAwesomeSolid.ELLIPSIS_H, 18, Color.BLACK));
-        btnKM.setPreferredSize(buttonMinSize);
-        kmFilterPanel.add(btnKM, BorderLayout.EAST);
+        btnCTKM = new JButton(FontIcon.of(FontAwesomeSolid.ELLIPSIS_H, 18, Color.BLACK));
+        btnCTKM.setPreferredSize(buttonMinSize);
+        kmFilterPanel.add(btnCTKM, BorderLayout.EAST);
         gbcLeft.gridx = 1; gbcLeft.fill = GridBagConstraints.HORIZONTAL; gbcLeft.weightx = 1.0;
         panelHoaDonLeft.add(kmFilterPanel, gbcLeft);
         leftY++;
@@ -1782,7 +1808,7 @@ public class PnQLBH extends JPanel {
         tableHoaDon.getSelectionModel().addListSelectionListener(event -> {
             if (!event.getValueIsAdjusting() && tableHoaDon.getSelectedRow() != -1) {
                 String maHD = tableHoaDon.getValueAt(tableHoaDon.getSelectedRow(), 0).toString();
-                loadChiTietHoaDon(maHD);
+                loadChiTietHoaDon(maHD, dsCTHD);
                 // tfNameDiscount, tfDetailDiscountName
                Integer maCTKM = Integer.valueOf(tableHoaDon.getValueAt(tableHoaDon.getSelectedRow(), 3).toString());
                ChiTietKMDAO ctkmdao = new ChiTietKMDAO();
@@ -1999,10 +2025,25 @@ public class PnQLBH extends JPanel {
                 a.setForeground(Color.blue);
             } else if (fields[i] instanceof JSpinner) {
                 JSpinner b = (JSpinner) fields[i];
+                b.setBorder(new LineBorder(Color.BLACK, 1));
+                b.setEnabled(true);
+                b.setModel(new SpinnerNumberModel(1, 1, slTD, 1));
+                b.setInputVerifier(new SpinnerInputVerifier(b, slTD, 1));
+                b.addChangeListener(e -> warn(b, slTD, 1));
                 JComponent editor = b.getEditor();
                 JFormattedTextField textField = ((JSpinner.DefaultEditor) editor).getTextField();
                 textField.setBorder(new EmptyBorder(0, 2, 0, 0));
                 textField.setHorizontalAlignment(JTextField.LEFT);
+                textField.setFocusLostBehavior(JFormattedTextField.PERSIST);
+                textField.addKeyListener(new KeyAdapter() {
+                    //Needed to inform user if they type something wrong:
+                    @Override public void keyReleased(final KeyEvent kevt) { warn(b, slTD, 1); }
+                });
+                textField.addFocusListener(new FocusAdapter() {
+                    //Needed to inform user if the text field loses focus and has a wrong value:
+                    @Override public void focusLost(final FocusEvent fevt) { warn(b, slTD, 1); }
+                });
+
                 for (Component component : b.getComponents()) {
                     if (component instanceof JButton) {
                         JButton button = (JButton) component;
@@ -2012,26 +2053,29 @@ public class PnQLBH extends JPanel {
                         button.setPreferredSize(new Dimension(button.getPreferredSize().width, textFieldHeight));
                     }
                 }
-                b.setBorder(new LineBorder(Color.BLACK, 1));
-                b.setEnabled(true);
-                b.setModel(new SpinnerNumberModel(1, 1, slTD, 1));
-                chanNhapJSpinner(b);
             } 
         }
         HoaDonBUS hd = new HoaDonBUS();
         loadProductImage(hd.timAnhChoSanPham(String.valueOf(maSP)));
     }
-    
-    private void chanNhapJSpinner(JSpinner spinner) {
-        JComponent editor = spinner.getEditor();
-        if (editor instanceof JSpinner.DefaultEditor defaultEditor) {
-            JFormattedTextField textField = defaultEditor.getTextField();
-            textField.setEditable(false);
-            textField.setFocusable(false);
-            textField.setBackground(Color.white);
+
+    public static void warn(final JSpinner spin, int max, int min) {
+        final JFormattedTextField jftf = ((DefaultEditor) spin.getEditor()).getTextField();
+        try {
+            spin.commitEdit(); //Try to commit given value.
+            
+        }
+        catch (final ParseException px) {
+            if (!jftf.getText().isBlank())
+            {           
+                jftf.setText("");
+                JOptionPane.showMessageDialog(spin, "Dữ liệu không hợp lệ");
+            }
+            //else if the background is already red, means we already checked previously,
+            //so we do not inform the user again. We inform him only once.
         }
     }
-
+    
     private void xuly_chonhang_banggiohang(ArrayList<Object> tk, int row) {
         int maSP = (Integer) tableGioHang.getModel().getValueAt(row, 0);
         String tenSP = (String) tableGioHang.getModel().getValueAt(row, 1);
@@ -2068,7 +2112,6 @@ public class PnQLBH extends JPanel {
                 a.setForeground(Color.blue);
             } else if (fields[i] instanceof JSpinner) {
                 JSpinner b = (JSpinner) fields[i];
-                chanNhapJSpinner(b);
                 b.setValue(slSP);
                 b.setEnabled(false);
             } 
@@ -2110,13 +2153,11 @@ public class PnQLBH extends JPanel {
         }
     }
 
-    private void loadChiTietHoaDon(String maHD) {
+    private void loadChiTietHoaDon(String maHD, ArrayList<ChiTietHoaDonDTO> dsCTHD) {
         DefaultTableModel modelChiTiet = (DefaultTableModel) tableChiTietHoaDon.getModel();
         modelChiTiet.setRowCount(0);
          //"Mã Chi Tiết Hoá Đơn","Mã Hoá Đơn" , "Mã Sản Phẩm", "Mã Chi Tiết Khuyến Mãi", "Số Lượng"  ,"Đơn Giá", "Thành Tiền"
         try {
-            HoaDonBUS localHdBUS = new HoaDonBUS();
-            ArrayList<ChiTietHoaDonDTO> dsCTHD = localHdBUS.hienDSCTHD();
             if (dsCTHD != null) {
                 for (ChiTietHoaDonDTO ct : dsCTHD) {
                     if(ct.getMaHD() == Integer.valueOf(maHD)){
