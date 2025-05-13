@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 
 public class CTHDDAO
-{
+{    
     public boolean themCTHD(ChiTietHoaDonDTO cthd) {
         String sql = "INSERT INTO ChiTietHoaDon (MaHD, MaSP, MaNV, MaCTKM, SoLuong, DonGia, ThanhTien) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -32,6 +32,43 @@ public class CTHDDAO
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Lỗi khi thêm hóa đơn: " + e.getMessage());
+        }
+
+        return false;
+    }
+    
+    public boolean themArrayListCTHD(ArrayList<ChiTietHoaDonDTO> listCTHD) {
+        String sql = "INSERT INTO ChiTietHoaDon (MaHD, MaSP, MaNV, MaCTKM, SoLuong, DonGia, ThanhTien) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (ChiTietHoaDonDTO cthd : listCTHD) {
+                ps.setInt(1, cthd.getMaHD());
+                ps.setInt(2, cthd.getMaSP());
+                ps.setInt(3, cthd.getMaNV());
+
+                // Xử lý null cho MaCTKM
+                if (cthd.getMaCTKM() != null) {
+                    ps.setInt(4, cthd.getMaCTKM());
+                } else {
+                    ps.setNull(4, java.sql.Types.INTEGER);
+                }
+
+                ps.setLong(5, cthd.getSoLuong());
+                ps.setLong(6, cthd.getDonGia());
+                ps.setLong(7, cthd.getThanhTien());
+
+                ps.addBatch(); // Thêm vào batch
+            }
+
+            int[] results = ps.executeBatch(); // Thực thi batch
+            for (int result : results) {
+                if (result == PreparedStatement.EXECUTE_FAILED) {
+                    return false; // Một phần tử bị lỗi khi thêm
+                }
+            }
+
+            return true; // Tất cả đều thành công
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi thêm danh sách chi tiết hóa đơn: " + e.getMessage());
         }
 
         return false;

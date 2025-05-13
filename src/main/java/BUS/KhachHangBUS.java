@@ -158,9 +158,9 @@ public class KhachHangBUS {
 
         boolean flag = khDAO.SuaKhachHang(kh);
         if (!flag) {
-            new MyDialog("Sửa khách hàng thất bại!", MyDialog.ERROR_DIALOG);
+            new MyDialog("Tăng Tổng Chi Tiêu của khách hàng thất bại!", MyDialog.ERROR_DIALOG);
         } else {
-            new MyDialog("Sửa khách hàng thành công!", MyDialog.SUCCESS_DIALOG);
+            new MyDialog("Tăng Tổng Chỉ Tiêu của khách hàng thành công!", MyDialog.SUCCESS_DIALOG);
         }
         return flag;
     }

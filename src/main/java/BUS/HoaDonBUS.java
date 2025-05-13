@@ -10,29 +10,36 @@ public class HoaDonBUS
 {
     private final HoaDonDAO hddao;
     private final CTHDDAO cthddao;
+    public final ArrayList<HoaDonDTO> dshd;
+    public final ArrayList<ChiTietHoaDonDTO> dsCTHD;
     public HoaDonBUS(){
        hddao = new HoaDonDAO();
        cthddao = new CTHDDAO();
+       dshd = new ArrayList<>();
+       dsCTHD = new ArrayList<>();
     }
+    
     public ArrayList<SanPhamDTO> hienDSSP(){
         SanPhamDAO sp = new SanPhamDAO();
         return sp.layDSSP();
     }
     
-    public boolean addReceipt(HoaDonDTO hd){      
+    public boolean addReceipt(HoaDonDTO hd){    
+        dshd.add(hd);
         return hddao.themHD(hd);
     }
     
-    public boolean addDetailReceipt(ChiTietHoaDonDTO cthd){
-        return cthddao.themCTHD(cthd);
+    public boolean addArrayListDR(ArrayList<ChiTietHoaDonDTO> dscthd){
+        dsCTHD.addAll(dscthd);
+        return cthddao.themArrayListCTHD(dscthd);
     }
     
-    public ArrayList<HoaDonDTO> hienDSHD(){
-        return hddao.layDSHD();
+    public void hienDSHD(){
+        dshd.addAll(hddao.layDSHD());
     }
     
-    public ArrayList<ChiTietHoaDonDTO> hienDSCTHD(){
-        return cthddao.layDSCTHD();
+    public void hienDSCTHD(){
+        dsCTHD.addAll(cthddao.layDSCTHD());
     }
      
     public String timAnhChoSanPham(String maSP){

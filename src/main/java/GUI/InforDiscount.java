@@ -18,14 +18,21 @@ import javax.swing.table.DefaultTableModel;
  */
 public class InforDiscount extends javax.swing.JFrame
 {
+    private SelectCustomerOrDiscount listener;
+    private SelectCustomerOrDiscount listener1;
+    private Boolean isTabHoaDon;
+    
     public InforDiscount()
     {
         initComponents();
         loadDataFromSource();
     }
     
-    private SelectCustomerOrDiscount listener;
-    private SelectCustomerOrDiscount listener1;
+    public InforDiscount(boolean coTabHD){
+        this.isTabHoaDon = coTabHD;
+        initComponents();
+        loadDataFromSource();
+    }
     
     public void setSelectDiscountListener(SelectCustomerOrDiscount listener) {
         this.listener = listener;
@@ -33,6 +40,10 @@ public class InforDiscount extends javax.swing.JFrame
     
     public void setSelectDiscount1Listener(SelectCustomerOrDiscount listener){
         this.listener1 = listener;
+    }
+    
+    public void setIsTabHoaDon(boolean flag) {
+        this.isTabHoaDon = flag;
     }
    private void loadDataFromSource() {
         // --- Nạp dữ liệu cho Bảng Hóa Đơn ---
@@ -199,13 +210,12 @@ public class InforDiscount extends javax.swing.JFrame
             String ma_ctkm = TableDiscount.getModel().getValueAt(row, 4).toString();
             String ten_ctkm = TableDiscount.getModel().getValueAt(row, 5).toString();
             String ten_km = TableDiscount.getModel().getValueAt(row, 1).toString();
-            if(listener != null){
-            JOptionPane.showMessageDialog(this, String.format("Bạn đã chọn khuyến mãi có tên là  %s", ten_km) , "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
-                listener.onDiscountSelected(Integer.parseInt(ma_km),ten_km);
-            }
-            if(listener1 != null){
-            JOptionPane.showMessageDialog(this, String.format("Bạn đã chọn chi tiết khuyến mãi có tên là  %s", ten_ctkm) , "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
-                listener1.onDiscount1Selected(Integer.parseInt(ma_ctkm),ten_ctkm);
+            if (isTabHoaDon) {
+                JOptionPane.showMessageDialog(this, String.format("Bạn đã chọn chi tiết khuyến mãi có tên là %s", ten_ctkm), "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
+                if (listener1 != null) listener1.onDiscount1Selected(Integer.parseInt(ma_ctkm), ten_ctkm);
+            } else {
+                JOptionPane.showMessageDialog(this, String.format("Bạn đã chọn khuyến mãi có tên là %s", ten_km), "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
+                if (listener != null) listener.onDiscountSelected(Integer.parseInt(ma_km), ten_km);
             }
             this.dispose();
         }
@@ -213,11 +223,10 @@ public class InforDiscount extends javax.swing.JFrame
 
     private void BtnNoDiscountActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_BtnNoDiscountActionPerformed
     {//GEN-HEADEREND:event_BtnNoDiscountActionPerformed
-        if(listener != null){
-            listener.onDiscountSelected(null, null);
-        }
-        if(listener1 != null){
-            listener1.onDiscount1Selected(null, null);
+        if (isTabHoaDon) {
+            if (listener1 != null) listener1.onDiscount1Selected(null, null);
+        } else {
+            if (listener != null) listener.onDiscountSelected(null, null);
         }
         this.dispose();
     }//GEN-LAST:event_BtnNoDiscountActionPerformed

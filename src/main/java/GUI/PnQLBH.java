@@ -37,8 +37,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -60,13 +58,9 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.ParseException;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner.DefaultEditor;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.basic.BasicMenuUI;
 
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
@@ -125,7 +119,6 @@ public class PnQLBH extends JPanel {
     private final int IMAGE_WIDTH = 200;
     private final int IMAGE_HEIGHT = 200;
     private ArrayList<String[]> list_bought_pizza;
-    private ArrayList<ChiTietHoaDonDTO> dsCTHD;
     private int tong_tien_hd;
     private DecimalFormat currencyFormat;
     private NumberFormatter numberFormatter;
@@ -133,16 +126,17 @@ public class PnQLBH extends JPanel {
     private String ma_nv_cantim="";
     private Boolean co_loc_tien = false;
     private String cot_loc_tien="";
+    private HoaDonBUS hdbus = new HoaDonBUS();
 
     public PnQLBH(ArrayList<Object> tk) {
-        HoaDonBUS hdbus = new HoaDonBUS();
-        dsCTHD = hdbus.hienDSCTHD();
+        hdbus.hienDSHD();
+        hdbus.hienDSCTHD();
         initComponents();
         setupTableModels(tk);
         loadDataFromSource();
         loadProductImage(DEFAULT_IMAGE_PATH);
         JButton a = (JButton) fields[6];
-        a.addActionListener((e) -> showTableCustomer());
+        a.addActionListener((e) -> showTableCustomer(false));
         JButton b = (JButton) fields[7];
         b.addActionListener((e) -> showTableDiscount(false));
         btnThemVaoGio.addActionListener((e) -> ThemVaoGioHang());
@@ -156,7 +150,7 @@ public class PnQLBH extends JPanel {
                 XuatPDFHoaDon(tk);
             }         
         });
-        btnKH.addActionListener((ActionEvent e) -> showTableCustomer());
+        btnKH.addActionListener((ActionEvent e) -> showTableCustomer(true));
         btnCTKM.addActionListener((ActionEvent e) -> showTableDiscount(true));
         btnTimKiem.addActionListener((ActionEvent e) -> TimKiemHoaDon());
         cbbMaHD.addItemListener(new ItemListener()
@@ -203,7 +197,7 @@ public class PnQLBH extends JPanel {
             for (int i = 0; i < headersPN.length; i++) {
                 headerPN.createCell(i).setCellValue(headersPN[i]);
             }
-            ArrayList<HoaDonDTO> dsHD = hdbus.hienDSHD();
+            ArrayList<HoaDonDTO> dsHD = hdbus.dshd;
             for (int i = 0; i < dsHD.size(); i++) {
                HoaDonDTO hd = dsHD.get(i);
                  org.apache.poi.ss.usermodel.Row row = sheetReceipt.createRow(i + 1);
@@ -242,7 +236,7 @@ public class PnQLBH extends JPanel {
             for (int i = 0; i < headersDR.length; i++) {
                 headerDR.createCell(i).setCellValue(headersDR[i]);
             }
-            ArrayList<ChiTietHoaDonDTO> listDR = hdbus.hienDSCTHD();
+            ArrayList<ChiTietHoaDonDTO> listDR = hdbus.dsCTHD;
             for (int i = 0; i < listDR.size(); i++) {
                 ChiTietHoaDonDTO ct = listDR.get(i);
                 org.apache.poi.ss.usermodel.Row row = sheetDR.createRow(i + 1);
@@ -871,19 +865,21 @@ public class PnQLBH extends JPanel {
         } else if (tableGioHang.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "Giỏ hàng không có sản phẩm", "Lỗi", JOptionPane.ERROR_MESSAGE);                
         } else {
-            HoaDonBUS hd = new HoaDonBUS();
             String[] b = ttKH.getText().split("",2);  
-            int n = hd.hienDSHD().size();
-            int o = hd.hienDSCTHD().size();
+            int n = hdbus.dshd.size() + 1;
+            int o = hdbus.dsCTHD.size();
             KhachHangBUS khbus = new KhachHangBUS();
             String[] holot_ten = b[1].trim().split(" ");
+            int size = holot_ten.length;
             ArrayList<KhachHangDTO> dskh = khbus.timKiemKhachHang(b[0]); // b[0] là mã khách hàng
             String sdt = dskh.get(0).getSdt();
             String diachi = dskh.get(0).getDiaChi();
             Long tong_ct_cu = dskh.get(0).getTongChiTieu();
             Long tong_ct_moi = null;
-            String c = holot_ten[0].concat(" ").concat(holot_ten[1]);
-            System.out.println(c);
+            String c = holot_ten[0];
+            for(int i = 0; i < size - 1; i++){
+                c.concat("").concat(holot_ten[i+1]);
+            }
   
             for (int i = 0; i < tableGioHang.getRowCount(); i++) {
                 tong_tien_hd += parseCurrencyString(tableGioHang.getModel().getValueAt(i, 4).toString());
@@ -893,7 +889,7 @@ public class PnQLBH extends JPanel {
                 System.out.println(tong_tien_hd);
                 d = new HoaDonDTO(n, MaNV, Integer.parseInt(b[0]), null, 0, tong_tien_hd);
                 tong_ct_moi = tong_ct_cu + tong_tien_hd;
-                them_hd_va_cthd_vao_csdl(MaNV, o, null, hd, d);
+                them_hd_va_cthd_vao_csdl(MaNV, o, null, hdbus, d);
             } else {
                 String[] e = ttKM.getText().split("\\s+");
                 int MaKM = Integer.parseInt(e[0]);
@@ -919,17 +915,17 @@ public class PnQLBH extends JPanel {
                     System.out.println(sum_with_discount);
                     d = new HoaDonDTO(n, MaNV, Integer.parseInt(b[0]), MaKM, (long) money, sum_with_discount);
                     tong_ct_moi = tong_ct_cu + sum_with_discount;                   
-                    them_hd_va_cthd_vao_csdl(MaNV, o, MaKM, hd, d);
+                    them_hd_va_cthd_vao_csdl(MaNV, o, MaKM, hdbus, d);
                 } 
                 if((now.compareTo(hethan)) > 0){
                    System.out.println(String.format("Tong tien cua hoa don co ma %d ( da het han khuyen mai)", n));
                    System.out.println(tong_tien_hd);
                    d = new HoaDonDTO(n, MaNV, Integer.parseInt(b[0]), null, 0, tong_tien_hd);
                    tong_ct_moi = tong_ct_cu + tong_tien_hd;
-                   them_hd_va_cthd_vao_csdl(MaNV, o, null, hd, d);                   
+                   them_hd_va_cthd_vao_csdl(MaNV, o, null, hdbus, d);                   
                 }
             }
-            if(khbus.TangTongChiTieu(b[0],c, holot_ten[2], sdt, diachi,tong_ct_moi )){
+            if(khbus.TangTongChiTieu(b[0],c, holot_ten[size - 1], sdt, diachi,tong_ct_moi )){
                 updateUI();
                 System.out.println("Đã cộng tổng tiền vào chi tiêu của khách hàng có mã là "+b[0]);
             }
@@ -946,8 +942,7 @@ public class PnQLBH extends JPanel {
         } else {
             boolean suaSP = true;
             JOptionPane.showMessageDialog(this, "Thêm Hoá Đơn Thành Công!");
- 
-            int n = hd.hienDSHD().size();         
+            int n = hd.dshd.size();
             
             //"Mã SP", "Tên Sản Phẩm", "Đơn Giá", "SL", "Thành Tiền"
             int sodong_giohang = tableGioHang.getRowCount();
@@ -963,12 +958,7 @@ public class PnQLBH extends JPanel {
             }
             if(hd.addArrayListDR(ds_cthd)){
                 JOptionPane.showMessageDialog(this, "Thêm CTHD vào CSDL thành công");
-                dsCTHD.addAll(ds_cthd);
-                
-
-                System.out.println(dsCTHD);
-                
-                
+                 
                 for (int MaSP : dssp_damua.keySet()) {
                     SanPhamDAO spdao = new SanPhamDAO();
                     ArrayList<SanPhamDTO> dssp = spdao.timKiemSanPham(String.valueOf(MaSP));
@@ -1059,8 +1049,8 @@ public class PnQLBH extends JPanel {
         }
     }
 
-    private void showTableCustomer() {
-        InforCustomer a = new InforCustomer();
+    private void showTableCustomer(boolean  isTabHD) {
+        InforCustomer a = new InforCustomer(isTabHD);
         a.setSelectCustomerListener(new SelectCustomerOrDiscount() {
             @Override
             public void onCustomerSelected(int maKH, String tenKH) {
@@ -1233,8 +1223,7 @@ public class PnQLBH extends JPanel {
         gbcLeft.gridx = 0; gbcLeft.gridy = leftY; gbcLeft.fill = GridBagConstraints.NONE; gbcLeft.weightx = 0;
         panelHoaDonLeft.add(lblHD, gbcLeft);
 
-        HoaDonBUS hdbus = new HoaDonBUS();
-        ArrayList<HoaDonDTO> dshd = hdbus.hienDSHD();
+        ArrayList<HoaDonDTO> dshd = hdbus.dshd;
         String[] ds_mahd = new String[dshd.size() + 1];
         ds_mahd[0] = "Chọn Mã Hoá Đơn";
         for (int i = 0; i < dshd.size(); i++) {
@@ -1808,7 +1797,7 @@ public class PnQLBH extends JPanel {
         tableHoaDon.getSelectionModel().addListSelectionListener(event -> {
             if (!event.getValueIsAdjusting() && tableHoaDon.getSelectedRow() != -1) {
                 String maHD = tableHoaDon.getValueAt(tableHoaDon.getSelectedRow(), 0).toString();
-                loadChiTietHoaDon(maHD, dsCTHD);
+                loadChiTietHoaDon(maHD, hdbus.dsCTHD);
                 // tfNameDiscount, tfDetailDiscountName
                Integer maCTKM = Integer.valueOf(tableHoaDon.getValueAt(tableHoaDon.getSelectedRow(), 3).toString());
                ChiTietKMDAO ctkmdao = new ChiTietKMDAO();
@@ -1950,8 +1939,7 @@ public class PnQLBH extends JPanel {
         DefaultTableModel modelHoaDon = (DefaultTableModel) tableHoaDon.getModel();
         modelHoaDon.setRowCount(0);
         try {
-            HoaDonBUS localHdBUS = new HoaDonBUS();
-            ArrayList<HoaDonDTO> dsHD = localHdBUS.hienDSHD();
+            ArrayList<HoaDonDTO> dsHD = hdbus.dshd;
             if (dsHD != null) {
                 for (HoaDonDTO hd : dsHD) {
                     Object[] rowData = {
@@ -2028,7 +2016,6 @@ public class PnQLBH extends JPanel {
                 b.setBorder(new LineBorder(Color.BLACK, 1));
                 b.setEnabled(true);
                 b.setModel(new SpinnerNumberModel(1, 1, slTD, 1));
-                b.setInputVerifier(new SpinnerInputVerifier(b, slTD, 1));
                 b.addChangeListener(e -> warn(b, slTD, 1));
                 JComponent editor = b.getEditor();
                 JFormattedTextField textField = ((JSpinner.DefaultEditor) editor).getTextField();

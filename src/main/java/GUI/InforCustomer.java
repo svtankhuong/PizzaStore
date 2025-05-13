@@ -20,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
 public class InforCustomer extends javax.swing.JFrame{
     private SelectCustomerOrDiscount listener;
     private SelectCustomerOrDiscount listener1;
+    private boolean isTabHoaDon;
     
     public void setSelectCustomerListener(SelectCustomerOrDiscount listener) {
         this.listener = listener;
@@ -29,6 +30,10 @@ public class InforCustomer extends javax.swing.JFrame{
         this.listener1 = listener;
     }
 
+    public void setIsTabHoaDon(boolean flag) {
+        this.isTabHoaDon = flag;
+    }
+    
     @Override
     public void setTransferHandler(TransferHandler newHandler)
     {
@@ -42,6 +47,12 @@ public class InforCustomer extends javax.swing.JFrame{
     }
     /** Creates new form InforCustomer */
     public InforCustomer() {
+        initComponents();
+        loadDataFromSource();
+    }
+    
+    public InforCustomer(boolean flag) {
+        this.isTabHoaDon = flag;
         initComponents();
         loadDataFromSource();
     }
@@ -181,11 +192,15 @@ public class InforCustomer extends javax.swing.JFrame{
             String ma_kh = TCustomer.getModel().getValueAt(row,0).toString();
             String ten_kh = TCustomer.getModel().getValueAt(row, 1).toString();
             JOptionPane.showMessageDialog(this, String.format("Bạn đã chọn khách hàng %s", ten_kh) , "Thông Báo", JOptionPane.INFORMATION_MESSAGE);
-            if(listener != null){
-                listener.onCustomerSelected(Integer.parseInt(ma_kh),ten_kh);
-            }
-            if(listener1 != null){
-                listener1.onCustomer1Selected(Integer.parseInt(ma_kh), ten_kh);
+
+            if (isTabHoaDon) {
+                if(listener1 != null){
+                    listener1.onCustomer1Selected(Integer.parseInt(ma_kh), ten_kh);
+                }
+            } else {
+                if(listener != null){
+                    listener.onCustomerSelected(Integer.parseInt(ma_kh),ten_kh);
+                }
             }
             this.dispose();
         }
