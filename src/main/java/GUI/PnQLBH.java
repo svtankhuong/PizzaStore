@@ -303,6 +303,7 @@ public class PnQLBH extends JPanel {
                 if(!dshd.isEmpty()){
                 HienHoaDonSauTK(dshd);  
                 JOptionPane.showMessageDialog(this, "Tìm Kiếm Hoá Đơn Thành Công!");
+                co_loc_tien = false;
                 groupDate.clearSelection();
                 groupMoney.clearSelection();
                 dateCB.setSelected(false);
@@ -399,46 +400,46 @@ public class PnQLBH extends JPanel {
         if(lessMoneyBtn.isSelected()){
            if(c.isBlank() && !d.isBlank()){
                if(cot_loc_tien.equals("Số Tiền Giảm")){
-                   ds_tt_khong_trong.put("SoTienGiam",String.format("< %s", d));       
+                   ds_tt_khong_trong.put("SoTienGiam",String.format("< %d", parseCurrencyString(d)));       
                }else{
-                   ds_tt_khong_trong.put("TongTien",String.format("< %s", d));       
+                   ds_tt_khong_trong.put("TongTien",String.format("< %d", parseCurrencyString(d)));       
                }                    
            }else if(!c.isBlank() && d.isBlank()){
                 if(cot_loc_tien.equals("Số Tiền Giảm")){
-                   ds_tt_khong_trong.put("SoTienGiam",String.format("< %s", c));       
+                   ds_tt_khong_trong.put("SoTienGiam",String.format("< %d", parseCurrencyString(c)));       
                 }else{
-                   ds_tt_khong_trong.put("TongTien",String.format("< %s", c));       
+                   ds_tt_khong_trong.put("TongTien",String.format("< %d", parseCurrencyString(c)));       
                 }     
            }
         }else if(moreMoneyBtn.isSelected()){
            if(c.isBlank() && !d.isBlank()){
                 if(cot_loc_tien.equals("Số Tiền Giảm")){
-                   ds_tt_khong_trong.put("SoTienGiam",String.format("> %s", d));       
+                   ds_tt_khong_trong.put("SoTienGiam",String.format("> %d", parseCurrencyString(d)));       
                }else{
-                   ds_tt_khong_trong.put("TongTien",String.format("> %s", d));       
+                   ds_tt_khong_trong.put("TongTien",String.format("> %d", parseCurrencyString(d)));       
                }              
            }else if(!c.isBlank() && d.isBlank()){
                 if(cot_loc_tien.equals("Số Tiền Giảm")){
-                   ds_tt_khong_trong.put("SoTienGiam",String.format("> %s", tfMinMoney.getText()));       
+                   ds_tt_khong_trong.put("SoTienGiam",String.format("> %s", parseCurrencyString(c)));       
                 }else{
-                   ds_tt_khong_trong.put("TongTien",String.format("> %s", tfMinMoney.getText()));       
+                   ds_tt_khong_trong.put("TongTien",String.format("> %s", parseCurrencyString(c)));       
                 }     
            }            
         } else{
             if(!c.isBlank() && !d.isBlank()){
                 if(c.equals(d)){
                     if(cot_loc_tien.equals("Số Tiền Giảm")){
-                        ds_tt_khong_trong.put("SoTienGiam",String.format("= %s", c));
+                        ds_tt_khong_trong.put("SoTienGiam",String.format("= %d", parseCurrencyString(c)));
                     }else{
-                        ds_tt_khong_trong.put("TongTien",String.format("= %s", d));                 
+                        ds_tt_khong_trong.put("TongTien",String.format("= %d", parseCurrencyString(c)));                 
                     }  
                 }else{
                     if(cot_loc_tien.equals("Số Tiền Giảm")){
-                        ds_tt_khong_trong.put("SoTienGiam 1",String.format("> %s", c));
-                        ds_tt_khong_trong.put("SoTienGiam 2",String.format("< %s", d));
+                        ds_tt_khong_trong.put("SoTienGiam 1",String.format("> %d", parseCurrencyString(c)));
+                        ds_tt_khong_trong.put("SoTienGiam 2",String.format("< %d", parseCurrencyString(d)));
                     }else{
-                        ds_tt_khong_trong.put("TongTien 1",String.format("> %s", c));
-                        ds_tt_khong_trong.put("TongTIen 2",String.format("< %s", d));                
+                        ds_tt_khong_trong.put("TongTien 1",String.format("> %d", parseCurrencyString(c)));
+                        ds_tt_khong_trong.put("TongTIen 2",String.format("< %d", parseCurrencyString(d)));                
                     }                     
                 }
             }
